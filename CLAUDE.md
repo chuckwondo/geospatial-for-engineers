@@ -114,7 +114,26 @@ grid; the parameter <-> range key binding).
   and hygiene files added (see Tech & build). Repo is still **local-only** -- no
   GitHub remote yet, so the workflows haven't run; deploy needs Pages set to the
   "GitHub Actions" source once a remote exists.
+- **Initial commit landed 2026-06-22** (scaffold + CovJSON guide + tooling +
+  diagram design docs).
 - Remaining content (foundations spine, `zarr.qmd`) is stubs.
+
+### Active work -- RESUME HERE (2026-06-22)
+
+**CoverageJSON diagram pass.** Brainstormed and planned; mid-flight.
+
+- Spec: `docs/superpowers/specs/2026-06-22-covjson-diagrams-design.md`.
+- Plan: `docs/superpowers/plans/2026-06-22-covjson-diagrams.md` (checkbox tasks).
+- Decision: execute the plan **inline** (not subagent-driven) -- the work is
+  visual/interactive (both-theme + DevTools grayscale/CVD/reduced-motion checks,
+  live `quarto preview`, and the visual companion for Task 5's hero).
+- **Next action: start Task 1 (animation spike)** -- nothing in the plan is done
+  yet. To resume, follow the plan task-by-task via `superpowers:executing-plans`.
+- Goal: 3 diagrams (spreadsheet hero, animated row-major fold, parameter<->range
+  binding) + codify conventions, establishing the **B-bar / animated-C** pattern.
+- Gotcha: the visual companion and anything needing Node must use a real Node
+  (the `node` shell shim is a broken asdf shim); prepend
+  `~/.asdf/installs/nodejs/22.16.0/bin` to PATH. See memory `node-shim-broken`.
 
 ## Prior art (build on, don't duplicate)
 
