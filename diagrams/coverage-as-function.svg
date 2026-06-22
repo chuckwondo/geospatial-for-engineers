@@ -17,7 +17,7 @@
   </g>
 
   <!-- Range -->
-  <rect x="462" y="96" width="250" height="156" rx="14" fill="#f0fdfa" stroke="#14b8a6" stroke-width="2.5"/>
+  <rect x="462" y="96" width="250" height="156" rx="14" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5"/>
   <text x="587" y="130" text-anchor="middle" font-size="18" font-weight="700" fill="#0f766e">RANGE</text>
   <text x="587" y="154" text-anchor="middle" font-size="13" fill="#0d9488">measured values</text>
   <text x="587" y="172" text-anchor="middle" font-size="13" fill="#0d9488">(the outputs)</text>
