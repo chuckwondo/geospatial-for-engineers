@@ -140,7 +140,7 @@ rather than discrete features) is exactly what CoverageJSON fills.
 
 **CoverageJSON is a JSON format for publishing spatiotemporal *coverage* data on
 the web.** ("Coverage" is a precise technical term we define carefully in
-Section 2; for now, read it as "a field of values spread over space and/or
+Section 2; for now, read it as "a field of values spread over space and
 time.") The data can be gridded or scattered, and the values can be continuous
 quantities (temperature, elevation) or discrete categories (land-cover class).
 
@@ -189,11 +189,11 @@ the last.
 The single most important idea in this entire guide is this:
 
 ::: {.callout-important}
-A coverage maps positions in space and/or time to values -- one function per
+A **coverage** maps positions in space and time to values -- one function per
 property, all sharing the same domain.
 :::
 
-![A coverage is a function: it maps a domain (positions in space and time) to a range (the measured values).](../diagrams/coverage-as-function.svg){#fig-coverage-function}
+![A coverage function maps a domain (positions in space and time) to a range (the measured values).](../diagrams/coverage-as-function.svg){#fig-coverage-function}
 
 That sentence is doing a lot of work, so let us unpack it with a little
 arithmetic vocabulary you already know. In mathematics, a *function* takes an
@@ -204,7 +204,7 @@ longitude, this latitude, at noon") and the output is a number ("18.4
 degrees Celsius").
 
 A coverage is exactly that kind of function, made concrete: its **domain** is a
-collection of positions in space and/or time, and its **range** is the set of
+collection of positions in space and time, and its **range** is the set of
 values measured or modeled at those positions. Ask a coverage "what is the value
 *here*?" and it answers.
 
