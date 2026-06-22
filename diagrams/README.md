@@ -18,6 +18,8 @@ Inventory (all used in the CoverageJSON guide):
   Section 3.3.
 - `row-major-grid.svg` -- a flat `values` list folds onto a grid in row-major
   order; **animated** (C layer) with a static fallback. Section 4.3.
+- `pointseries-daily-curve.svg` -- a PointSeries as a daily temperature curve
+  (time = domain, values = range; the noon peak spotlit in amber). Section 5.2.
 
 ## 2. Text-based structural diagrams
 

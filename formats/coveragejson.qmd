@@ -979,12 +979,7 @@ Reading it:
 - The range spans only the `t` axis (`axisNames` is `["t"]`, `shape` is `[4]`), so
   its four values line up one-to-one with the four times:
 
-```text
-   2024-07-01T00:00Z  ->  14.2
-   2024-07-01T06:00Z  ->  16.8
-   2024-07-01T12:00Z  ->  19.5
-   2024-07-01T18:00Z  ->  17.1
-```
+![A PointSeries pins the location and lets time vary: at one fixed point (lon 12.5, lat 45.3), the four readings trace a day's warm-up to a noon peak and cool-down. The time axis is the domain; the temperatures are the range.](../diagrams/pointseries-daily-curve.svg){#fig-pointseries}
 
 The air warms from 14.2 degrees Celsius at midnight to a 19.5-degree peak at noon,
 then cools again, exactly the daily curve you would expect. Structurally, this is
