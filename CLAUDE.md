@@ -88,9 +88,11 @@ Two lanes, documented in `diagrams/README.md`:
 2. **Text-based** Mermaid / Graphviz / D2 for structural diagrams (Quarto renders
    to SVG at build; diffs cleanly).
 
-Reuse the guides' vocabulary verbatim in labels so prose and picture match.
-Backlog: convert more of the CovJSON guide's ASCII diagrams to SVG (the row-major
-grid; the parameter <-> range key binding).
+Reuse the guides' vocabulary verbatim in labels so prose and picture match. The
+full, matured conventions (B-bar, color/accessibility, motion, captions) now live
+in `diagrams/README.md`. The CovJSON guide's main ASCII diagrams (the row-major
+grid; the parameter <-> range key binding) have been converted; convert further
+ASCII blocks as the series grows.
 
 ## Chuck's workflow preferences
 
@@ -118,22 +120,22 @@ grid; the parameter <-> range key binding).
   diagram design docs).
 - Remaining content (foundations spine, `zarr.qmd`) is stubs.
 
-### Active work -- RESUME HERE (2026-06-22)
+### CoverageJSON diagram pass -- DONE (2026-06-22)
 
-**CoverageJSON diagram pass.** Brainstormed and planned; mid-flight.
+Executed inline. Conventions are codified in `diagrams/README.md`; the as-built
+result and the deviations from the plan are in the "Outcome" note of
+`docs/superpowers/plans/2026-06-22-covjson-diagrams.md`.
 
-- Spec: `docs/superpowers/specs/2026-06-22-covjson-diagrams-design.md`.
-- Plan: `docs/superpowers/plans/2026-06-22-covjson-diagrams.md` (checkbox tasks).
-- Decision: execute the plan **inline** (not subagent-driven) -- the work is
-  visual/interactive (both-theme + DevTools grayscale/CVD/reduced-motion checks,
-  live `quarto preview`, and the visual companion for Task 5's hero).
-- **Next action: start Task 1 (animation spike)** -- nothing in the plan is done
-  yet. To resume, follow the plan task-by-task via `superpowers:executing-plans`.
-- Goal: 3 diagrams (spreadsheet hero, animated row-major fold, parameter<->range
-  binding) + codify conventions, establishing the **B-bar / animated-C** pattern.
-- Gotcha: the visual companion and anything needing Node must use a real Node
-  (the `node` shell shim is a broken asdf shim); prepend
-  `~/.asdf/installs/nodejs/22.16.0/bin` to PATH. See memory `node-shim-broken`.
+- Diagrams now in the CovJSON guide: `coverage-as-function.svg` (enhanced with an
+  amber worked instance), `coverage-shared-domain.svg` (one domain -> multiple
+  ranges -- **replaced** the planned spreadsheet hero), `parameter-range-binding.svg`
+  (Section 3.3), `row-major-grid.svg` (animated, Section 4.3).
+- Also: site-wide figure caption styling (`custom.scss` + `caption-labels.html`);
+  a "Property, parameter, range" callout in 3.3; reworded 2.1 coverage definition
+  ("one function per property, all sharing the same domain"); spreadsheet mental
+  model removed from the prose.
+- Established the **B-bar / animated-C** pattern and the matured palette,
+  accessibility, motion, and caption conventions for the series.
 
 ## Prior art (build on, don't duplicate)
 

@@ -8,6 +8,30 @@
 
 **Tech Stack:** Quarto 1.9.x (website project), hand-authored SVG with inline CSS, `xmllint` (well-formedness), `quarto render`/`quarto preview` (build + visual verification), Chrome DevTools "Emulate vision deficiencies" + "prefers-reduced-motion" (accessibility verification).
 
+## Outcome (completed 2026-06-22)
+
+All tasks executed. Two changes were decided collaboratively during execution and
+diverge from the plan as written:
+
+1. **Caption styling was added** (not in the original plan): site-wide figure/table
+   caption styling via `custom.scss` + `caption-labels.html` -- smaller, muted, a
+   constrained `min(40rem, 90%)` measure, and a bold "Figure N:" label (a load-time
+   JS shim wraps the locator, which Quarto emits as a bare text node). Wired into
+   both themes in `_quarto.yml`. Committed separately.
+2. **Task 5 was redesigned.** The `coverage-as-spreadsheet.svg` hero was dropped --
+   the spreadsheet metaphor was judged a poor fit (implies a rigid grid,
+   skeuomorphic, redundant with the function hero, visually busy). It was replaced
+   with a **function pair**: `coverage-as-function.svg` enhanced with an amber
+   worked instance + equal-count parallel domain/range grids, plus a new
+   `coverage-shared-domain.svg` (one shared domain -> multiple ranges, the plural
+   `ranges` idea). The Section 2.1 callout was reworded to "one function per
+   property, all sharing the same domain"; the spreadsheet mental model was removed
+   from the prose (2.1 + the 5.3 back-reference); and a "Property, parameter, range"
+   callout was added to 3.3. `#fig-shared-domain` replaces the planned
+   `#fig-coverage-spreadsheet`; there is no `coverage-as-spreadsheet.svg`.
+
+Matured conventions are codified in `diagrams/README.md` (Task 6).
+
 ## Global Constraints
 
 - **Chuck commits himself.** Never run `git commit`. Each task ends by staging (`git add`) the relevant files and pausing for Chuck to commit.

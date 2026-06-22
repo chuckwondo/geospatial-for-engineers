@@ -1,7 +1,10 @@
 # Design: CoverageJSON guide diagram pass (establish the visual pattern)
 
 - **Date:** 2026-06-22
-- **Status:** Approved design; ready for implementation planning.
+- **Status:** Implemented 2026-06-22. The spreadsheet hero (Scope diagram 1) was
+  dropped during execution and replaced with a coverage-as-function pair; see the
+  "Outcome" note in `../plans/2026-06-22-covjson-diagrams.md` for the as-built
+  result and the reasons.
 - **Author:** Chuck Daniels (with Claude)
 
 ## 1. Context and motivation
