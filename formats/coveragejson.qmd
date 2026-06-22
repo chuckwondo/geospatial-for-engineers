@@ -189,7 +189,8 @@ the last.
 The single most important idea in this entire guide is this:
 
 ::: {.callout-important}
-A coverage is a function that maps positions in space and/or time to values.
+A coverage maps positions in space and/or time to values -- one function per
+property, all sharing the same domain.
 :::
 
 ![A coverage is a function: it maps a domain (positions in space and time) to a range (the measured values).](../diagrams/coverage-as-function.svg){#fig-coverage-function}
@@ -199,7 +200,7 @@ arithmetic vocabulary you already know. In mathematics, a *function* takes an
 input and returns an output. The set of allowed inputs is called the function's
 **domain**; the set of possible outputs is called its **range**. For the function
 "temperature of the air," an input is a place-and-time ("the spot at this
-longitude, this latitude, at 3:00 p.m.") and the output is a number ("18.4
+longitude, this latitude, at noon") and the output is a number ("18.4
 degrees Celsius").
 
 A coverage is exactly that kind of function, made concrete: its **domain** is a
@@ -221,14 +222,13 @@ each takes the same positions as input, but each returns values for a different
 property, so each has its own range. The shared inputs are described once, in
 `"domain"`; the separate outputs live in `"ranges"`, one per property.
 
-A useful mental picture: imagine an enormous spreadsheet laid over a map. The
-rows and columns are positions on the ground; each filled cell holds a value. The
-grid of cells is the domain; the values inside them are the range. If the coverage
-measures two properties, picture two stacked sheets sharing the very same row and
-column labels (one sheet of temperatures, one of humidities): the shared labels
-are the single domain, and each sheet is a separate range. A coverage is the whole
-spreadsheet-on-a-map, bundled with enough description that software can read any
-cell unambiguously.
+![One coverage, one shared domain, multiple ranges: the positions are described once in `domain`, and each property gets its own array of values in `ranges` -- one range per property.](../diagrams/coverage-shared-domain.svg){#fig-shared-domain}
+
+Whatever shape the positions take, a coverage bundles them and their values
+together with enough description -- the units, what each property is, how the
+positions are referenced in space and time -- that software can read any value
+unambiguously. Pinning down that description is what the rest of this guide is
+about.
 
 ### 2.2 Two ways data varies: gridded vs non-gridded, continuous vs categorical
 
@@ -415,6 +415,15 @@ The **Domain** describes the positions. It has three parts:
   CRS or calendar that interprets them.
 
 ### 3.3 Parameter: what is being measured
+
+::: {.callout-note title="Property, parameter, range"}
+Three related words, worth keeping straight. A **property** is the real-world
+quantity being measured -- air temperature, humidity, wind speed. For each
+property, a coverage carries two objects: a **parameter** that *describes* it
+(its name, units, and what it observes) and a **range** that *holds its values*.
+Property is the *what*, parameter is the *description*, range is the *data* -- and
+a shared key ties a property's parameter to its range.
+:::
 
 A **Parameter** is the human- and machine-readable description of one measured
 property. The two members you will almost always see are:
@@ -1057,9 +1066,8 @@ now holds two entries, and `ranges` holds two matching ones. Follow the keys: th
 parameter named `temperature` pairs with the range named `temperature` (18.4
 degrees Celsius), and the parameter named `humidity` pairs with the range named
 `humidity` (62 percent). These are two functions over the same domain, written
-side by side, exactly the picture of two stacked spreadsheet sheets sharing one
-set of row and column labels from Section 2.1. To add a third property, you would
-add a third matching pair of keys.
+side by side -- the one-domain, multiple-ranges picture from Section 2.1. To add a
+third property, you would add a third matching pair of keys.
 
 ### 5.4 A path through space and time: Trajectory
 
