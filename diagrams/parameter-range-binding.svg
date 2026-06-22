@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 536 236" role="img" aria-labelledby="pb-title pb-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="pb-title">A shared key binds a parameter to its range</title>
+  <desc id="pb-desc">Two cards side by side: a parameters card on the left, describing each parameter, and a ranges card on the right, holding the values. Both contain a key named temperature, highlighted and joined by a connector labelled shared key. The left temperature entry is a Parameter object with unit Cel; the right is an NdArray object whose values are an array of numbers. A faint humidity entry in each card, joined by a dashed connector labelled another shared key, shows that a second parameter adds a second matching key.</desc>
+
+  <rect x="1" y="1" width="534" height="234" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- parameters card (a description of each parameter) -->
+  <rect x="18" y="18" width="216" height="200" rx="12" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+  <text x="32" y="44" font-size="14" font-weight="700" fill="#0f172a" font-family="ui-monospace, Menlo, monospace">"parameters"</text>
+  <text x="32" y="62" font-size="10.5" fill="#64748b">a description of each parameter</text>
+
+  <!-- ranges card (one data array per parameter) -->
+  <rect x="302" y="18" width="216" height="200" rx="12" fill="#f0fdfa" stroke="#0f766e" stroke-width="2"/>
+  <text x="316" y="44" font-size="14" font-weight="700" fill="#0f766e" font-family="ui-monospace, Menlo, monospace">"ranges"</text>
+  <text x="316" y="62" font-size="10.5" fill="#0d9488">one data array per parameter</text>
+
+  <!-- shared key highlight: temperature (amber) -->
+  <rect x="28" y="78" width="196" height="96" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <g font-family="ui-monospace, Menlo, monospace">
+    <text x="38" y="99" font-size="12.5" font-weight="700" fill="#92400e">"temperature": {</text>
+    <text x="54" y="120" font-size="11" fill="#78716c">"type": "Parameter",</text>
+    <text x="54" y="140" font-size="11" fill="#78716c">"unit": "Cel"</text>
+    <text x="38" y="160" font-size="12.5" font-weight="700" fill="#92400e">}</text>
+  </g>
+
+  <rect x="312" y="78" width="196" height="96" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <g font-family="ui-monospace, Menlo, monospace">
+    <text x="322" y="99" font-size="12.5" font-weight="700" fill="#92400e">"temperature": {</text>
+    <text x="338" y="120" font-size="11" fill="#78716c">"type": "NdArray",</text>
+    <text x="338" y="140" font-size="11" fill="#78716c">"values": [18.4, 18.9, &#8230;]</text>
+    <text x="322" y="160" font-size="12.5" font-weight="700" fill="#92400e">}</text>
+  </g>
+
+  <!-- connector for the shared key (label centred in the gap, clear of both borders) -->
+  <line x1="224" y1="93" x2="312" y2="93" stroke="#f59e0b" stroke-width="2.5"/>
+  <text x="268" y="84" text-anchor="middle" font-size="10" font-weight="600" fill="#b45309">shared key</text>
+
+  <!-- faint second pair: humidity (another shared key, same pattern) -->
+  <text x="38" y="206" font-size="12" fill="#94a3b8" font-family="ui-monospace, Menlo, monospace">"humidity": { ... }</text>
+  <text x="322" y="206" font-size="12" fill="#94a3b8" font-family="ui-monospace, Menlo, monospace">"humidity": { ... }</text>
+  <line x1="224" y1="202" x2="312" y2="202" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="268" y="188" text-anchor="middle" font-size="8.5" font-weight="600" fill="#94a3b8">another</text>
+  <text x="268" y="198" text-anchor="middle" font-size="8.5" font-weight="600" fill="#94a3b8">shared key</text>
+</svg>

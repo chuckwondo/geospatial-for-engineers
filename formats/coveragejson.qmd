@@ -442,16 +442,7 @@ Parameters live in the `parameters` object, keyed by a short name you choose
 the *values*: a parameter and a range that share the same key describe the same
 property. Lining the two objects up side by side makes the binding obvious:
 
-```text
-    "parameters": {
-┌─▶   "temperature": { ...what it is: air temperature, in Celsius... }
-│   }
-│   "ranges": {
-└─▶   "temperature": { ...the temperature values: 18.4... }
-    }
-
-(the shared key "temperature" binds the description to its values)
-```
+![The shared key (here `temperature`) is the glue: a parameter and the range with the same key describe the same property. A second property simply adds a second matching key in each object.](../diagrams/parameter-range-binding.svg){#fig-parameter-range-binding}
 
 The parameter says what the numbers mean; the range holds the numbers. A document
 with two properties simply has two matching keys in each object (for example,
