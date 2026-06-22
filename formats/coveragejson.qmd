@@ -666,11 +666,7 @@ Because `x` is named last, you read across the `x` axis first: the first three
 values are the whole `y = 0` row (across all three `x`), then the next three are
 the `y = 1` row. Laid out as a grid:
 
-```text
-            x0   x1   x2
-   y0  [    1    2    3  ]
-   y1  [    4    5    6  ]
-```
+![Reading the flat `values` onto the grid: with `axisNames` `["y","x"]` the last-named axis, `x`, varies fastest, so the first three values fill row `y0` and the next three fill row `y1`.](../diagrams/row-major-grid.svg){#fig-row-major}
 
 So `values[0]` is the cell at (`y0`, `x0`) and `values[5]` is (`y1`, `x2`). Any
 cell with no data (e.g., sea-surface temperature over land) is the JSON literal
