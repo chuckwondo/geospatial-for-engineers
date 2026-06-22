@@ -1,0 +1,56 @@
+# Local hooks for this Quarto site. Set up once with `prek install` (or
+# `pre-commit install`); run on demand with `prek run --all-files`. prek
+# (https://github.com/j178/prek) is a fast drop-in that reads this same file.
+#
+# Each `rev` is pinned to a commit SHA (tag in the trailing comment) so a
+# repointed tag cannot silently change the code these hooks run. To update:
+#
+#     prek autoupdate && ./scripts/pin-precommit-shas.sh
+#
+# autoupdate moves revs to the latest tags; the script re-pins them to SHAs.
+# The rev-must-be-sha hook below fails if that re-pin step is skipped.
+repos:
+  # General file hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # v6.0.0
+    hooks: # ids sorted ascending (case-insensitive)
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+        # Preserve Markdown hard line breaks (two trailing spaces) in prose.
+        # Quoted so the comma is part of the value, not a YAML list separator.
+        args: ["--markdown-linebreak-ext=md,qmd"]
+
+  # Spell-check the prose (skip generated output and hand-authored SVGs).
+  - repo: https://github.com/codespell-project/codespell
+    rev: 2ccb47ff45ad361a21071a7eedda4c37e6ae8c5a # v2.4.2
+    hooks:
+      - id: codespell
+        args: ["--skip", "_site,_freeze,.quarto,.git,*.svg"]
+
+  # GitHub Actions workflow lint + security audit (same tools the workflows were
+  # generated and validated with).
+  - repo: https://github.com/rhysd/actionlint
+    rev: 914e7df21a07ef503a81201c76d2b11c789d3fca # v1.7.12
+    hooks:
+      - id: actionlint
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: 9257c6050c0261b8c57e712f632dc4a8010109a9 # v1.25.2
+    hooks:
+      - id: zizmor
+
+  # Fail if any hook `rev:` is a bare tag instead of a commit SHA -- catches a
+  # `prek autoupdate` that was not followed by ./scripts/pin-precommit-shas.sh.
+  - repo: local
+    hooks:
+      - id: rev-must-be-sha
+        name: pre-commit revs must be SHA-pinned (run ./scripts/pin-precommit-shas.sh)
+        language: pygrep
+        files: '^\.pre-commit-config\.yaml$'
+        # Matches a rev: whose value has a non-hex char (i.e. a tag, not a SHA).
+        # Lookahead-free so it works under prek's (Rust) regex engine too.
+        entry: '(?m)^\s*rev:\s+[0-9a-fA-F]*[^0-9a-fA-F\s#]'

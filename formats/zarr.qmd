@@ -1,0 +1,18 @@
+---
+title: "Zarr (planned)"
+---
+
+::: {.callout-note}
+**Planned guide -- not yet written.** A beginner's guide to Zarr (chunked,
+compressed, cloud-native N-dimensional arrays) may be adapted from the
+zarr-python beginner's guide drafted elsewhere.
+:::
+
+## Intended scope
+
+- What Zarr is and the problem it solves (cloud-native array storage).
+- Stores, groups, arrays, chunks, and compression.
+- Metadata: `zarr.json`, `dimension_names`, attributes.
+- Zarr v2 vs. v3 in brief.
+- How Zarr relates to NetCDF/HDF5 and to Xarray.
+- Where coordinate/CRS semantics come from (GeoZarr, conventions).

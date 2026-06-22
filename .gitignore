@@ -1,0 +1,17 @@
+# Quarto build artifacts
+/_site/
+/.quarto/
+/_freeze/
+
+# OS / editor
+.DS_Store
+
+# Brainstorming visual-companion scratch (mockups, session state)
+.superpowers/
+
+# Python (for executable guides)
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+
+**/*.quarto_ipynb

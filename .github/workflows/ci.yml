@@ -1,0 +1,39 @@
+# Continuous integration: render the Quarto site and fail on any build error,
+# then check that internal links and section anchors resolve. Runs on every
+# push to main and on every pull request. No Python kernel is needed yet -- all
+# pages are prose; wire up the executable-guide environment here when one exists.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+      - name: Render site
+        run: quarto render
+      - name: Check internal links and anchors (lychee, offline)
+        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
+        with:
+          # --offline skips http(s) URLs so external spec links cannot make CI
+          # flaky; relative links and #fragment anchors in the rendered HTML are
+          # still verified. Drop --offline (and add caching) for full link checks.
+          args: "--offline --include-fragments --no-progress ./_site/**/*.html"
+          fail: true

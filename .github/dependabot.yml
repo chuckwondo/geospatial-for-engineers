@@ -1,0 +1,16 @@
+# Dependabot: weekly grouped PRs to keep the SHA-pinned GitHub Actions current
+# (it understands the `@<sha> # <tag>` form and updates both). A 7-day cooldown
+# holds back brand-new releases. No Python ecosystem is listed yet: the project
+# has no committed dependency manifest (the executable guides are stubs). Add a
+# `uv`/`pip` entry here once one exists; conda is not a Dependabot ecosystem.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]

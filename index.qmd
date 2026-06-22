@@ -1,0 +1,42 @@
+---
+title: "Geospatial for Engineers"
+subtitle: >-
+  Earth observation and geospatial data, explained for experienced software
+  engineers with zero domain background.
+---
+
+## Who this is for
+
+You already write software. You are comfortable with JSON, the command line,
+data structures, and reading an unfamiliar API. What you *don't* have is a
+geospatial or earth-observation (EO) background: terms like CRS, projection,
+raster, coverage, footprint, COG, and Zarr go by without quite landing, and most
+tutorials assume the domain knowledge you're missing while carefully explaining
+the code you already understand.
+
+This series inverts that assumption. It spends its words on the **domain** --
+what these concepts *mean* and *why they exist* -- and trusts you with the code.
+It is the on-ramp I wanted when I started doing EO work without the background.
+
+## How it's organized
+
+- **Foundations** -- the core geospatial ideas the rest depends on (coordinate
+  reference systems, projections, raster vs. vector, coverages, footprints).
+- **Data formats** -- the file and interchange formats you'll actually meet,
+  one self-contained guide each (CoverageJSON, Zarr, and more to come).
+- **Libraries & tools** (planned) -- practical, runnable introductions to the
+  Python geospatial stack, once the foundations and formats are in place.
+
+Each guide stands on its own, but if you're starting cold, read **Foundations**
+first -- it's the spine the others hang from.
+
+## Status
+
+This is an actively growing, work-in-progress personal learning project. Guides
+marked *planned* are stubs; expect rough edges and frequent change.
+
+::: {.callout-note}
+The first complete guide is the [CoverageJSON guide](formats/coveragejson.qmd).
+It doubles as the template for the series: patient, example-driven, and
+diagram-forward.
+:::

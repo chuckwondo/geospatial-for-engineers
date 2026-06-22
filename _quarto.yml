@@ -1,0 +1,39 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "**/*.qmd"
+
+website:
+  title: "Geospatial for Engineers"
+  description: >-
+    Earth observation and geospatial data, explained for experienced software
+    engineers with zero domain background.
+  reader-mode: true
+  page-navigation: true
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - text: "Home"
+        href: index.qmd
+      - section: "Foundations"
+        contents:
+          - foundations/geospatial-concepts.qmd
+      - section: "Data formats"
+        contents:
+          - formats/coveragejson.qmd
+          - formats/zarr.qmd
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: darkly
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-overflow: wrap
+    fig-cap-location: bottom
+    link-external-newwindow: true

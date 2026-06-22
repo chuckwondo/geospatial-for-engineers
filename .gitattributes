@@ -1,0 +1,9 @@
+# Normalize all text files to LF in the repository, regardless of platform.
+* text=auto eol=lf
+
+# Quarto sources are Markdown-family; count them as Markdown in language stats.
+*.qmd linguist-language=Markdown
+
+# Hand-authored SVG diagrams are text we diff, but they shouldn't skew the
+# repository's language statistics.
+*.svg linguist-detectable=false
