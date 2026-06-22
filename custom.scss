@@ -1,0 +1,35 @@
+/*-- scss:rules --*/
+
+// Figure and table captions: set them apart from the body prose so a reader
+// never mistakes a caption for running text. Smaller, a muted theme-aware
+// colour (Bootstrap's secondary colour adapts to light/dark), and a little
+// breathing room above. Upright (not italic): journals favour a bold label
+// over wholesale italics, which hurt readability on longer captions.
+.quarto-float-caption,
+.figure-caption,
+figcaption,
+caption {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  margin-top: 0.5rem;
+  color: var(--bs-secondary-color, #6c757d);
+
+  // Constrained measure, two ways at once. The 90% term keeps the caption
+  // always narrower than the full-width prose and scales with the container,
+  // so the inset holds at any viewport; the 40rem term caps the line length to
+  // a readable measure on wide screens. min() takes whichever is smaller.
+  // Centre the block under the (centred) figure, then left-align the text:
+  // centred text is fine for a one-liner but hard to scan once it wraps, and
+  // the captions in this series tend to be longer and descriptive.
+  max-width: min(40rem, 90%);
+  margin-inline: auto;
+  text-align: left;
+}
+
+// The "Figure N:" / "Table N:" locator -- the bit a reader scans for -- is
+// wrapped in .caption-label by caption-labels.html at load time. Bold it and
+// give it full body contrast so it stands out from the muted caption text.
+.caption-label {
+  font-weight: 600;
+  color: var(--bs-body-color, #1a1a1a);
+}

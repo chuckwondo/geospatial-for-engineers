@@ -1,0 +1,38 @@
+<script>
+// Quarto emits the crossref locator ("Figure 2:", "Table 1:") as a bare text
+// node inside the caption, with no element to target. Wrap that locator in a
+// <span class="caption-label"> so the theme SCSS can bold it -- the classic
+// journal convention (bold label, lighter caption text). Runs once on load.
+(function () {
+  function labelCaptions() {
+    var caps = document.querySelectorAll(
+      "figcaption.quarto-float-caption, figcaption.figure-caption"
+    );
+    caps.forEach(function (cap) {
+      if (cap.querySelector(".caption-label")) return; // already done
+      var walker = document.createTreeWalker(cap, NodeFilter.SHOW_TEXT, null);
+      var node = walker.nextNode();
+      while (node && !node.nodeValue.trim()) node = walker.nextNode();
+      if (!node) return;
+      // leading ws/newline, the "Figure 2:"/"Table 1." locator, then the rest.
+      var m = node.nodeValue.match(
+        /^([\s ]*)((?:Figure|Table)[\s ]*\d+(?:[.:])?)([\s\S]*)$/
+      );
+      if (!m) return;
+      var parent = node.parentNode;
+      var rest = document.createTextNode(m[3]);
+      var span = document.createElement("span");
+      span.className = "caption-label";
+      span.textContent = m[2];
+      parent.replaceChild(rest, node);
+      parent.insertBefore(span, rest);
+      if (m[1]) parent.insertBefore(document.createTextNode(m[1]), span);
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", labelCaptions);
+  } else {
+    labelCaptions();
+  }
+})();
+</script>
