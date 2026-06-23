@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 152" role="img" aria-labelledby="pg-title pg-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="pg-title">A polygon with a hole: an outer ring and an inner ring</title>
+  <desc id="pg-desc">A longitude-latitude plane with one filled polygon outlined in indigo: a tilted four-sided outer ring with a tilted triangular inner ring cut out of its middle as a hole. Neither shape is aligned to the grid, like a real-world polygon. Axis ticks give the scale; the exact corner coordinates are in the accompanying JSON. Small arrows show the winding: the outer ring runs counter-clockwise and the inner ring clockwise. The figure shows that a polygon is a list of rings: an outer boundary plus any inner rings that punch holes.</desc>
+
+  <rect x="1" y="1" width="318" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- reference gridlines at the labelled ticks -->
+  <g stroke="#eef2f6" stroke-width="1">
+    <line x1="66" y1="36" x2="66" y2="116"/><line x1="171" y1="36" x2="171" y2="116"/><line x1="276" y1="36" x2="276" y2="116"/>
+    <line x1="58" y1="36" x2="284" y2="36"/><line x1="58" y1="76" x2="284" y2="76"/><line x1="58" y1="116" x2="284" y2="116"/>
+  </g>
+  <text x="20" y="32" font-size="8.5" fill="#4338ca">lat</text>
+  <text x="290" y="132" font-size="8.5" fill="#4338ca">lon</text>
+  <g font-size="9" fill="#4338ca" font-family="ui-monospace, Menlo, monospace">
+    <g text-anchor="end"><text x="46" y="40">46.0</text><text x="46" y="80">45.5</text><text x="46" y="120">45.0</text></g>
+    <g text-anchor="middle"><text x="66" y="132">12.0</text><text x="171" y="132">13.0</text><text x="276" y="132">14.0</text></g>
+  </g>
+
+  <!-- one polygon: a tilted outer ring with a tilted triangular inner ring (hole), via even-odd fill -->
+  <path d="M98 36 L255 28 L234 116 L77 110 Z M110 92 L213 84 L161 52 Z" fill="#e0e7ff" fill-opacity="0.7" fill-rule="evenodd" stroke="#4338ca" stroke-width="2"/>
+  <g fill="#4338ca">
+    <circle cx="98" cy="36" r="3.5"/><circle cx="255" cy="28" r="3.5"/><circle cx="234" cy="116" r="3.5"/><circle cx="77" cy="110" r="3.5"/>
+    <circle cx="110" cy="92" r="3.5"/><circle cx="213" cy="84" r="3.5"/><circle cx="161" cy="52" r="3.5"/>
+  </g>
+
+  <!-- winding arrows: outer ring counter-clockwise, inner ring clockwise (right-hand rule) -->
+  <g fill="#4338ca">
+    <polygon points="84,85 83,76 89,78"/>
+    <polygon points="246,67 241,74 247,76"/>
+    <polygon points="139,69 131,72 135,76"/>
+    <polygon points="191,71 183,69 186,64"/>
+  </g>
+
+  <text x="166" y="24" text-anchor="middle" font-size="10.5" font-weight="600" fill="#3730a3">outer ring &#8634;</text>
+  <text x="162" y="82" text-anchor="middle" font-size="9" fill="#475569">inner ring &#8635;</text>
+</svg>

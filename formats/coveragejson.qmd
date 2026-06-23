@@ -270,8 +270,8 @@ familiar dimensions are:
 Each dimension has an **axis**: the ordered list of coordinate values the data is
 sampled at along that dimension. A small temperature grid might have an `x` axis
 of the longitudes `[12.0, 12.5, 13.0]` and a `y` axis of the latitudes
-`[45.0, 45.5]`. Together those axes describe a 3-by-2 grid of six positions, and
-the coverage carries a value for each.
+`[45.0, 45.5]`. Together, pairing every `x` with every `y`, those axes describe a 3-by-2 grid of
+six positions (3 × 2), and the coverage carries a value for each.
 
 This is the heart of how a coverage records *where* every value lives: list the
 coordinate values along each axis, then read the data values as filling in the
@@ -630,24 +630,93 @@ This describes exactly the same four coordinates as the explicit form above. Gri
 lean on this heavily, which is what keeps a million-cell raster's *domain*
 description tiny even though its *range* still holds a million values.
 
-**3. Composite (tuple) values.** Grid-shaped domains give each dimension its own
-axis, but irregular geometries (a scattered set of points, a winding trajectory, a
-polygon outline) cannot be laid on independent x and y axes. Those domains use a
-single axis, conventionally named `composite`, whose `values` are *tuples* of
-coordinates rather than single numbers, with `coordinates` naming the members of
-each tuple and `dataType` saying how to read them (`"tuple"` for coordinate
-tuples, `"polygon"` for rings of vertices):
+**3. Composite values.** The first two forms describe a *grid*:
+independent `x` and `y` axes combine by **cross-product** (every `x` paired with
+every `y`), so three longitudes and two latitudes define 3 × 2 = six lattice
+positions. That factoring only works when the positions truly fill a grid.
+Irregular geometries do not: a trajectory visits specific `(x, y)` pairs in
+sequence, *not* every `x` with every `y`, and there is no way to split those pairs
+back into independent axes without inventing positions that were never sampled. So
+a scattered set of points, a winding trajectory, or a polygon outline uses a single
+axis, conventionally named `composite`, whose `values` are an **explicit list** of
+the actual positions, each a *tuple* of coordinates rather than a single number.
+
+![A grid laid out two ways. On the left, independent `x` and `y` axes cross-product to fill all nine cells. On the right, only three positions hold data, so the six cells a grid would invent stay hollow and a composite axis lists the three explicitly.](../diagrams/axes-independent-vs-composite.svg){#fig-composite-axis}
+
+In the document, the two sides look like this. Two **independent axes** (the grid
+on the left):
 
 ```json
-{
-  "dataType": "tuple",
-  "coordinates": ["x", "y"],
-  "values": [[12.0, 45.0], [12.6, 45.4], [13.1, 45.9]]
+"axes": {
+  "x": { "values": [12.0, 12.5, 13.0] },
+  "y": { "values": [45.0, 45.5, 46.0] }
 }
 ```
 
-That example places three points at three (longitude, latitude) pairs. We use a
-composite axis in the trajectory example of Section 5.
+or one **composite axis** (the three points on the right):
+
+```json
+"axes": {
+  "composite": {
+    "dataType": "tuple",
+    "coordinates": ["x", "y"],
+    "values": [[12.0, 45.0], [12.5, 46.0], [13.0, 45.5]]
+  }
+}
+```
+
+Two fields say how to read those tuples. **`coordinates`** (here `["x", "y"]`)
+names the members of each tuple *in order*, so in `[12.0, 45.0]` the first number
+is the `x` (longitude) and the second the `y` (latitude): one point.
+**`dataType`** says what *kind* of value each entry is; `"tuple"`, as here, means
+each entry is a single point.
+
+The other shape you will see is `"polygon"`, where each entry is a whole area
+instead of a point. The composite axis looks the same as the tuple case, only with
+`"dataType": "polygon"` and a `values` built from **rings**: an outer ring for the
+boundary, plus an inner ring for each hole. Here is the figure's polygon as a full
+composite axis, one corner per line:
+
+![A polygon is a list of rings: a tilted outer boundary with a triangular inner ring punched out as a hole, its winding shown. The exact corners are in the JSON below.](../diagrams/polygon-composite-axis.svg){#fig-polygon}
+
+```json
+"axes": {
+  "composite": {
+    "dataType": "polygon",
+    "coordinates": ["x", "y"],
+    "values": [
+      [
+        [
+          [12.3, 46.0],
+          [12.1, 45.1],
+          [13.6, 45.0],
+          [13.8, 46.1],
+          [12.3, 46.0]
+        ],
+        [
+          [12.4, 45.3],
+          [12.9, 45.8],
+          [13.4, 45.4],
+          [12.4, 45.3]
+        ]
+      ]
+    ]
+  }
+}
+```
+
+Read the `values` from the inside out: a closed loop of corners (the last
+repeating the first to close it) is a **ring**; a polygon is a **list of rings**,
+the outer boundary then any holes (the two rings labelled in the figure); and
+`values` is a **list of polygons**. This one holds a single polygon; several would
+be a `MultiPolygon`.
+
+The arrows show the **winding**: by the right-hand rule CoverageJSON inherits from
+GeoJSON, an outer ring runs counter-clockwise and a hole clockwise. Software is
+lenient about it (it should not reject a polygon wound the other way), so the
+*order* of the rings, not their direction, is what marks the hole
+([RFC 7946 Section 3.1.6](https://www.rfc-editor.org/rfc/rfc7946#section-3.1.6)). We
+use a composite axis again in the trajectory example of Section 5.
 
 ### 4.3 How ranges store their values: NdArray and TiledNdArray
 

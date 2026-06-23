@@ -20,6 +20,11 @@ Inventory (all used in the CoverageJSON guide):
   order; **animated** (C layer) with a static fallback. Section 4.3.
 - `pointseries-daily-curve.svg` -- a PointSeries as a daily temperature curve
   (time = domain, values = range; the noon peak spotlit in amber). Section 5.2.
+- `axes-independent-vs-composite.svg` -- independent `x`/`y` axes (a full grid) vs
+  one `composite` axis of tuples (only the sampled points; the rest a grid would
+  invent stay hollow). Section 4.2.
+- `polygon-composite-axis.svg` -- a polygon as a list of rings: an irregular outer
+  boundary with a triangular inner ring punched out as a hole. Section 4.2.
 
 ## 2. Text-based structural diagrams
 
