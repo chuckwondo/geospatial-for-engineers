@@ -599,6 +599,17 @@ through time. The full list, including `VerticalProfile`, `MultiPointSeries`,
 (A `domain` may also omit `domainType` and simply describe its axes, but using a
 standard type lets generic software know what to expect.)
 
+![The common domain types, grouped by how their axes are structured -- the same split the table draws in words. The **independent-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (Section 4.2). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
+
+The `...Series` forms repay a closer look, because they make the
+domain-versus-range split concrete. A `MultiPointSeries` is, in effect, many
+`PointSeries` sharing one `t` axis: the *positions* are the domain and never
+move, while the *values* are the range and change at every timestep. Reading one
+station across the frames -- same coordinates, a different value each time -- is
+exactly what a time series is.
+
+![A `MultiPointSeries` reading a sensor network at three times. The dots are the **domain**: the same positions in every frame, fixed because the geometry does not move. The label on each dot is the **range**: the value measured there, which changes from `t0` to `t1` to `t2`. Following the highlighted station (the dashed arrows) makes the split plain -- its position (`x=12.5, y=45.3`) is identical in all three frames while its value rises then falls. A single multi-valued `t` axis carries the whole geometry through time; that added `t` axis is all that separates a `...Series` type from its plain form.](../diagrams/multipointseries-through-time.svg){#fig-series-through-time}
+
 ### 4.2 How axes encode their coordinates
 
 An axis is a JSON object, and the

@@ -25,6 +25,14 @@ Inventory (all used in the CoverageJSON guide):
   invent stay hollow). Section 4.2.
 - `polygon-composite-axis.svg` -- a polygon as a list of rings: an irregular outer
   boundary with a triangular inner ring punched out as a hole. Section 4.2.
+- `domain-types-gallery.svg` -- the common domain types grouped by axis structure:
+  independent-axis types (`Point`, `PointSeries`, `VerticalProfile`, `Grid`) vs
+  composite-axis types (`MultiPoint`, `Trajectory`, `Polygon`, `MultiPolygon`).
+  Section 4.1.
+- `multipointseries-through-time.svg` -- a `MultiPointSeries` as three side-by-side
+  frames: the dots (positions) stay fixed while their value labels change with
+  `t`, with one station threaded by dashed arrows. Shows what a `...Series` adds.
+  Section 4.1.
 
 ## 2. Text-based structural diagrams
 
@@ -69,6 +77,14 @@ Every hero SVG meets this bar before any motion is considered.
   position, a text label, or a bracket/shape -- so it survives for color-blind
   readers. Verify with Chrome DevTools -> Rendering -> "Emulate vision
   deficiencies" (`Deuteranopia`).
+- **Refer to elements by role, never by color.** In-figure keys, axis text, and
+  the `<desc>` must name elements by an unambiguous structural/role handle (e.g.,
+  "the dots", "the value label", "the highlighted station with the heavier
+  outline"), not by their fill ("the teal dots", "the amber ring"). Color names do
+  not survive grayscale, fail color-blind readers, and break when the palette
+  changes. Pick handles that are themselves unambiguous: "dots" and "value label"
+  rather than "ring"/"fill", since a dot can look like a ring and every dot is
+  filled.
 - **Luminance separation.** Two category fills must differ in *luminance*, not only
   hue, or they collapse together in grayscale (achromatopsia). Indigo-100
   (`#e0e7ff`) and teal-100 (`#ccfbf1`) are both very light and nearly
