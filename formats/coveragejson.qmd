@@ -1,5 +1,6 @@
 ---
-title: "A Beginner's Guide to CoverageJSON"
+title: "CoverageJSON Uncovered"
+subtitle: "A complete, ground-up guide to reading coverage data on the web — every concept, from your first document to the edge cases."
 ---
 
 This guide is for people new to *CoverageJSON* (often shortened
@@ -23,9 +24,9 @@ We will move in four stages:
 You do not need to read it all at once. The first three stages give you a
 working understanding; the rest is there when you want to go deeper.
 
-## 1. Why CoverageJSON exists, and why it matters
+## Why CoverageJSON exists, and why it matters {#sec-why}
 
-### 1.1 The problem: putting environmental data on the web
+### The problem: putting environmental data on the web {#sec-problem}
 
 A huge amount of the world's data describes *how some quantity varies over space
 and time*. The air temperature across a country at 2:00 p.m. Tuesday. The
@@ -41,7 +42,7 @@ to download a region, or step through time. Doing that well turns out to be
 hard, because the formats that traditionally hold this data were not designed for
 the web.
 
-### 1.2 What came before, and why it chafes in a browser
+### What came before, and why it chafes in a browser {#sec-before}
 
 The formats that hold and move this data fall into a few distinct roles, and
 separating those roles (storing the data, delivering it, and, more recently,
@@ -117,7 +118,7 @@ in later sections) that software can match across datasets. That web-native,
 linked-meaning layer is precisely what CoverageJSON adds, and it is the reason the
 format exists.
 
-### 1.3 Why JSON, and why GeoJSON is not enough
+### Why JSON, and why GeoJSON is not enough {#sec-why-json}
 
 Meanwhile, [JSON](https://www.json.org/) had become the default language of the
 web. It is text, every browser parses it for free, and humans can read it. For
@@ -136,11 +137,11 @@ makes the data meaningful and efficient to handle.
 That structural gap (JSON-native and web-friendly, yet built for *coverages*
 rather than discrete features) is exactly what CoverageJSON fills.
 
-### 1.4 What CoverageJSON is, in one breath
+### What CoverageJSON is, in one breath {#sec-in-one-breath}
 
 **CoverageJSON is a JSON format for publishing spatiotemporal *coverage* data on
 the web.** ("Coverage" is a precise technical term we define carefully in
-Section 2; for now, read it as "a field of values spread over space and
+@sec-foundations; for now, read it as "a field of values spread over space and
 time.") The data can be gridded or scattered, and the values can be continuous
 quantities (temperature, elevation) or discrete categories (land-cover class).
 
@@ -154,7 +155,7 @@ design choice in the format traces back to one of them:
 - **Efficiency**: it can move *useful* amounts of data from big back-end data
   stores to lightweight clients (browsers, mobile apps) without drowning them.
 
-### 1.5 Why it matters, and its standing
+### Why it matters, and its standing {#sec-standing}
 
 CoverageJSON is not one organization's private convention. It is an
 [**OGC Community Standard**](https://www.ogc.org/). The OGC is the international
@@ -177,14 +178,14 @@ way those APIs hand back coverage data.
 > and tutorials: <https://covjson.org/>. We cite specific specification sections
 > as they become relevant in later sections.
 
-## 2. Foundational geospatial concepts
+## Foundational geospatial concepts {#sec-foundations}
 
 Before we open an actual CoverageJSON document, we need five ideas. None is
 difficult, but they are the ground the whole format stands on, and skipping them
 is what makes CoverageJSON feel impenetrable. Take them slowly; each builds on
 the last.
 
-### 2.1 What a "coverage" actually is
+### What a "coverage" actually is {#sec-coverage}
 
 The single most important idea in this entire guide is this:
 
@@ -211,7 +212,7 @@ values measured or modeled at those positions. Ask a coverage "what is the value
 Hold onto the words *domain* and *range*. They are not casual language: they are
 the literal names of the two main parts of every CoverageJSON document, and the
 format chose those names precisely because a coverage *is* a function. When you
-see `"domain"` and `"ranges"` as JSON keys in Section 3, you will already know
+see `"domain"` and `"ranges"` as JSON keys in @sec-core, you will already know
 what they mean: the *where/when* and the *what*.
 
 One small heads-up about that second key: it is plural, `"ranges"`. A single
@@ -230,7 +231,7 @@ positions are referenced in space and time -- that software can read any value
 unambiguously. Pinning down that description is what the rest of this guide is
 about.
 
-### 2.2 Two ways data varies: gridded vs non-gridded, continuous vs categorical
+### Two ways data varies: gridded vs non-gridded, continuous vs categorical {#sec-variation}
 
 Coverages differ along two independent axes, and it helps to name both up front.
 
@@ -248,7 +249,7 @@ meters, rainfall in millimeters. A *categorical* value is a label drawn from a
 fixed list: a land-cover class (forest, water, cropland, urban), or a flag such
 as cloudy/clear. Categorical data is still stored as numbers in the file (e.g.,
 `3` might mean "cropland"), with a separate table mapping each number to its
-meaning. We return to that table in Section 4.
+meaning. We return to that table in @sec-deeper.
 
 These two axes are independent: any combination is possible.
 
@@ -257,7 +258,7 @@ These two axes are independent: any combination is possible.
 | **Gridded**     | a temperature map                | a land-cover map                 |
 | **Non-gridded** | temperatures at weather stations | flood-risk class at sample sites |
 
-### 2.3 Positions, dimensions, and axes
+### Positions, dimensions, and axes {#sec-positions}
 
 To pin a value to a place, you need coordinates, one number per *dimension*. The
 familiar dimensions are:
@@ -275,11 +276,11 @@ six positions (3 × 2), and the coverage carries a value for each.
 
 This is the heart of how a coverage records *where* every value lives: list the
 coordinate values along each axis, then read the data values as filling in the
-grid those axes define. Section 2.4 supplies the missing piece (what those
-coordinate numbers actually *mean*), and Section 4 covers the compact shorthands
+grid those axes define. @sec-crs supplies the missing piece (what those
+coordinate numbers actually *mean*), and @sec-deeper covers the compact shorthands
 CoverageJSON uses when an axis is perfectly regular.
 
-### 2.4 Coordinate Reference Systems and "referencing"
+### Coordinate Reference Systems and "referencing" {#sec-crs}
 
 Here is a question that exposes a hidden assumption: in the axis value `x = 12.5`,
 *12.5 what?* Degrees of longitude east of Greenwich? Meters east of some origin
@@ -323,9 +324,9 @@ calendar) and written as standard date-time strings such as
 In CoverageJSON, the part of a document that ties axes to their reference systems
 is called **referencing**: a small list that says, in effect, "the `x` and `y`
 axes are interpreted using *this* CRS, and the `t` axis using *this* calendar." We
-will see the exact shape of it in Section 3.
+will see the exact shape of it in @sec-core.
 
-### 2.5 Raster vs vector: where coverages sit
+### Raster vs vector: where coverages sit {#sec-raster-vector}
 
 One last orientation, because it connects to something you may already know.
 Geographic data splits broadly into two styles:
@@ -347,12 +348,12 @@ dedicated format exists rather than reusing GeoJSON.
 
 With these five ideas in hand (coverage-as-function, the two axes of variation,
 positions and axes, reference systems, and raster versus vector), the actual
-CoverageJSON document in Section 3 will read as a direct, almost mechanical
+CoverageJSON document in @sec-core will read as a direct, almost mechanical
 encoding of things you now already understand.
 
-## 3. The core CoverageJSON concepts
+## The core CoverageJSON concepts {#sec-core}
 
-We now have the vocabulary to read a real document. Recall from Section 2 that a
+We now have the vocabulary to read a real document. Recall from @sec-foundations that a
 coverage is really *one or more* functions sharing a single domain: each function
 maps the same positions to the values of a different property, so a coverage
 carries one domain and one or more ranges. A CoverageJSON document encodes that
@@ -365,9 +366,9 @@ with four kinds of object:
 
 This section introduces each object in its simplest form and then shows them
 working together in a single small document. The fuller details wait for
-Section 4.
+@sec-deeper.
 
-### 3.1 The Coverage object: the container
+### The Coverage object: the container {#sec-coverage-object}
 
 A document describing one coverage is a JSON object with `"type": "Coverage"` and
 three main members. In skeleton form (this is a sketch, not a complete document):
@@ -400,21 +401,21 @@ The convention is inherited from GeoJSON, where every object likewise carries a
 `type`.
 :::
 
-### 3.2 Domain: where and when the values live
+### Domain: where and when the values live {#sec-domain}
 
 The **Domain** describes the positions. It has three parts:
 
 - `domainType`: a single keyword naming the *shape* of the positions, such as
   `"Point"` (one location), `"Grid"` (a regular lattice), or `"Trajectory"` (a
-  path). The domain type tells a reader what to expect from the axes. Section 4.1
+  path). The domain type tells a reader what to expect from the axes. @sec-domain-types
   lists the full vocabulary.
 - `axes`: the coordinate values along each dimension, keyed by axis name (`x`,
-  `y`, and optionally `z` and `t`), exactly the axes from Section 2.3.
+  `y`, and optionally `z` and `t`), exactly the axes from @sec-positions.
 - `referencing`: the link from those axes to their reference systems, exactly the
-  idea from Section 2.4. It is a list; each entry names the axes it covers and the
+  idea from @sec-crs. It is a list; each entry names the axes it covers and the
   CRS or calendar that interprets them.
 
-### 3.3 Parameter: what is being measured
+### Parameter: what is being measured {#sec-parameter}
 
 ::: {.callout-note title="Property, parameter, range"}
 Three related words, worth keeping straight. A **property** is the real-world
@@ -437,7 +438,7 @@ property. The two members you will almost always see are:
   machine-checkable agreement is what makes data from different sources
   interoperable.
 - `unit`: the unit of measurement, e.g., degrees Celsius. We unpack its
-  `label`/`symbol` structure in Section 4.4.
+  `label`/`symbol` structure in @sec-parameters-depth.
 
 **A note on the `{ "en": ... }` wrapper.** Throughout CoverageJSON, human-readable
 text is written as a *language map*: an object whose keys are language codes and
@@ -457,7 +458,7 @@ The parameter says what the numbers mean; the range holds the numbers. A documen
 with two properties simply has two matching keys in each object (for example,
 `"temperature"` and `"humidity"` appearing in both `parameters` and `ranges`).
 
-### 3.4 Range: the values themselves
+### Range: the values themselves {#sec-range}
 
 A **Range** holds the actual data for one parameter, as an object of type
 `"NdArray"` ("N-dimensional array"). Its members are:
@@ -469,9 +470,9 @@ A **Range** holds the actual data for one parameter, as an object of type
   record which domain axes the array spans and how many values lie along each, so
   a reader can fold the flat `values` list back onto the grid. For a single point
   there is only one value, so both can be omitted. We cover exactly how this
-  folding works, and a second encoding for very large grids, in Section 4.3.
+  folding works, and a second encoding for very large grids, in @sec-ndarray.
 
-### 3.5 Putting the four together: a minimal coverage
+### Putting the four together: a minimal coverage {#sec-minimal}
 
 Here is a complete, valid CoverageJSON document: the air temperature at a single
 location. It uses every one of the four objects above and nothing else.
@@ -540,7 +541,7 @@ Read it the way the function picture suggests:
   `t` axis holds just one value.
 - The **parameter** named `temperature` says *what*: air temperature, measured in
   degrees Celsius. (The `symbol` value `"Cel"` is the standard code for that unit;
-  Section 4.4 explains where it comes from.)
+  @sec-parameters-depth explains where it comes from.)
 - The **range** named `temperature` says *the value*: a single number, `18.4`. It
   needs no `axisNames` or `shape` because there is exactly one position.
 
@@ -550,26 +551,26 @@ The *number* of times is what decides the domain type. A `Point` may include a
 ([specification Section 9.10.4](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_31a22b9c-06de-4d54-a23d-afa29f8435c7));
 the moment you have two or more times at the location, you must switch to the
 `PointSeries` domain type, whose `t` axis must be multi-valued. We meet
-`PointSeries` in Section 4.1.
+`PointSeries` in @sec-domain-types.
 :::
 
 Put plainly: *at longitude 12.5, latitude 45.3, at noon UTC on 1 July 2024, the
 air temperature is 18.4 degrees Celsius.* Every richer CoverageJSON document,
-including the multi-cell grids in Section 5, is this same skeleton with more
+including the multi-cell grids in @sec-examples, is this same skeleton with more
 positions in the domain and more values in the ranges.
 
-## 4. Going deeper
+## Going deeper {#sec-deeper}
 
-Section 3 showed the four objects in their simplest form. This section fills in
+@sec-core showed the four objects in their simplest form. This section fills in
 the details that real documents use: the full menu of domain shapes, the compact
 ways axes and value arrays are written, the finer points of parameters, and how
 several coverages travel together. You can read these subsections in any order,
-or skip ahead to the worked examples in Section 5 and return here when a document
+or skip ahead to the worked examples in @sec-examples and return here when a document
 shows you something unfamiliar.
 
-### 4.1 The full menu of domain types
+### The full menu of domain types {#sec-domain-types}
 
-The `domainType` keyword (Section 3.2) is not free-form: CoverageJSON defines a
+The `domainType` keyword (@sec-domain) is not free-form: CoverageJSON defines a
 fixed vocabulary of common domain types, each fixing which axes appear and what
 they mean. Knowing the type tells you, before you read anything else, what shape
 the positions take. The specification defines them in
@@ -590,7 +591,7 @@ A few patterns are worth noticing. Types whose positions form a clean grid
 (`Point`, `PointSeries`, `Grid`, ...) list each spatial dimension as its own axis.
 Types whose positions are irregular (`MultiPoint`, `Trajectory`, `Polygon`, ...)
 collapse the dimensions into a single `composite` axis whose entries are tuples,
-because there is no neat row-and-column structure to lay them on (Section 4.2
+because there is no neat row-and-column structure to lay them on (@sec-axes
 explains composite axes). And several types come in a plain form and a `...Series`
 form: the `Series` form adds a multi-valued `t` axis to carry the same geometry
 through time. The full list, including `VerticalProfile`, `MultiPointSeries`,
@@ -599,7 +600,7 @@ through time. The full list, including `VerticalProfile`, `MultiPointSeries`,
 (A `domain` may also omit `domainType` and simply describe its axes, but using a
 standard type lets generic software know what to expect.)
 
-![The common domain types, grouped by how their axes are structured -- the same split the table draws in words. The **individual-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (Section 4.2). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
+![The common domain types, grouped by how their axes are structured -- the same split the table draws in words. The **individual-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (@sec-axes). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
 
 The `...Series` forms repay a closer look, because they make the
 domain-versus-range split concrete. A `MultiPointSeries` is, in effect, many
@@ -610,16 +611,16 @@ exactly what a time series is.
 
 ![A `MultiPointSeries` reading a sensor network at three times. The dots are the **domain**: the same positions in every frame, fixed because the geometry does not move. The label on each dot is the **range**: the value measured there, which changes from `t0` to `t1` to `t2`. Following the highlighted station (the dashed arrows) makes the split plain -- its position (`x=12.5, y=45.3`) is identical in all three frames while its value rises then falls. A single multi-valued `t` axis carries the whole geometry through time; that added `t` axis is all that separates a `...Series` type from its plain form.](../diagrams/multipointseries-through-time.svg){#fig-series-through-time}
 
-### 4.2 How axes encode their coordinates
+### How axes encode their coordinates {#sec-axes}
 
 An axis is a JSON object. The
 [Domain Objects section (9.6.1)](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_d5c16418-1a20-4dbf-bf7a-8e685062df97)
 of the specification gives three ways to write one, which fall into two kinds:
 **individual axes** describe a **gridded** coverage one dimension at a time, while a
 **composite axis** lists coordinate tuples for the **non-gridded** geometries from
-Section 2.2.
+@sec-variation.
 
-#### 4.2.1 Individual axes
+#### Individual axes {#sec-individual-axes}
 
 An individual axis describes one dimension -- `x`, `y`, `z`, or `t`. Several of them
 describe a **gridded** coverage: they combine by **cross-product** -- every `x`
@@ -629,11 +630,11 @@ grid of six positions.
 
 ![Two individual axes -- three longitudes and two latitudes -- cross-product to fill all six cells of a regular 2 × 3 lattice: a gridded coverage.](../diagrams/gridded-axes.svg){#fig-gridded}
 
-A domain needs at least `x` and `y` (the table in Section 4.1 lists them as always
+A domain needs at least `x` and `y` (the table in @sec-domain-types lists them as always
 required). Each individual axis writes its coordinates one of two ways: explicitly,
 or -- when they are evenly spaced -- compactly.
 
-**Explicit.** The form from Section 3: an object whose `values` array lists every
+**Explicit.** The form from @sec-core: an object whose `values` array lists every
 coordinate along the axis.
 
 ```json
@@ -666,10 +667,10 @@ longitudes and two latitudes. Grids lean on this heavily, which is what keeps a
 million-cell raster's *domain* description tiny even though its *range* still holds
 a million values.
 
-#### 4.2.2 Composite axes
+#### Composite axes {#sec-composite-axes}
 
 Cross-product only works when the positions truly fill a grid. A **non-gridded**
-coverage (Section 2.2) does not: a scatter of stations, a ship's winding path, or a
+coverage (@sec-variation) does not: a scatter of stations, a ship's winding path, or a
 polygon outline visits whatever positions it visits, sharing no common longitudes or
 latitudes to factor out -- so there is no way to split them into individual axes
 without inventing positions that were never sampled.
@@ -741,7 +742,7 @@ GeoJSON, an outer ring runs counter-clockwise and a hole clockwise. Software is
 lenient about it (it should not reject a polygon wound the other way), so the
 *order* of the rings, not their direction, is what marks the hole
 ([RFC 7946 Section 3.1.6](https://www.rfc-editor.org/rfc/rfc7946#section-3.1.6)). We
-use a composite axis again in the trajectory example of Section 5.
+use a composite axis again in the trajectory example of @sec-examples.
 
 Some domain types use **both** kinds of axis at once. The clearest is **`Section`**:
 an oceanographic transect, where a research ship sails a track and stops at
@@ -781,9 +782,9 @@ grid's `x` and `y`. The range then carries one value for each (composite, `z`)
 pair -- the curtain's sixteen cells -- stored as the flat `NdArray` of the next
 section.
 
-### 4.3 How ranges store their values: NdArray and TiledNdArray
+### How ranges store their values: NdArray and TiledNdArray {#sec-ndarray}
 
-Section 3.4 introduced the `NdArray` (N-dimensional array) and deferred the
+@sec-range introduced the `NdArray` (N-dimensional array) and deferred the
 question of how a flat `values` list represents a multi-dimensional grid. Here is
 the rule.
 
@@ -812,7 +813,7 @@ the `y = 1` row. Laid out as a grid:
 So `values[0]` is the cell at (`y0`, `x0`) and `values[5]` is (`y1`, `x2`). Any
 cell with no data (e.g., sea-surface temperature over land) is the JSON literal
 `null` in that slot. The row-major rule is the single most important one for
-reading gridded data by hand, and it is exactly what Section 5's grid example
+reading gridded data by hand, and it is exactly what @sec-examples's grid example
 walks through.
 
 ::: {.callout-caution}
@@ -832,19 +833,19 @@ than inlined. The mental model is identical (it is still one logical N-dimension
 array with `axisNames` and `shape`); only the delivery is chunked. As a beginner
 you will rarely hand-write one, but you should recognize the type when you see it.
 
-### 4.4 Parameters in depth: vocabularies, categories, and units
+### Parameters in depth: vocabularies, categories, and units {#sec-parameters-depth}
 
-Section 3.3 covered the everyday shape of a parameter. Three details round it out;
+@sec-parameter covered the everyday shape of a parameter. Three details round it out;
 all live in
 [specification Section 9.3](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_848e0786-20e2-4b65-a232-ebb02da2d387).
 
 **Observed property and vocabularies.** The `observedProperty` is where a
 parameter links out to a controlled vocabulary through its `id` URI, as discussed
-in Section 3.3. The richer a document's vocabulary links, the more two independent
+in @sec-parameter. The richer a document's vocabulary links, the more two independent
 datasets can be combined automatically, because software can confirm they describe
 the same physical quantity.
 
-**Categorical data.** For categorical coverages (Section 2.2), the values are codes
+**Categorical data.** For categorical coverages (@sec-variation), the values are codes
 standing for labels, and two extra pieces connect the codes to their meanings:
 
 - The `observedProperty` carries a `categories` list, each entry giving a category
@@ -888,7 +889,7 @@ Units of Measure), a standard catalog of unambiguous unit codes, which is why
 degrees Celsius. Software that understands UCUM can then convert or compare units
 safely.
 
-### 4.5 Carrying many coverages together: CoverageCollection
+### Carrying many coverages together: CoverageCollection {#sec-collection}
 
 Often you have not one coverage but many that share structure: temperature at a
 hundred weather stations, or one grid per hour across a day. Repeating the full
@@ -903,7 +904,7 @@ the collection, so each member coverage only needs to carry its own domain
 positions and range values. It is the natural container when an API returns many
 coverages in one response.
 
-### 4.6 How a coverage travels: media type and APIs
+### How a coverage travels: media type and APIs {#sec-media-type}
 
 Two practical points finish the picture.
 
@@ -921,17 +922,17 @@ the job of the modern OGC API family, especially
 [OGC API - Coverages](https://ogcapi.ogc.org/coverages/), whose endpoints can
 return their results as CoverageJSON. In other words, an OGC API delivers the
 data, and CoverageJSON is one of the shapes that data arrives in, which is the
-web-native role the format was created to fill (Section 1).
+web-native role the format was created to fill (@sec-why).
 
-## 5. Worked examples
+## Worked examples {#sec-examples}
 
-Theory settles once you read a whole document and recover its meaning. Section 3
+Theory settles once you read a whole document and recover its meaning. @sec-core
 walked a single `Point`; here are several complete, richer coverages, each
 highlighting one new idea. Every one validates against the official CoverageJSON
 schema, and each is followed by a field-by-field reading. Try covering the
 explanation and reading the JSON yourself first.
 
-### 5.1 A gridded coverage: the raster case
+### A gridded coverage: the raster case {#sec-grid-example}
 
 This is the bread-and-butter of CoverageJSON: a small grid of sea surface
 temperature values over a patch of sea, at a single moment. It is a 3-column by
@@ -994,7 +995,7 @@ no value.
 
 Reading the **domain** first:
 
-- The `x` axis is given in compact form (Section 4.2): `start` 12.0, `stop` 13.0,
+- The `x` axis is given in compact form (@sec-axes): `start` 12.0, `stop` 13.0,
   `num` 3 expands to the three longitudes `[12.0, 12.5, 13.0]`. The `y` axis
   likewise expands to the two latitudes `[45.5, 45.0]` (descending, because raster
   rows usually run north to south). So the grid covers six positions.
@@ -1014,7 +1015,7 @@ axis named in `axisNames`.
 | 3rd: `3`      | `x`                     | 3     | three longitude columns  |
 
 Multiplying the counts (1 x 2 x 3) gives six, which is exactly the number of
-entries in `values`. Applying the row-major rule from Section 4.3 (the last-named
+entries in `values`. Applying the row-major rule from @sec-ndarray (the last-named
 axis, `x`, varies fastest, then `y`, then `t`), the flat `values` list maps onto
 the grid like this:
 
@@ -1030,14 +1031,14 @@ So `values[0]` (18.4) is the cell at time `12:00Z`, latitude 45.5, longitude 12.
 economy: the entire grid geometry is described by six small numbers in the domain
 (two `start`/`stop`/`num` triples plus one timestamp), no matter how many cells
 the grid has, while only the `values` array grows with the data. That is the
-efficiency goal from Section 1 made concrete.
+efficiency goal from @sec-why made concrete.
 
-### 5.2 A time series at one location: PointSeries
+### A time series at one location: PointSeries {#sec-pointseries-example}
 
-The second example takes the single `Point` from Section 3 and asks a different
+The second example takes the single `Point` from @sec-core and asks a different
 question: not "many places at one time" but "one place through many times." It
 records air temperature at one weather station at four times across a day. Because
-there is now more than one time, the cardinality rule from Section 3.5 applies: the
+there is now more than one time, the cardinality rule from @sec-minimal applies: the
 domain type is no longer `Point` but `PointSeries`, whose `t` axis holds multiple
 values.
 
@@ -1105,7 +1106,7 @@ values.
 Reading it:
 
 - The `x` and `y` axes each hold a single value, pinning the location to longitude
-  12.5, latitude 45.3, the same spot as Section 3.
+  12.5, latitude 45.3, the same spot as @sec-core.
 - The `t` axis now holds four timestamps, so this is a `PointSeries`, not a
   `Point`.
 - The range spans only the `t` axis (`axisNames` is `["t"]`, `shape` is `[4]`), so
@@ -1115,18 +1116,18 @@ Reading it:
 
 The air warms from 14.2 degrees Celsius at midnight to a 19.5-degree peak at noon,
 then cools again, exactly the daily curve you would expect. Structurally, this is
-the Section 3 point with its time axis promoted from one value to many, and the
+the @sec-core point with its time axis promoted from one value to many, and the
 domain type changed to match. Everything else, the parameter, the referencing, the
 range mechanics, is identical. That is the payoff of the model: once you can read
 one coverage, every other kind is a variation on the same four objects. The
 remaining examples show that variety: a coverage that carries two ranges at once,
 a non-grid trajectory, categorical data, and a bundle of several coverages.
 
-### 5.3 Two properties at once: multiple ranges
+### Two properties at once: multiple ranges {#sec-multi-range-example}
 
 Every example so far has measured a single property. This one finally cashes in
-the idea from Section 2.1 that a coverage is really *several functions sharing one
-domain*. It is the Section 3 point again, at the same place and time, but it now
+the idea from @sec-coverage that a coverage is really *several functions sharing one
+domain*. It is the @sec-core point again, at the same place and time, but it now
 records two things there: air temperature and relative humidity.
 
 ```json
@@ -1193,15 +1194,15 @@ now holds two entries, and `ranges` holds two matching ones. Follow the keys: th
 parameter named `temperature` pairs with the range named `temperature` (18.4
 degrees Celsius), and the parameter named `humidity` pairs with the range named
 `humidity` (62 percent). These are two functions over the same domain, written
-side by side -- the one-domain, multiple-ranges picture from Section 2.1. To add a
+side by side -- the one-domain, multiple-ranges picture from @sec-coverage. To add a
 third property, you would add a third matching pair of keys.
 
-### 5.4 A path through space and time: Trajectory
+### A path through space and time: Trajectory {#sec-trajectory-example}
 
 The grid and point examples lay their positions on individual axes. A
 **Trajectory** cannot: it is a single track through space *and* time (a weather
 balloon, a ship, an aircraft), where each instant has its own location. As
-introduced in Section 4.2, such irregular geometries use one `composite` axis
+introduced in @sec-axes, such irregular geometries use one `composite` axis
 whose values are tuples rather than a separate axis per dimension.
 
 ```json
@@ -1272,10 +1273,10 @@ live inside the composite tuples. The range spans that one axis (`axisNames` is
 `["composite"]`, `shape` is `[3]`), so its three temperatures line up with the
 three waypoints: 13.1, 15.7, and 18.2 degrees Celsius along the way.
 
-### 5.5 Categories instead of numbers: a land-cover grid
+### Categories instead of numbers: a land-cover grid {#sec-categorical-example}
 
 Every value so far has been a measured quantity. This grid carries *categorical*
-data instead (Section 2.2): each cell holds a small integer code standing for a
+data instead (@sec-variation): each cell holds a small integer code standing for a
 land-cover class, and the parameter supplies the legend that decodes it.
 
 ```json
@@ -1346,12 +1347,12 @@ Storing small integers and decoding them through `categoryEncoding`, rather than
 repeating the word "forest" in every cell, is what keeps a large categorical grid
 compact while losing none of its meaning.
 
-### 5.6 Many coverages in one document: CoverageCollection
+### Many coverages in one document: CoverageCollection {#sec-collection-example}
 
 The final example packages several coverages together. Imagine a temperature
 reading from two weather stations: two separate point coverages that share the
 exact same parameter and reference system. A **CoverageCollection**
-(Section 4.5) holds them in one document and *hoists the shared parts to the top*,
+(@sec-collection) holds them in one document and *hoists the shared parts to the top*,
 so they are written once rather than repeated in each coverage.
 
 ```json
@@ -1435,9 +1436,9 @@ series, a multi-property point, a trajectory, a categorical grid, and a
 collection, the same four objects (Coverage, Domain, Parameter, Range) recur,
 rearranged. Read one fluently and you can read them all.
 
-## 6. Glossary and further reading
+## Glossary and further reading {#sec-glossary-reading}
 
-### 6.1 Glossary
+### Glossary {#sec-glossary}
 
 | Term | Meaning |
 | ---- | ------- |
@@ -1457,7 +1458,7 @@ rearranged. Read one fluently and you can read them all.
 | **UCUM** | Unified Code for Units of Measure: a catalog of unambiguous unit codes (e.g., `Cel` for degrees Celsius). |
 | **Media type** | `application/prs.coverage+json`, the label identifying a CoverageJSON document sent over the web. |
 
-### 6.2 Further reading
+### Further reading {#sec-further-reading}
 
 - [OGC CoverageJSON Community Standard 1.0 (document 21-069r2)](https://docs.ogc.org/cs/21-069r2/21-069r2.html)
   -- the authoritative specification, with the full object definitions and the
