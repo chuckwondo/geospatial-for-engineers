@@ -599,7 +599,7 @@ through time. The full list, including `VerticalProfile`, `MultiPointSeries`,
 (A `domain` may also omit `domainType` and simply describe its axes, but using a
 standard type lets generic software know what to expect.)
 
-![The common domain types, grouped by how their axes are structured -- the same split the table draws in words. The **independent-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (Section 4.2). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
+![The common domain types, grouped by how their axes are structured -- the same split the table draws in words. The **individual-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (Section 4.2). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
 
 The `...Series` forms repay a closer look, because they make the
 domain-versus-range split concrete. A `MultiPointSeries` is, in effect, many
@@ -612,72 +612,86 @@ exactly what a time series is.
 
 ### 4.2 How axes encode their coordinates
 
-An axis is a JSON object, and the
+An axis is a JSON object. The
 [Domain Objects section (9.6.1)](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_d5c16418-1a20-4dbf-bf7a-8e685062df97)
-of the specification gives it three possible forms. You have already seen the
-first; the other two are space-savers.
+of the specification gives three ways to write one, which fall into two kinds:
+**individual axes** describe a **gridded** coverage one dimension at a time, while a
+**composite axis** lists coordinate tuples for the **non-gridded** geometries from
+Section 2.2.
 
-**1. Explicit values.** The form from Section 3: an object with a `values` array
-listing every coordinate along the axis.
+#### 4.2.1 Individual axes
 
-```json
-{ "values": [12.0, 12.5, 13.0, 13.5] }
-```
+An individual axis describes one dimension -- `x`, `y`, `z`, or `t`. Several of them
+describe a **gridded** coverage: they combine by **cross-product** -- every `x`
+paired with every `y` -- so a few longitudes and latitudes define a full regular
+lattice. Three longitudes crossed with two latitudes, for instance, give a 2 × 3
+grid of six positions.
 
-This is the right choice when the spacing is irregular (e.g., vertical levels that
-get further apart with height).
+![Two individual axes -- three longitudes and two latitudes -- cross-product to fill all six cells of a regular 2 × 3 lattice: a gridded coverage.](../diagrams/gridded-axes.svg){#fig-gridded}
 
-**2. Compact (regularly spaced) values.** When an axis is *evenly* spaced, listing
-every coordinate is wasteful: a 4000-pixel grid axis would need 4000 numbers.
-Instead the axis can give just three: `start` (the first coordinate), `stop` (the
-last), and `num` (how many there are). A reader expands them into evenly spaced
-values.
+A domain needs at least `x` and `y` (the table in Section 4.1 lists them as always
+required). Each individual axis writes its coordinates one of two ways: explicitly,
+or -- when they are evenly spaced -- compactly.
 
-```json
-{ "start": 12.0, "stop": 13.5, "num": 4 }
-```
-
-This describes exactly the same four coordinates as the explicit form above. Grids
-lean on this heavily, which is what keeps a million-cell raster's *domain*
-description tiny even though its *range* still holds a million values.
-
-**3. Composite values.** The first two forms describe a *grid*:
-independent `x` and `y` axes combine by **cross-product** (every `x` paired with
-every `y`), so three longitudes and two latitudes define 3 × 2 = six lattice
-positions. That factoring only works when the positions truly fill a grid.
-Irregular geometries do not: a trajectory visits specific `(x, y)` pairs in
-sequence, *not* every `x` with every `y`, and there is no way to split those pairs
-back into independent axes without inventing positions that were never sampled. So
-a scattered set of points, a winding trajectory, or a polygon outline uses a single
-axis, conventionally named `composite`, whose `values` are an **explicit list** of
-the actual positions, each a *tuple* of coordinates rather than a single number.
-
-![A grid laid out two ways. On the left, independent `x` and `y` axes cross-product to fill all nine cells. On the right, only three positions hold data, so the six cells a grid would invent stay hollow and a composite axis lists the three explicitly.](../diagrams/axes-independent-vs-composite.svg){#fig-composite-axis}
-
-In the document, the two sides look like this. Two **independent axes** (the grid
-on the left):
+**Explicit.** The form from Section 3: an object whose `values` array lists every
+coordinate along the axis.
 
 ```json
 "axes": {
   "x": { "values": [12.0, 12.5, 13.0] },
-  "y": { "values": [45.0, 45.5, 46.0] }
+  "y": { "values": [45.0, 45.5] }
 }
 ```
 
-or one **composite axis** (the three points on the right):
+Despite the shared key name, an axis's `values` are *coordinates* (where each
+position sits), distinct from the *data* values in the range; this guide says
+"coordinates" for axes to keep the two apart. The explicit form is the right choice
+when the spacing is irregular (e.g., vertical levels that get further apart with
+height).
+
+**Compact (regularly spaced).** When an axis is *evenly* spaced, listing every
+coordinate is wasteful: a 4000-pixel grid axis would need 4000 numbers. Instead the
+axis can give just three: `start` (the first coordinate), `stop` (the last), and
+`num` (how many there are). A reader expands them into evenly spaced coordinates.
+
+```json
+"axes": {
+  "x": { "start": 12.0, "stop": 13.0, "num": 3 },
+  "y": { "start": 45.0, "stop": 45.5, "num": 2 }
+}
+```
+
+This describes exactly the same coordinates as the explicit form above -- three
+longitudes and two latitudes. Grids lean on this heavily, which is what keeps a
+million-cell raster's *domain* description tiny even though its *range* still holds
+a million values.
+
+#### 4.2.2 Composite axes
+
+Cross-product only works when the positions truly fill a grid. A **non-gridded**
+coverage (Section 2.2) does not: a scatter of stations, a ship's winding path, or a
+polygon outline visits whatever positions it visits, sharing no common longitudes or
+latitudes to factor out -- so there is no way to split them into individual axes
+without inventing positions that were never sampled.
+
+![Three points sit at irregular, off-lattice positions over a faint reference grid -- sharing no `x`'s or `y`'s to factor into axes -- so a **composite axis** lists each as a coordinate tuple.](../diagrams/non-gridded-composite.svg){#fig-composite-axis}
+
+Such geometries use a single axis, conventionally named `composite`, whose `values`
+are an explicit list of the actual positions, each a *tuple* of coordinates rather
+than a single number:
 
 ```json
 "axes": {
   "composite": {
     "dataType": "tuple",
     "coordinates": ["x", "y"],
-    "values": [[12.0, 45.0], [12.5, 46.0], [13.0, 45.5]]
+    "values": [[12.1, 44.9], [12.4, 45.7], [13.1, 45.1]]
   }
 }
 ```
 
 Two fields say how to read those tuples. **`coordinates`** (here `["x", "y"]`)
-names the members of each tuple *in order*, so in `[12.0, 45.0]` the first number
+names the members of each tuple *in order*, so in `[12.1, 44.9]` the first number
 is the `x` (longitude) and the second the `y` (latitude): one point.
 **`dataType`** says what *kind* of value each entry is; `"tuple"`, as here, means
 each entry is a single point.
@@ -728,6 +742,44 @@ lenient about it (it should not reject a polygon wound the other way), so the
 *order* of the rings, not their direction, is what marks the hole
 ([RFC 7946 Section 3.1.6](https://www.rfc-editor.org/rfc/rfc7946#section-3.1.6)). We
 use a composite axis again in the trajectory example of Section 5.
+
+Some domain types use **both** kinds of axis at once. The clearest is **`Section`**:
+an oceanographic transect, where a research ship sails a track and stops at
+numbered **stations**, lowering a CTD (conductivity, temperature, depth) probe at
+each to record a column of values down through the water. A `Section` is a
+*trajectory of vertical profiles*: its domain crosses a **composite axis** of
+`(t, x, y)` tuples (one per station, just like a `Trajectory`) with a multi-valued
+**`z` axis** of depths (just like a `VerticalProfile`). The range is then a
+two-dimensional field -- one value at every (station, depth) pair
+([specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e)).
+
+![A `Section` reads as an equation: `Trajectory` &times; `VerticalProfile`. The ship's track is a **composite axis** of `(t, x, y)` tuples -- one per station, listed beneath the equation -- and crossing it with the **`z` axis** of depths fills the **curtain**, a value at each (station, depth). One highlight ties the three views together: as it steps from station to station it rings the dot on the track, the row in the composite-axis list (where the time `t` ticks forward), and the column in the curtain -- the geometry carried through time. A real transect's stations are not evenly spaced; the even grid is only for legibility.](../diagrams/section-curtain.svg){#fig-section}
+
+In the document, those two axes sit side by side. The **composite axis** carries
+one `(t, x, y)` tuple per station -- the four rows from the figure's list -- and a
+separate **`z` axis** holds the depths every station shares:
+
+```json
+"axes": {
+  "composite": {
+    "dataType": "tuple",
+    "coordinates": ["t", "x", "y"],
+    "values": [
+      ["2024-03-01T12:00:00Z", 12.5, 45.3],
+      ["2024-03-01T13:00:00Z", 12.8, 45.6],
+      ["2024-03-01T14:00:00Z", 13.1, 45.9],
+      ["2024-03-01T15:00:00Z", 13.4, 46.2]
+    ]
+  },
+  "z": { "values": [0, 10, 20, 30] }
+}
+```
+
+It is the composite axis from the scatter and polygon examples (`"dataType":
+"tuple"`, with `t` now leading each tuple) crossed with a plain `z` axis like the
+grid's `x` and `y`. The range then carries one value for each (composite, `z`)
+pair -- the curtain's sixteen cells -- stored as the flat `NdArray` of the next
+section.
 
 ### 4.3 How ranges store their values: NdArray and TiledNdArray
 
@@ -1146,7 +1198,7 @@ third property, you would add a third matching pair of keys.
 
 ### 5.4 A path through space and time: Trajectory
 
-The grid and point examples lay their positions on independent axes. A
+The grid and point examples lay their positions on individual axes. A
 **Trajectory** cannot: it is a single track through space *and* time (a weather
 balloon, a ship, an aircraft), where each instant has its own location. As
 introduced in Section 4.2, such irregular geometries use one `composite` axis
@@ -1213,7 +1265,7 @@ The key difference from the grid is the single `composite` axis. Its `coordinate
 say each value is a `(t, x, y)` triple, and its three `values` are the track's
 three waypoints: at `00:00Z` the craft is at longitude 12.0, latitude 45.0; by
 `06:00Z` it has moved to 12.4, 45.2; by `12:00Z` to 12.9, 45.5. Time and place
-travel *together*, one tuple per waypoint, rather than as independent axes you
+travel *together*, one tuple per waypoint, rather than as individual axes you
 cross-multiply. The `referencing` still interprets `x`/`y` with `CRS84` and `t`
 with the Gregorian calendar, naming those coordinate identifiers even though they
 live inside the composite tuples. The range spans that one axis (`axisNames` is

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="41 13 454 142" role="img" aria-labelledby="ng-title ng-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="ng-title">Non-gridded points use a composite axis</title>
+  <desc id="ng-desc">On the left, a faint two-by-three reference lattice with x and y axes; three data points sit at irregular, off-lattice positions joined by a path, sharing no common x or y values. On the right, the label reads: non-gridded points map to a composite axis, which lists each as a coordinate tuple. This is the non-gridded case.</desc>
+
+  <rect x="42" y="14" width="452" height="140" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- LEFT: irregular points over a faint reference lattice (x / y labelled) -->
+  <g stroke="#d4dce5" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="80" y1="58" x2="80" y2="110"/><line x1="148" y1="58" x2="148" y2="110"/><line x1="216" y1="58" x2="216" y2="110"/>
+    <line x1="80" y1="58" x2="216" y2="58"/><line x1="80" y1="110" x2="216" y2="110"/>
+  </g>
+  <g fill="#ffffff" stroke="#dbe2ea" stroke-width="1"><circle cx="80" cy="58" r="3"/><circle cx="148" cy="58" r="3"/><circle cx="216" cy="58" r="3"/><circle cx="80" cy="110" r="3"/><circle cx="148" cy="110" r="3"/><circle cx="216" cy="110" r="3"/></g>
+  <text x="62" y="88" font-size="12" font-style="italic" fill="#94a3b8" text-anchor="middle">y</text>
+  <text x="148" y="126" font-size="12" font-style="italic" fill="#94a3b8" text-anchor="middle">x</text>
+  <polyline points="94,122 132,44 226,80" fill="none" stroke="#4338ca" stroke-width="2"/>
+  <g fill="#4338ca"><circle cx="94" cy="122" r="5"/><circle cx="132" cy="44" r="5"/><circle cx="226" cy="80" r="5"/></g>
+  <g font-size="8.5" fill="#64748b" font-family="ui-monospace, Menlo, monospace" text-anchor="middle">
+    <text x="94" y="135">12.1, 44.9</text><text x="132" y="38">12.4, 45.7</text><text x="226" y="93">13.1, 45.2</text>
+  </g>
+
+  <line x1="258" y1="42" x2="258" y2="128" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- RIGHT: bold heading + original-style subtitles -->
+  <text x="274" y="60" font-size="13" font-weight="700" fill="#334155">Non-gridded points</text>
+  <text x="274" y="75" font-size="13" font-weight="700" fill="#3730a3">&#8594; a composite axis</text>
+  <text x="274" y="102" font-size="10.5" fill="#475569">points fall wherever sampled</text>
+  <text x="274" y="117" font-size="9" fill="#94a3b8">off the lattice &#8594; no shared x's or y's to factor</text>
+</svg>

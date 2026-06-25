@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 0 504 324" role="img" aria-labelledby="sec-title sec-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="sec-title">Section = Trajectory times VerticalProfile: a ship's depth-profile transect</title>
+  <desc id="sec-desc">An equation reads left to right: Trajectory times VerticalProfile equals Section. The Trajectory is a small map of a ship track with four numbered stations, labelled the composite t, x, y axis. The VerticalProfile is a single z depth axis. Their product is the Section, a curtain of values with one column per station and one row per depth. Below, the composite axis is listed as one t, x, y tuple per station, with columns headed hash, t, x and y. A single highlight advances left to right through the stations, in step around each station's track dot, down its row in the list where the time t ticks forward, and across its depth column in the curtain. With reduced motion the highlight rests on station 1.</desc>
+  <style>
+    .sweep { opacity: 0; animation-duration: 8s; animation-iteration-count: infinite; animation-timing-function: linear; }
+    .s1 { animation-name: a1; } .s2 { animation-name: a2; } .s3 { animation-name: a3; } .s4 { animation-name: a4; }
+    @keyframes a1 { 0%{opacity:1} 20%{opacity:1} 25%{opacity:0} 95%{opacity:0} 100%{opacity:1} }
+    @keyframes a2 { 0%{opacity:0} 20%{opacity:0} 25%{opacity:1} 45%{opacity:1} 50%{opacity:0} 100%{opacity:0} }
+    @keyframes a3 { 0%{opacity:0} 45%{opacity:0} 50%{opacity:1} 70%{opacity:1} 75%{opacity:0} 100%{opacity:0} }
+    @keyframes a4 { 0%{opacity:0} 70%{opacity:0} 75%{opacity:1} 95%{opacity:1} 100%{opacity:0} }
+    @media (prefers-reduced-motion: reduce) { .sweep { animation: none; opacity: 0; } .s1 { opacity: 1; } }
+  </style>
+
+  <rect x="7" y="1" width="502" height="322" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- ===== Factor A: Trajectory ===== -->
+  <text x="94" y="26" font-size="12" fill="#3730a3" font-weight="bold" text-anchor="middle">Trajectory</text>
+  <text x="94" y="46" font-size="10.5" fill="#475569" text-anchor="middle">stations along the ship track</text>
+  <rect x="24" y="52" width="140" height="104" rx="5" fill="#eef2ff" stroke="#4338ca" stroke-width="1.2"/>
+  <polyline points="40,138 74,92 112,112 150,72" fill="none" stroke="#334155" stroke-width="1.6"/>
+  <circle cx="40" cy="138" r="4.5" fill="#4338ca"/><circle cx="74" cy="92" r="4.5" fill="#4338ca"/>
+  <circle cx="112" cy="112" r="4.5" fill="#4338ca"/><circle cx="150" cy="72" r="4.5" fill="#4338ca"/>
+  <circle class="sweep s1" cx="40" cy="138" r="7.5" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <circle class="sweep s2" cx="74" cy="92" r="7.5" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <circle class="sweep s3" cx="112" cy="112" r="7.5" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <circle class="sweep s4" cx="150" cy="72" r="7.5" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <text x="46" y="152" font-size="10" fill="#1e293b">1</text><text x="80" y="88" font-size="10" fill="#1e293b">2</text>
+  <text x="118" y="126" font-size="10" fill="#1e293b">3</text><text x="156" y="68" font-size="10" fill="#1e293b">4</text>
+  <text x="94" y="172" font-size="10.5" fill="#475569" text-anchor="middle">composite (t, x, y) axis</text>
+
+  <text x="190" y="112" font-size="26" fill="#64748b" text-anchor="middle">&#215;</text>
+
+  <!-- ===== Factor B: VerticalProfile ===== -->
+  <text x="234" y="26" font-size="12" fill="#3730a3" font-weight="bold" text-anchor="middle">VerticalProfile</text>
+  <g stroke="#4338ca" stroke-width="1">
+    <rect x="216" y="52" width="38" height="26" fill="#e0e7ff"/><rect x="216" y="78" width="38" height="26" fill="#e0e7ff"/>
+    <rect x="216" y="104" width="38" height="26" fill="#e0e7ff"/><rect x="216" y="130" width="38" height="26" fill="#e0e7ff"/>
+  </g>
+  <g font-size="9" fill="#64748b" text-anchor="end">
+    <text x="212" y="69">0</text><text x="212" y="95">10</text><text x="212" y="121">20</text><text x="212" y="147">30</text>
+  </g>
+  <text x="234" y="172" font-size="10.5" fill="#475569" text-anchor="middle">z axis (depth, m)</text>
+
+  <text x="282" y="112" font-size="26" fill="#64748b" text-anchor="middle">=</text>
+
+  <!-- ===== Result: Section curtain (station 1 on the left) ===== -->
+  <text x="400" y="26" font-size="12" fill="#0f766e" font-weight="bold" text-anchor="middle">Section</text>
+  <g font-size="10" fill="#334155" text-anchor="middle">
+    <text x="331" y="46">1</text><text x="377" y="46">2</text><text x="423" y="46">3</text><text x="469" y="46">4</text>
+  </g>
+  <g stroke="#94a3b8" stroke-width="1">
+    <rect x="308" y="52" width="46" height="26" fill="#f0fdfa"/><rect x="354" y="52" width="46" height="26" fill="#f0fdfa"/><rect x="400" y="52" width="46" height="26" fill="#f0fdfa"/><rect x="446" y="52" width="46" height="26" fill="#f0fdfa"/>
+    <rect x="308" y="78" width="46" height="26" fill="#ccfbf1"/><rect x="354" y="78" width="46" height="26" fill="#ccfbf1"/><rect x="400" y="78" width="46" height="26" fill="#ccfbf1"/><rect x="446" y="78" width="46" height="26" fill="#ccfbf1"/>
+    <rect x="308" y="104" width="46" height="26" fill="#99f6e4"/><rect x="354" y="104" width="46" height="26" fill="#99f6e4"/><rect x="400" y="104" width="46" height="26" fill="#99f6e4"/><rect x="446" y="104" width="46" height="26" fill="#99f6e4"/>
+    <rect x="308" y="130" width="46" height="26" fill="#5eead4"/><rect x="354" y="130" width="46" height="26" fill="#5eead4"/><rect x="400" y="130" width="46" height="26" fill="#5eead4"/><rect x="446" y="130" width="46" height="26" fill="#5eead4"/>
+  </g>
+  <g font-size="11" font-weight="600" text-anchor="middle" fill="#0f172a">
+    <text x="331" y="69">18.2</text><text x="377" y="69">17.6</text><text x="423" y="69">16.9</text><text x="469" y="69">15.4</text>
+    <text x="331" y="95">14.1</text><text x="377" y="95">13.3</text><text x="423" y="95">12.0</text><text x="469" y="95">11.2</text>
+    <text x="331" y="121">9.4</text><text x="377" y="121">8.7</text><text x="423" y="121">8.1</text><text x="469" y="121">7.3</text>
+    <text x="331" y="147">6.2</text><text x="377" y="147">5.5</text><text x="423" y="147">5.0</text><text x="469" y="147">4.1</text>
+  </g>
+  <rect class="sweep s1" x="308" y="52" width="46" height="104" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <rect class="sweep s2" x="354" y="52" width="46" height="104" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <rect class="sweep s3" x="400" y="52" width="46" height="104" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <rect class="sweep s4" x="446" y="52" width="46" height="104" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <text x="400" y="172" font-size="10.5" fill="#475569" text-anchor="middle">value at each (station, depth) &#183; &#176;C</text>
+
+  <!-- ===== Composite axis list (heading matched to the panel headings) ===== -->
+  <text x="256" y="206" font-size="12" fill="#3730a3" font-weight="bold" text-anchor="middle">Composite axis</text>
+  <text x="256" y="221" font-size="10.5" fill="#475569" text-anchor="middle">one (t, x, y) tuple per station</text>
+  <g font-size="9" font-style="italic" fill="#64748b" text-anchor="middle">
+    <text x="143" y="237">#</text><text x="228" y="237">t</text><text x="322" y="237">x</text><text x="366" y="237">y</text>
+  </g>
+  <rect class="sweep s1" x="132" y="243" width="256" height="15" fill="none" stroke="#f59e0b" stroke-width="2"/>
+  <rect class="sweep s2" x="132" y="259" width="256" height="15" fill="none" stroke="#f59e0b" stroke-width="2"/>
+  <rect class="sweep s3" x="132" y="275" width="256" height="15" fill="none" stroke="#f59e0b" stroke-width="2"/>
+  <rect class="sweep s4" x="132" y="291" width="256" height="15" fill="none" stroke="#f59e0b" stroke-width="2"/>
+  <g font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#0f172a">
+    <text x="140" y="254">1&#160;&#160;&#160;2024-03-01T12:00:00Z&#160;&#160;&#160;12.5&#160;&#160;&#160;45.3</text>
+    <text x="140" y="270">2&#160;&#160;&#160;2024-03-01T13:00:00Z&#160;&#160;&#160;12.8&#160;&#160;&#160;45.6</text>
+    <text x="140" y="286">3&#160;&#160;&#160;2024-03-01T14:00:00Z&#160;&#160;&#160;13.1&#160;&#160;&#160;45.9</text>
+    <text x="140" y="302">4&#160;&#160;&#160;2024-03-01T15:00:00Z&#160;&#160;&#160;13.4&#160;&#160;&#160;46.2</text>
+  </g>
+</svg>

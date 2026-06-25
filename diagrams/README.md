@@ -20,9 +20,11 @@ Inventory (all used in the CoverageJSON guide):
   order; **animated** (C layer) with a static fallback. Section 4.3.
 - `pointseries-daily-curve.svg` -- a PointSeries as a daily temperature curve
   (time = domain, values = range; the noon peak spotlit in amber). Section 5.2.
-- `axes-independent-vs-composite.svg` -- independent `x`/`y` axes (a full grid) vs
-  one `composite` axis of tuples (only the sampled points; the rest a grid would
-  invent stay hollow). Section 4.2.
+- `gridded-axes.svg` -- two individual `x`/`y` axes cross-product into a full
+  regular 2x3 lattice: the gridded case. Section 4.2.1.
+- `non-gridded-composite.svg` -- three points at irregular, off-lattice positions
+  over a faint reference grid (sharing no `x`/`y` values to factor), so a
+  `composite` axis lists each as a tuple: the non-gridded case. Section 4.2.2.
 - `polygon-composite-axis.svg` -- a polygon as a list of rings: an irregular outer
   boundary with a triangular inner ring punched out as a hole. Section 4.2.
 - `domain-types-gallery.svg` -- the common domain types grouped by axis structure:
@@ -33,6 +35,12 @@ Inventory (all used in the CoverageJSON guide):
   frames: the dots (positions) stay fixed while their value labels change with
   `t`, with one station threaded by dashed arrows. Shows what a `...Series` adds.
   Section 4.1.
+- `section-curtain.svg` -- a `Section` as the equation `Trajectory` x
+  `VerticalProfile`: a composite `(t, x, y)` axis (listed as tuples) crossed with a
+  `z` depth axis fills a curtain of values. **Animated** (C layer): one highlight
+  advances station by station across the track, the composite-axis list, and the
+  curtain in sync (`t` ticking forward), with a static fallback frozen on station 1.
+  Section 4.2.
 
 ## 2. Text-based structural diagrams
 
