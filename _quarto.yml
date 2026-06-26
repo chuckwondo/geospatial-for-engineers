@@ -25,6 +25,9 @@ website:
         contents:
           - formats/coveragejson.qmd
           - formats/zarr.qmd
+      - section: "How-to guides"
+        contents:
+          - how-to/index.qmd
 
 format:
   html:
