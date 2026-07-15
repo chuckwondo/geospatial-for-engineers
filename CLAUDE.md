@@ -62,8 +62,12 @@ move to the `developmentseed` org; for now it lives under `~/src/chuckwondo`.
 ## Prose style (carried from the CoverageJSON guide)
 
 - Spell out acronyms on first use with brief motivation.
-- Prefer `--` over em dashes, but **don't overuse dashes**: use colons for
-  definitions, parentheses for asides.
+- **Avoid the `--` dash; prefer other punctuation.** Default to a colon (for a
+  definition or lead-in), parentheses (for an aside), a comma (for an appositive),
+  or splitting into two sentences. Reserve `--` for the rare case where nothing
+  else reads as well; if a dash is truly needed use `--`, never a literal em dash
+  (`—`). When editing, treat an existing `--` as a smell: try the alternatives
+  first.
 - `e.g.,` / `i.e.,` with a trailing comma; write "Section" not the section symbol.
 - Cite specs precisely: canonical document id + a deep link to the exact heading
   anchor (CovJSON = OGC 21-069r2,

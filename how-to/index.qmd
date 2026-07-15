@@ -3,7 +3,7 @@ title: "How-to guides (planned)"
 ---
 
 ::: {.callout-note}
-**Planned area -- not yet written.** The conceptual guides (e.g.,
+**Planned area: not yet written.** The conceptual guides (e.g.,
 [CoverageJSON Uncovered](../formats/coveragejson.qmd)) link forward to the
 task-focused how-to guides below. Each entry is a placeholder for a recipe that
 walks through a complete, runnable example for a reader who already has the
@@ -35,5 +35,5 @@ or hyperspectral bands.
 ## Vector quantities with parameterGroups {#sec-howto-vectors}
 
 Using `parameterGroups` to bind related parameters into a single physical
-quantity -- the canonical example being wind as `u`/`v` components -- and how a
+quantity (the canonical example being wind as `u`/`v` components) and how a
 client reads a group back as one vector field.

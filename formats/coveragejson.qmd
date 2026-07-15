@@ -1,6 +1,6 @@
 ---
 title: "CoverageJSON Uncovered"
-subtitle: "A complete, ground-up guide to reading coverage data on the web — every concept, from your first document to the edge cases."
+subtitle: "A complete, ground-up guide to reading coverage data on the web: every concept, from your first document to the edge cases."
 ---
 
 This guide is for people new to *CoverageJSON* (often shortened
@@ -190,7 +190,7 @@ the last.
 The single most important idea in this entire guide is this:
 
 ::: {.callout-important}
-A **coverage** maps positions in space and time to values -- one function per
+A **coverage** maps positions in space and time to values: one function per
 property, all sharing the same domain.
 :::
 
@@ -223,11 +223,11 @@ each takes the same positions as input, but each returns values for a different
 property, so each has its own range. The shared inputs are described once, in
 `"domain"`; the separate outputs live in `"ranges"`, one per property.
 
-![One coverage, one shared domain, multiple ranges: the positions are described once in `domain`, and each property gets its own array of values in `ranges` -- one range per property.](../diagrams/coverage-shared-domain.svg){#fig-shared-domain}
+![One coverage, one shared domain, multiple ranges: the positions are described once in `domain`, and each property gets its own array of values in `ranges`: one range per property.](../diagrams/coverage-shared-domain.svg){#fig-shared-domain}
 
 Whatever shape the positions take, a coverage bundles them and their values
-together with enough description -- the units, what each property is, how the
-positions are referenced in space and time -- that software can read any value
+together with enough description (the units, what each property is, how the
+positions are referenced in space and time) that software can read any value
 unambiguously. Pinning down that description is what the rest of this guide is
 about.
 
@@ -421,11 +421,11 @@ The **Domain** describes the positions. It has three parts:
 
 ::: {.callout-note title="Property, parameter, range"}
 Three related words, worth keeping straight. A **property** is the real-world
-quantity being measured -- air temperature, humidity, wind speed. For each
+quantity being measured: air temperature, humidity, wind speed. For each
 property, a coverage carries two objects: a **parameter** that *describes* it
 (its name, units, and what it observes) and a **range** that *holds its values*.
-Property is the *what*, parameter is the *description*, range is the *data* -- and
-a shared key ties a property's parameter to its range.
+Property is the *what*, parameter is the *description*, and range is the *data*.
+A shared key ties a property's parameter to its range.
 :::
 
 A **Parameter** is the human- and machine-readable description of one measured
@@ -604,16 +604,16 @@ through time. The full list, including `VerticalProfile`, `MultiPointSeries`,
 (A `domain` may also omit `domainType` and simply describe its axes, but using a
 standard type lets generic software know what to expect.)
 
-![The common domain types, grouped by how their axes are structured -- the same split the table draws in words. The **individual-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (@sec-axes). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
+![The common domain types, grouped by how their axes are structured: the same split the table draws in words. The **individual-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (@sec-axes). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
 
 The `...Series` forms repay a closer look, because they make the
 domain-versus-range split concrete. A `MultiPointSeries` is, in effect, many
 `PointSeries` sharing one `t` axis: the *positions* are the domain and never
 move, while the *values* are the range and change at every timestep. Reading one
-station across the frames -- same coordinates, a different value each time -- is
+station across the frames (same coordinates, a different value each time) is
 exactly what a time series is.
 
-![A `MultiPointSeries` reading a sensor network at three times. The dots are the **domain**: the same positions in every frame, fixed because the geometry does not move. The label on each dot is the **range**: the value measured there, which changes from `t0` to `t1` to `t2`. Following the highlighted station (the dashed arrows) makes the split plain -- its position (`x=12.5, y=45.3`) is identical in all three frames while its value rises then falls. A single multi-valued `t` axis carries the whole geometry through time; that added `t` axis is all that separates a `...Series` type from its plain form.](../diagrams/multipointseries-through-time.svg){#fig-series-through-time}
+![A `MultiPointSeries` reading a sensor network at three times. The dots are the **domain**: the same positions in every frame, fixed because the geometry does not move. The label on each dot is the **range**: the value measured there, which changes from `t0` to `t1` to `t2`. Following the highlighted station (the dashed arrows) makes the split plain: its position (`x=12.5, y=45.3`) is identical in all three frames while its value rises then falls. A single multi-valued `t` axis carries the whole geometry through time; that added `t` axis is all that separates a `...Series` type from its plain form.](../diagrams/multipointseries-through-time.svg){#fig-series-through-time}
 
 ### How axes encode their coordinates {#sec-axes}
 
@@ -626,17 +626,17 @@ of the specification gives three ways to write one, which fall into two kinds:
 
 #### Individual axes {#sec-individual-axes}
 
-An individual axis describes one dimension -- `x`, `y`, `z`, or `t`. Several of them
-describe a **gridded** coverage: they combine by **cross-product** -- every `x`
-paired with every `y` -- so a few longitudes and latitudes define a full regular
+An individual axis describes one dimension: `x`, `y`, `z`, or `t`. Several of them
+describe a **gridded** coverage: they combine by **cross-product** (every `x`
+paired with every `y`), so a few longitudes and latitudes define a full regular
 lattice. Three longitudes crossed with two latitudes, for instance, give a 2 × 3
 grid of six positions.
 
-![Two individual axes -- three longitudes and two latitudes -- cross-product to fill all six cells of a regular 2 × 3 lattice: a gridded coverage.](../diagrams/gridded-axes.svg){#fig-gridded}
+![Two individual axes (three longitudes and two latitudes) cross-product to fill all six cells of a regular 2 × 3 lattice: a gridded coverage.](../diagrams/gridded-axes.svg){#fig-gridded}
 
 A domain needs at least `x` and `y` (the table in @sec-domain-types lists them as always
 required). Each individual axis writes its coordinates one of two ways: explicitly,
-or -- when they are evenly spaced -- compactly.
+or, when they are evenly spaced, compactly.
 
 **Explicit.** The form from @sec-core: an object whose `values` array lists every
 coordinate along the axis.
@@ -666,7 +666,7 @@ axis can give just three: `start` (the first coordinate), `stop` (the last), and
 }
 ```
 
-This describes exactly the same coordinates as the explicit form above -- three
+This describes exactly the same coordinates as the explicit form above: three
 longitudes and two latitudes. Grids lean on this heavily, which is what keeps a
 million-cell raster's *domain* description tiny even though its *range* still holds
 a million values.
@@ -676,10 +676,10 @@ a million values.
 Cross-product only works when the positions truly fill a grid. A **non-gridded**
 coverage (@sec-variation) does not: a scatter of stations, a ship's winding path, or a
 polygon outline visits whatever positions it visits, sharing no common longitudes or
-latitudes to factor out -- so there is no way to split them into individual axes
+latitudes to factor out, so there is no way to split them into individual axes
 without inventing positions that were never sampled.
 
-![Three points sit at irregular, off-lattice positions over a faint reference grid -- sharing no `x`'s or `y`'s to factor into axes -- so a **composite axis** lists each as a coordinate tuple.](../diagrams/non-gridded-composite.svg){#fig-composite-axis}
+![Three points sit at irregular, off-lattice positions over a faint reference grid (sharing no `x`'s or `y`'s to factor into axes), so a **composite axis** lists each as a coordinate tuple.](../diagrams/non-gridded-composite.svg){#fig-composite-axis}
 
 Such geometries use a single axis, conventionally named `composite`, whose `values`
 are an explicit list of the actual positions, each a *tuple* of coordinates rather
@@ -755,13 +755,13 @@ each to record a column of values down through the water. A `Section` is a
 *trajectory of vertical profiles*: its domain crosses a **composite axis** of
 `(t, x, y)` tuples (one per station, just like a `Trajectory`) with a multi-valued
 **`z` axis** of depths (just like a `VerticalProfile`). The range is then a
-two-dimensional field -- one value at every (station, depth) pair
+two-dimensional field: one value at every (station, depth) pair
 ([specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e)).
 
-![A `Section` reads as an equation: `Trajectory` &times; `VerticalProfile`. The ship's track is a **composite axis** of `(t, x, y)` tuples -- one per station, listed beneath the equation -- and crossing it with the **`z` axis** of depths fills the **curtain**, a value at each (station, depth). One highlight ties the three views together: as it steps from station to station it rings the dot on the track, the row in the composite-axis list (where the time `t` ticks forward), and the column in the curtain -- the geometry carried through time. A real transect's stations are not evenly spaced; the even grid is only for legibility.](../diagrams/section-curtain.svg){#fig-section}
+![A `Section` reads as an equation: `Trajectory` &times; `VerticalProfile`. The ship's track is a **composite axis** of `(t, x, y)` tuples (one per station, listed beneath the equation) and crossing it with the **`z` axis** of depths fills the **curtain**, a value at each (station, depth). One highlight ties the three views together: as it steps from station to station it rings the dot on the track, the row in the composite-axis list (where the time `t` ticks forward), and the column in the curtain: the geometry carried through time. A real transect's stations are not evenly spaced; the even grid is only for legibility.](../diagrams/section-curtain.svg){#fig-section}
 
 In the document, those two axes sit side by side. The **composite axis** carries
-one `(t, x, y)` tuple per station -- the four rows from the figure's list -- and a
+one `(t, x, y)` tuple per station (the four rows from the figure's list) and a
 separate **`z` axis** holds the depths every station shares:
 
 ```json
@@ -783,7 +783,7 @@ separate **`z` axis** holds the depths every station shares:
 It is the composite axis from the scatter and polygon examples (`"dataType":
 "tuple"`, with `t` now leading each tuple) crossed with a plain `z` axis like the
 grid's `x` and `y`. The range then carries one value for each (composite, `z`)
-pair -- the curtain's sixteen cells -- stored as the flat `NdArray` of the next
+pair (the curtain's sixteen cells) stored as the flat `NdArray` of the next
 section.
 
 ### How ranges store their values: NdArray and TiledNdArray {#sec-ndarray}
@@ -954,8 +954,8 @@ recognize the type and read its tile sets when a server hands you one.
 
 **Going further.**
 
-- [Specification Section 9.6.3](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_57f9bc0e-3cd5-4c33-a213-4fbd9b3bfaf9)
-  -- the normative `TiledNdArray` definition.
+- [Specification Section 9.6.3](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_57f9bc0e-3cd5-4c33-a213-4fbd9b3bfaf9):
+  the normative `TiledNdArray` definition.
 - The same chunking idea, as a storage format: [Zarr](zarr.qmd) and
   Cloud-Optimized GeoTIFF ([cogeo.org](https://www.cogeo.org/)).
 - A hands-on walkthrough: [Serving &amp; consuming a TiledNdArray](../how-to/index.qmd#sec-howto-tiled-ndarray)
@@ -1324,7 +1324,7 @@ now holds two entries, and `ranges` holds two matching ones. Follow the keys: th
 parameter named `temperature` pairs with the range named `temperature` (18.4
 degrees Celsius), and the parameter named `humidity` pairs with the range named
 `humidity` (62 percent). These are two functions over the same domain, written
-side by side -- the one-domain, multiple-ranges picture from @sec-coverage. To add a
+side by side: the one-domain, multiple-ranges picture from @sec-coverage. To add a
 third property, you would add a third matching pair of keys.
 
 ### A path through space and time: Trajectory {#sec-trajectory-example}
@@ -1590,15 +1590,15 @@ rearranged. Read one fluently and you can read them all.
 
 For deeper detail and hands-on exploration, these are the key resources:
 
-- [OGC CoverageJSON Community Standard 1.0 (document 21-069r2)](https://docs.ogc.org/cs/21-069r2/21-069r2.html)
-  -- the authoritative specification, with the full object definitions and the
+- [OGC CoverageJSON Community Standard 1.0 (document 21-069r2)](https://docs.ogc.org/cs/21-069r2/21-069r2.html):
+  the authoritative specification, with the full object definitions and the
   complete list of domain types.
-- [covjson.org](https://covjson.org/) -- the project's home, with an
+- [covjson.org](https://covjson.org/): the project's home, with an
   approachable overview, tutorials, and tooling.
-- [CoverageJSON Playground](https://covjson.org/playground/) -- an interactive
+- [CoverageJSON Playground](https://covjson.org/playground/): an interactive
   viewer where you can paste a document and see it rendered, which is an excellent
   way to build intuition.
-- [OGC API - Coverages](https://ogcapi.ogc.org/coverages/) -- the web API
+- [OGC API - Coverages](https://ogcapi.ogc.org/coverages/): the web API
   standard that commonly delivers data as CoverageJSON.
-- [CoverageJSON on GitHub](https://github.com/opengeospatial/CoverageJSON) --
+- [CoverageJSON on GitHub](https://github.com/opengeospatial/CoverageJSON):
   the public repository, including the JSON Schema used to validate documents.
