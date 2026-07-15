@@ -258,6 +258,8 @@ These two axes are independent: any combination is possible.
 | **Gridded**     | a temperature map                | a land-cover map                 |
 | **Non-gridded** | temperatures at weather stations | flood-risk class at sample sites |
 
+: Two independent axes of variation (gridded vs non-gridded, continuous vs categorical), with an example in each combination. {#tbl-variation}
+
 ### Positions, dimensions, and axes {#sec-positions}
 
 To pin a value to a place, you need coordinates, one number per *dimension*. The
@@ -587,6 +589,8 @@ the ones you will meet most often are:
 | `Trajectory`    | A path traced through space and time                | a `composite` axis of (t, x, y[, z]) tuples    |
 | `Polygon`       | An area bounded by a ring of vertices               | a `composite` axis holding polygon rings       |
 
+: The `domainType` values you will meet most often: the shape each describes and the axes it uses. {#tbl-domain-types}
+
 A few patterns are worth noticing. Types whose positions form a clean grid
 (`Point`, `PointSeries`, `Grid`, ...) list each spatial dimension as its own axis.
 Types whose positions are irregular (`MultiPoint`, `Trajectory`, `Polygon`, ...)
@@ -810,11 +814,13 @@ the `y = 1` row. Laid out as a grid:
 
 ![Reading the flat `values` onto the grid: with `axisNames` `["y","x"]` the last-named axis, `x`, varies fastest, so the first three values fill row `y0` and the next three fill row `y1`.](../diagrams/row-major-grid.svg){#fig-row-major}
 
-So `values[0]` is the cell at (`y0`, `x0`) and `values[5]` is (`y1`, `x2`). Any
-cell with no data (e.g., sea-surface temperature over land) is the JSON literal
-`null` in that slot. The row-major rule is the single most important one for
-reading gridded data by hand, and it is exactly what @sec-examples's grid example
-walks through.
+The mapping between a cell and its slot in `values` is arithmetic: for a shape
+`[ny, nx]`, the cell in row `y`, column `x` lives at `values[y * nx + x]`. Here
+`nx = 3`, so (`y0`, `x0`) is `values[0 * 3 + 0]` = `values[0]` and (`y1`, `x2`) is
+`values[1 * 3 + 2]` = `values[5]`. Any cell with no data (e.g., sea-surface
+temperature over land) is the JSON literal `null` in that slot. The row-major rule
+is the single most important one for reading gridded data by hand, and it is
+exactly what @sec-examples's grid example walks through.
 
 ::: {.callout-caution}
 A `null` means *no reading*, which is not the same as a reading of `0`. A sea
@@ -827,11 +833,133 @@ missing data is `null` rather than a filler number.
 grid is huge, at which point forcing a client to download every value at once
 defeats the goal of feeding lightweight clients. The `TiledNdArray` form
 ([specification Section 9.6.3](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_57f9bc0e-3cd5-4c33-a213-4fbd9b3bfaf9))
-addresses this by splitting the array into *tiles*
-that can be fetched separately and on demand, each tile referenced by a URL rather
-than inlined. The mental model is identical (it is still one logical N-dimensional
-array with `axisNames` and `shape`); only the delivery is chunked. As a beginner
-you will rarely hand-write one, but you should recognize the type when you see it.
+addresses this by splitting the array into *tiles* that can be fetched separately
+and on demand, each tile referenced by a URL rather than inlined. The mental model
+is identical (it is still one logical N-dimensional array with `axisNames` and
+`shape`); only the delivery is chunked. This is the same idea that makes
+[Zarr](zarr.qmd) and Cloud-Optimized GeoTIFF work, applied to a CoverageJSON
+range.
+
+![The original array we will tile: one logical `NdArray` of shape `[4, 600, 800]` over axes `t`, `y`, `x`, drawn as a deck of four time-step sheets (the `t` axis is the stack's depth). The two tile sets below each cut *this* array a different way.](../diagrams/tiled-ndarray-original.svg){#fig-tiled-original}
+
+A `TiledNdArray` keeps the familiar `axisNames` and `shape` (still describing the
+*whole* logical array) and adds a `tileSets` array. Each entry there is a
+**tile set**: one complete way to cut that whole array into separately fetchable
+tiles. Here is a `TiledNdArray` for a range of shape `[4, 600, 800]` over axes
+`t`, `y`, `x` (four time steps on a 600-row by 800-column grid, an 800 &times; 600
+image), carrying two tile sets:
+
+```json
+{
+  "type": "TiledNdArray",
+  "dataType": "float",
+  "axisNames": ["t", "y", "x"],
+  "shape": [4, 600, 800],
+  "tileSets": [
+    {
+      "tileShape": [null, 300, 400],
+      "urlTemplate": "https://example.com/spatial/{y}/{x}.covjson"
+    },
+    {
+      "tileShape": [1, null, null],
+      "urlTemplate": "https://example.com/temporal/{t}.covjson"
+    }
+  ]
+}
+```
+
+Each tile set is described by two fields, `tileShape` and `urlTemplate`:
+
+- `tileShape` says how to slice each axis. It has one entry per axis, in
+  `axisNames` order, and each entry is either an integer or `null`:
+    - an **integer** *n* is the tile's **length** along that axis. Writing *L*
+      for that axis's own length (its entry in `shape`), the axis is cut into
+      `ceil(L / n)` tiles, the last one shorter when *n* does not divide *L*
+      evenly.
+    - **`null`** leaves the axis **untiled**: every tile spans its full length,
+      counting as a single slice.
+
+  A tile set's total tile count is the product of its per-axis slice counts.
+  (@tbl-tileset-cuts works this through for both tile sets above.)
+- `urlTemplate` is a [Level 1 URI template](https://www.rfc-editor.org/rfc/rfc6570)
+  (RFC 6570) giving the URL of each tile's data (detailed below).
+
+**Why more than one tile set?** `tileSets` is a list because the *same* array can
+be cut more than one way, and different clients want different cuts. The two tile
+sets above slice this array along different axes. Each array in the object
+(`shape` and every `tileShape`) lists its entries in `axisNames` order (`t`, then
+`y`, then `x`; time first, then the two spatial axes, is the usual convention), so
+you read each `tileShape` against `shape` position by position:
+
+| Axis | `shape` | spatial `tileShape [null, 300, 400]` | temporal `tileShape [1, null, null]` |
+| ---- | ------- | ------------------------------------ | ------------------------------------ |
+| `t`  | 4       | `null`: all 4 steps kept together &rarr; 1 slice | `1`: one step per tile, 4 &divide; 1 &rarr; 4 slices |
+| `y`  | 600     | `300`: 600 &divide; 300 &rarr; 2 slices | `null`: full height &rarr; 1 slice |
+| `x`  | 800     | `400`: 800 &divide; 400 &rarr; 2 slices | `null`: full width &rarr; 1 slice |
+| **tiles** | | 1 &times; 2 &times; 2 = **4** | 4 &times; 1 &times; 1 = **4** |
+
+: How each tile set slices the `[4, 600, 800]` array: read each `tileShape` entry against the axis `shape` on its left; multiplying the per-axis slice counts gives the tile total (**4** either way). {#tbl-tileset-cuts}
+
+The **spatial** tile set leaves `t` as `null`, so each of its four tiles is one
+spatial quadrant (300 in `y` by 400 in `x`) that still carries all four time
+steps (shape `[4, 300, 400]`). That is *four* tiles, not sixteen: because time is
+not a tiling axis here, the steps are never split apart, so each tile is the full
+time-stack of one spatial quadrant. A client zooming into one region across the
+whole time range fetches just the tile covering it (@fig-tiled-spatial).
+
+![The **spatial** tile set (`tileShape [null, 300, 400]`): four tiles in a 2 &times; 2 grid, each a quarter of the `x`/`y` plane that still keeps all four time steps (a deck of shape `[4, 300, 400]`). Each tile carries its indices `{y}`, `{x}` and the URL they produce from the template `https://example.com/spatial/{y}/{x}.covjson`. The dashed lines mark the 400/300 split on the `x`/`y` axes.](../diagrams/tiled-ndarray-spatial.svg){#fig-tiled-spatial}
+
+The `urlTemplate` is how a client turns a tile's position into a request. Reading
+one takes three steps:
+
+1. **Spot the placeholders.** The template carries one `{axis}` placeholder per
+   *tiled* axis. The spatial template `https://example.com/spatial/{y}/{x}.covjson`
+   has `{y}` and `{x}`; the untiled `t` gets no placeholder.
+2. **Substitute tile indices, not coordinate values.** Each placeholder takes that
+   tile's index along its axis: a whole-tile count starting at 0 at the axis
+   origin, so `{x} = 1` is the *second* tile along `x`, not the coordinate value 1.
+3. **Read off the URL.** The expansion is the complete request URL, with nothing
+   else to combine it with; fetching it returns a plain `NdArray` (@sec-ndarray)
+   holding just that one tile's values.
+
+Because `y` increases upward, tile-row `{y} = 0` is the *bottom* row. Applying the
+rule to all four spatial tiles gives @tbl-spatial-urls.
+
+| Tile position | `{y}` | `{x}` | Expanded URL            |
+| ------------- | ----- | ----- | ----------------------- |
+| bottom-left   | 0     | 0     | `…/spatial/0/0.covjson` |
+| bottom-right  | 0     | 1     | `…/spatial/0/1.covjson` |
+| top-left      | 1     | 0     | `…/spatial/1/0.covjson` |
+| top-right     | 1     | 1     | `…/spatial/1/1.covjson` |
+
+: The four tiles of the spatial tile set. Its `urlTemplate` `https://example.com/spatial/{y}/{x}.covjson` expands to each tile's URL by substituting that tile's `{y}`/`{x}` indices; with `y` increasing upward, `{y} = 0` is the bottom row. {#tbl-spatial-urls}
+
+A caveat on relative URLs: the standard defines `urlTemplate` as an RFC 6570
+template and its examples use absolute URLs, but it says nothing about resolving a
+*relative* template against a base URI. Treat the template as a complete URL.
+
+The **temporal** tile set does the opposite: it cuts `t` one step at a time and
+leaves `y` and `x` as `null`, so each of its four tiles is a full-resolution
+`[1, 600, 800]` snapshot of a single moment. A client animating the whole map step
+by step fetches those instead (@fig-tiled-temporal).
+
+![The **temporal** tile set (`tileShape [1, null, null]`): four tiles, one per time step, laid out along `t`. Each is a single full-extent `[1, 600, 800]` image, carrying its index `{t}` and the URL it produces from the template `https://example.com/temporal/{t}.covjson`.](../diagrams/tiled-ndarray-temporal.svg){#fig-tiled-temporal}
+
+Same logical array, two delivery layouts; the client picks the one that matches
+its access pattern. That is exactly the trade-off you make when choosing a chunk
+shape in Zarr.
+
+As a beginner you will rarely hand-write a `TiledNdArray`, but you should
+recognize the type and read its tile sets when a server hands you one.
+
+**Going further.**
+
+- [Specification Section 9.6.3](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_57f9bc0e-3cd5-4c33-a213-4fbd9b3bfaf9)
+  -- the normative `TiledNdArray` definition.
+- The same chunking idea, as a storage format: [Zarr](zarr.qmd) and
+  Cloud-Optimized GeoTIFF ([cogeo.org](https://www.cogeo.org/)).
+- A hands-on walkthrough: [Serving &amp; consuming a TiledNdArray](../how-to/index.qmd#sec-howto-tiled-ndarray)
+  (planned).
 
 ### Parameters in depth: vocabularies, categories, and units {#sec-parameters-depth}
 
@@ -1013,6 +1141,8 @@ axis named in `axisNames`.
 | 1st: `1`      | `t`                     | 1     | one time step            |
 | 2nd: `2`      | `y`                     | 2     | two latitude rows        |
 | 3rd: `3`      | `x`                     | 3     | three longitude columns  |
+
+: How the three `shape` entries line up with the axes named in `axisNames` for the grid example. {#tbl-shape-align}
 
 Multiplying the counts (1 x 2 x 3) gives six, which is exactly the number of
 entries in `values`. Applying the row-major rule from @sec-ndarray (the last-named
@@ -1438,10 +1568,8 @@ rearranged. Read one fluently and you can read them all.
 
 ## Glossary and further reading {#sec-glossary-reading}
 
-### Glossary {#sec-glossary}
-
 | Term | Meaning |
-| ---- | ------- |
+| :--- | :------ |
 | **Coverage** | A function mapping positions in space and time to values; also the top-level CoverageJSON object that bundles a domain, parameters, and ranges. |
 | **Domain** | The part of a coverage describing the positions (the inputs): its `domainType`, `axes`, and `referencing`. |
 | **`domainType`** | A keyword naming the shape of the positions, such as `Grid`, `Point`, `PointSeries`, or `Trajectory`. |
@@ -1458,7 +1586,9 @@ rearranged. Read one fluently and you can read them all.
 | **UCUM** | Unified Code for Units of Measure: a catalog of unambiguous unit codes (e.g., `Cel` for degrees Celsius). |
 | **Media type** | `application/prs.coverage+json`, the label identifying a CoverageJSON document sent over the web. |
 
-### Further reading {#sec-further-reading}
+: Glossary of the CoverageJSON terms used in this guide. {#tbl-glossary}
+
+For deeper detail and hands-on exploration, these are the key resources:
 
 - [OGC CoverageJSON Community Standard 1.0 (document 21-069r2)](https://docs.ogc.org/cs/21-069r2/21-069r2.html)
   -- the authoritative specification, with the full object definitions and the
