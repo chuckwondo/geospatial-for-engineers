@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 15 421 289" role="img" aria-labelledby="tns-title tns-desc" font-family="sans-serif">
+  <title id="tns-title">The spatial tile set</title>
+  <desc id="tns-desc">The same array cut by tileShape [null, 300, 400] into a two-by-two grid of four tiles. Each tile is one quarter of the x-y plane but keeps all four time steps, drawn as a small deck, and is labelled with its tile indices {y} and {x}, the URL its template expands to, and its shape [4, 300, 400]. Dashed lines mark the 400 and 300 split on the x and y axes.</desc>
+  <style>
+    .axis{stroke:#64748b;stroke-width:1.2}.tk{stroke:#64748b;stroke-width:1.2}
+    .tick{font-size:9px;fill:#475569}.url{font-size:7px;font-family:monospace;fill:#1e293b}
+    .shp{font-size:7px;font-family:monospace;fill:#475569}.idx{font-size:7px;font-family:monospace;font-weight:700;fill:#4338ca}
+    .cut{stroke:#94a3b8;stroke-width:1.3;stroke-dasharray:5 3}.axl{font-size:11px;font-style:italic;fill:#334155}
+  </style>
+  <rect x="-10" y="18" width="415" height="283" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <line class="cut" x1="178" y1="55" x2="178" y2="247"/>
+  <line class="cut" x1="50" y1="151" x2="306" y2="151"/>
+  <rect x="71" y="159" width="102" height="66" rx="2" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="66" y="164" width="102" height="66" rx="2" fill="#e8ecff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="61" y="169" width="102" height="66" rx="2" fill="#eef2ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="56" y="174" width="102" height="66" rx="2" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+  <text class="idx" x="107" y="198" text-anchor="middle">{y}=0, {x}=0</text>
+  <text class="url" x="107" y="209" text-anchor="middle">…/spatial/0/0.covjson</text>
+  <text class="shp" x="107" y="220" text-anchor="middle">[4, 300, 400]</text>
+  <rect x="199" y="159" width="102" height="66" rx="2" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="194" y="164" width="102" height="66" rx="2" fill="#e8ecff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="189" y="169" width="102" height="66" rx="2" fill="#eef2ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="184" y="174" width="102" height="66" rx="2" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+  <text class="idx" x="235" y="198" text-anchor="middle">{y}=0, {x}=1</text>
+  <text class="url" x="235" y="209" text-anchor="middle">…/spatial/0/1.covjson</text>
+  <text class="shp" x="235" y="220" text-anchor="middle">[4, 300, 400]</text>
+  <rect x="71" y="63" width="102" height="66" rx="2" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="66" y="68" width="102" height="66" rx="2" fill="#e8ecff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="61" y="73" width="102" height="66" rx="2" fill="#eef2ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="56" y="78" width="102" height="66" rx="2" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+  <text class="idx" x="107" y="102" text-anchor="middle">{y}=1, {x}=0</text>
+  <text class="url" x="107" y="113" text-anchor="middle">…/spatial/1/0.covjson</text>
+  <text class="shp" x="107" y="124" text-anchor="middle">[4, 300, 400]</text>
+  <rect x="199" y="63" width="102" height="66" rx="2" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="194" y="68" width="102" height="66" rx="2" fill="#e8ecff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="189" y="73" width="102" height="66" rx="2" fill="#eef2ff" stroke="#4338ca" stroke-width="1.3"/>
+  <rect x="184" y="78" width="102" height="66" rx="2" fill="#ffffff" stroke="#4338ca" stroke-width="1.3"/>
+  <text class="idx" x="235" y="102" text-anchor="middle">{y}=1, {x}=1</text>
+  <text class="url" x="235" y="113" text-anchor="middle">…/spatial/1/1.covjson</text>
+  <text class="shp" x="235" y="124" text-anchor="middle">[4, 300, 400]</text>
+  <line class="axis" x1="42" y1="255" x2="314" y2="255" marker-end="url(#b)"/>
+  <line class="tk" x1="50" y1="255" x2="50" y2="259"/><text class="tick" x="50" y="268" text-anchor="middle">0</text>
+  <line class="tk" x1="178" y1="255" x2="178" y2="259"/><text class="tick" x="178" y="268" text-anchor="middle">400</text>
+  <line class="tk" x1="306" y1="255" x2="306" y2="259"/><text class="tick" x="306" y="268" text-anchor="middle">800</text>
+  <text class="axl" x="178" y="283" text-anchor="middle">x</text>
+  <line class="axis" x1="42" y1="255" x2="42" y2="49" marker-end="url(#b)"/>
+  <line class="tk" x1="38" y1="247" x2="42" y2="247"/><text class="tick" x="34" y="250" text-anchor="end">0</text>
+  <line class="tk" x1="38" y1="151" x2="42" y2="151"/><text class="tick" x="34" y="154" text-anchor="end">300</text>
+  <line class="tk" x1="38" y1="55" x2="42" y2="55"/><text class="tick" x="34" y="58" text-anchor="end">600</text>
+  <text class="axl" x="8" y="154" text-anchor="middle">y</text>
+  <line class="axis" x1="319" y1="246" x2="340" y2="225" marker-end="url(#b)"/>
+  <text class="axl" x="344" y="238">t (0&#8594;3)</text>
+  <defs><marker id="b" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#64748b"/></marker></defs>
+</svg>
