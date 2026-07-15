@@ -3,7 +3,7 @@ title: "Foundations: Core Geospatial Concepts"
 ---
 
 ::: {.callout-note}
-**Planned guide -- not yet written.** This is the spine of the series; the other
+**Planned guide: not yet written.** This is the spine of the series; the other
 guides assume the vocabulary introduced here.
 :::
 

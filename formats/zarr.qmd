@@ -3,7 +3,7 @@ title: "Zarr (planned)"
 ---
 
 ::: {.callout-note}
-**Planned guide -- not yet written.** A beginner's guide to Zarr (chunked,
+**Planned guide: not yet written.** A beginner's guide to Zarr (chunked,
 compressed, cloud-native N-dimensional arrays) may be adapted from the
 zarr-python beginner's guide drafted elsewhere.
 :::
