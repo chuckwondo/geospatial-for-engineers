@@ -98,6 +98,16 @@ job**, not by what would make the series feel complete.
   github-actions bumps; `.pre-commit-config.yaml` (+ `scripts/pin-precommit-shas.sh`),
   `.editorconfig`, `.gitattributes` cover local hygiene. All Actions and
   pre-commit revs are SHA-pinned with tag comments; run `prek run --all-files`.
+  - **`prek install` is required, per clone, and nothing enforces it.** It was
+    never run here until 2026-07-16, so every hook was inert for the repo's
+    first month: they only fired when someone typed `prek run --all-files` by
+    hand. **CI does not run prek either**, so a missed `prek install` has no
+    backstop. If hygiene ever looks suspiciously clean, check
+    `ls .git/hooks/` first.
+  - `default_install_hook_types` names both `pre-commit` and `commit-msg`, so
+    one bare `prek install` sets up both shims. Without it, `prek install`
+    installs only `pre-commit` and silently leaves gitlint inert -- the same
+    class of failure as above, one level down.
 
 ## Layout
 
@@ -183,7 +193,15 @@ categories in §5.5).
 
 ## Chuck's workflow preferences
 
-- **Chuck commits himself**: stage changes, do NOT auto-commit.
+- **Chuck commits himself**: stage changes, do NOT auto-commit. Drafting the
+  commit message is welcome; running `git commit` is not.
+- **Commit messages**: conventional-commit subject (`docs:`, `feat:`, `chore:`,
+  optional scope), and **wrap at 72** -- subject and body alike. Enforced at
+  commit time by gitlint (`.gitlint`) via the commit-msg hook, so a bad message
+  is rejected rather than merely noticed; `--no-verify` bypasses it. Merge
+  commits are exempt (gitlint ignores them), so GitHub's "Merge pull request
+  #NN from ..." subjects are fine. History before 2026-07-16 drifted to 75 and
+  80 columns; do not copy it.
 - **SHA-pin** all GitHub Actions (and pre-commit revs) to commit SHAs, with a tag
   comment.
 - Install tools via **Homebrew + `~/.Brewfile`**; never `curl | bash` installers.

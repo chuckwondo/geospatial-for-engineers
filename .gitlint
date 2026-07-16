@@ -1,0 +1,23 @@
+# gitlint (https://jorisroovers.com/gitlint/) -- commit message style, enforced
+# at the commit-msg stage by the hook in .pre-commit-config.yaml.
+#
+# Run against the last commit:      gitlint --commit HEAD
+# Bypass in an emergency:           git commit --no-verify
+#
+# Merge commits are ignored by default (ignore-merge-commits), so GitHub's
+# "Merge pull request #NN from ..." subjects do not trip the length limits.
+
+[general]
+# A one-line commit ("docs: fix typo") is legitimate, so do not demand a body.
+# B5 (body-min-length) only applies once a body exists.
+ignore = body-is-missing
+
+[title-max-length]
+# 72, matching the body wrap. The repo had drifted to 75 and 82; this is the
+# line that was already the de facto convention in most commits.
+line-length = 72
+
+[body-max-line-length]
+# gitlint defaults to 80. 72 is git's own convention and leaves room for the
+# 4-space indent `git log` adds without wrapping in an 80-column terminal.
+line-length = 72
