@@ -22,6 +22,11 @@ Inventory (all used in the CoverageJSON guide):
   (time = domain, values = range; the noon peak spotlit in amber). Section 5.2.
 - `gridded-axes.svg` -- two individual `x`/`y` axes cross-product into a full
   regular 2x3 lattice: the gridded case. Section 4.2.1.
+- `axis-bounds.svg` -- the same 2x3 lattice as `gridded-axes.svg`, with two candidate
+  grids laid over it: read as cell centers, the shaded cells box each position; read
+  as cell corners, the dashed lines cross at them. The two grids sit half a cell apart
+  along both axes, which is the half-pixel trap (GeoTIFF's `PixelIsPoint` vs
+  `PixelIsArea`) that `bounds` exists to settle. Section 4.2.1.
 - `non-gridded-composite.svg` -- three points at irregular, off-lattice positions
   over a faint reference grid (sharing no `x`/`y` values to factor), so a
   `composite` axis lists each as a tuple: the non-gridded case. Section 4.2.2.
