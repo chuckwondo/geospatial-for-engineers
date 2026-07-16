@@ -741,8 +741,6 @@ which reading it means, axis by axis. Same half pixel, same bug.
   ([GDAL RFC 33](https://gdal.org/development/rfc/rfc33_gtiff_pixelispoint.html)),
   and, in netCDF, the CF Conventions' cell boundaries
   ([CF Section 7.1](https://cfconventions.org/cf-conventions/cf-conventions.html#cell-boundaries)).
-- The concepts underneath: [Foundations: core geospatial concepts](../foundations/geospatial-concepts.qmd)
-  (planned).
 
 #### Composite axes {#sec-composite-axes}
 
@@ -910,7 +908,7 @@ addresses this by splitting the array into *tiles* that can be fetched separatel
 and on demand, each tile referenced by a URL rather than inlined. The mental model
 is identical (it is still one logical N-dimensional array with `axisNames` and
 `shape`); only the delivery is chunked. This is the same idea that makes
-[Zarr](zarr.qmd) and Cloud-Optimized GeoTIFF work, applied to a CoverageJSON
+Zarr and Cloud-Optimized GeoTIFF work, applied to a CoverageJSON
 range.
 
 ![The original array we will tile: one logical `NdArray` of shape `[4, 600, 800]` over axes `t`, `y`, `x`, drawn as a deck of four time-step sheets (the `t` axis is the stack's depth). The two tile sets below each cut *this* array a different way.](../diagrams/tiled-ndarray-original.svg){#fig-tiled-original}
@@ -1029,10 +1027,8 @@ recognize the type and read its tile sets when a server hands you one.
 
 - [Specification Section 9.6.3](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_57f9bc0e-3cd5-4c33-a213-4fbd9b3bfaf9):
   the normative `TiledNdArray` definition.
-- The same chunking idea, as a storage format: [Zarr](zarr.qmd) and
+- The same chunking idea, as a storage format: [Zarr](https://zarr.dev/) and
   Cloud-Optimized GeoTIFF ([cogeo.org](https://www.cogeo.org/)).
-- A hands-on walkthrough: [Serving &amp; consuming a TiledNdArray](../how-to/index.qmd#sec-howto-tiled-ndarray)
-  (planned).
 
 ### Parameters in depth: vocabularies, categories, and units {#sec-parameters-depth}
 

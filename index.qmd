@@ -18,25 +18,11 @@ This series inverts that assumption. It spends its words on the **domain** (what
 *why they exist*) and trusts you with the code.
 It is the on-ramp I wanted when I started doing EO work without the background.
 
-## How it's organized
+## The guides
 
-- **Foundations**: the core geospatial ideas the rest depends on (coordinate
-  reference systems, projections, raster vs. vector, coverages, footprints).
-- **Data formats**: the file and interchange formats you'll actually meet,
-  one self-contained guide each (CoverageJSON, Zarr, and more to come).
-- **Libraries & tools** (planned): practical, runnable introductions to the
-  Python geospatial stack, once the foundations and formats are in place.
+Each one is self-contained: it teaches the geospatial ideas it needs, so you can
+start with whichever one matches the problem in front of you.
 
-Each guide stands on its own, but if you're starting cold, read **Foundations**
-first: it's the spine the others hang from.
-
-## Status
-
-This is an actively growing, work-in-progress personal learning project. Guides
-marked *planned* are stubs; expect rough edges and frequent change.
-
-::: {.callout-note}
-The first complete guide is the [CoverageJSON guide](formats/coveragejson.qmd).
-It doubles as the template for the series: patient, example-driven, and
-diagram-forward.
-:::
+[**CoverageJSON Uncovered**](guides/coveragejson.qmd) is a complete, ground-up
+guide to reading coverage data on the web, from your first document through the
+edge cases.

@@ -76,10 +76,11 @@ job**, not by what would make the series feel complete.
 - Engine: **Quarto** (website project). Quarto 1.9.38 is installed (via
   `brew install --cask quarto`).
 - `quarto preview` for live local view; `quarto render` builds into `_site/`.
-- `_quarto.yml`: docked sidebar (Foundations / Data formats), light (`cosmo`) +
-  dark (`darkly`) themes, search. `render` is restricted to `*.qmd` so
-  `CLAUDE.md`/`README.md` are not turned into pages. The pedagogical sidebar
-  sections get flattened to a peer list of guides by #9.
+- `_quarto.yml`: docked sidebar (a flat peer list: Home + each guide), light
+  (`cosmo`) + dark (`darkly`) themes, search. `render` is restricted to `*.qmd`
+  so `CLAUDE.md`/`README.md` are not turned into pages. The pedagogical section
+  headers were removed by #9; grouping can return if the guide count ever
+  justifies it.
 - **No Python environment yet.** Every page is currently prose and renders with
   no kernel, so `environment.yml` was removed (YAGNI). When the first
   *executable* guide gets real code, add the env then -- likely **uv**
@@ -100,19 +101,35 @@ job**, not by what would make the series feel complete.
 
 ## Layout
 
-As-built today. The three stub pages are **slated for deletion** by issue #9 (see
-"A shelf, not a curriculum"); they still exist until it lands.
+As-built today. Every page here is finished work (#9 landed).
 
 - `index.qmd` -- landing page + the framing.
-- `formats/coveragejson.qmd` -- the one complete guide.
+- `guides/` -- one file per guide. `guides/coveragejson.qmd` is the only one so
+  far.
 - `diagrams/` -- concept diagrams + their conventions (`diagrams/README.md`).
-- `foundations/geospatial-concepts.qmd`, `formats/zarr.qmd`, `how-to/index.qmd`
-  -- stubs, all three to be **deleted** (#9). Do not write against them.
-- **Do not move `coveragejson.qmd` yet.** `formats/` honestly describes what is
-  in it today. The *second* guide forces the taxonomy question (CRS is not a
-  format), so decide `guides/` vs. root in that PR (#14), with Quarto `aliases:`
-  to preserve the published URL. Deciding taxonomy at N=1 against a hypothetical
-  N=2 is exactly the habit #9 exists to delete.
+
+### Taxonomy: settled 2026-07-16 (#9)
+
+Guides live in `guides/`, flat. `formats/`, `foundations/`, and `how-to/` are
+gone.
+
+`guides/` **classifies nothing, and that is the point.** Under the shelf model
+every page is a guide, so the directory carries no information and therefore
+cannot become wrong. `formats/` classified, and would have broken the moment a
+non-format landed.
+
+Do not re-litigate this by adding a category directory. If the guide count ever
+makes navigation hard, that is a sidebar problem (#6), not a filesystem one.
+
+Two things worth knowing, because both were nearly missed:
+
+- **#9 originally deferred this to #14**, reasoning that "the second guide forces
+  the taxonomy question (CRS is not a format)." That trigger would never have
+  fired: #14 is COG, and COG **is** a format, so it would have slotted into
+  `formats/` cleanly and punted to guide #3, by which point there would be more
+  inbound links to break. Beware forcing functions aimed at the wrong guide.
+- **Moving is cheapest when a PR is already rewriting the inbound links.** #9
+  was; a standalone move PR would not be.
 
 ## Prose style (carried from the CoverageJSON guide)
 
@@ -176,7 +193,7 @@ categories in §5.5).
 ## Status
 
 - Scaffold complete and **building cleanly** (all pages render, no errors).
-- `formats/coveragejson.qmd` is the first complete guide, **ported from**
+- `guides/coveragejson.qmd` is the first complete guide, **ported from**
   `developmentseed/titiler-covjson/docs/00-coveragejson-beginners-guide.md`.
   It is the template for the series.
 - **Canonical home resolved:** this series is the home for the CovJSON guide. The
@@ -192,8 +209,11 @@ categories in §5.5).
   <https://chuckwondo.github.io/geospatial-for-engineers/>. (This supersedes the
   earlier "local-only, no remote" note.)
 - **No LICENSE yet** (#11). The site is public with no stated terms.
-- Content is one guide deep: `coveragejson.qmd` is ~12k words, the three stub
-  pages are 84-260 words each and are being deleted (#9). COG (#14) is next.
+- Content is one guide deep: `coveragejson.qmd` is ~12k words, and it is now the
+  whole site. COG (#14) is next.
+- **Shelf model adopted 2026-07-16 (#9).** The three stub pages are deleted, the
+  guide moved to `guides/`, the sidebar is flat, and no page says "planned".
+  Every published page is finished work. See Layout for the taxonomy decision.
 
 ### CoverageJSON diagram pass -- DONE (2026-06-22)
 
@@ -231,12 +251,10 @@ titiler-covjson work.
 Filed as issues 2026-07-16 (roughly in priority order). The issue bodies carry
 the reasoning; this is the index.
 
-- **#9** -- adopt the shelf model: delete the three stub pages, rewire the four
-  links into them, rewrite `index.qmd`, flatten the sidebar. Small, do first.
 - **#10** -- validate the JSON examples against the OGC schema in CI. Highest
   leverage: see "Why this is load-bearing" below.
-- **#14** -- write "COG Uncovered", the second guide. Forces the taxonomy and uv
-  decisions.
+- **#14** -- write "COG Uncovered", the second guide. Forces the uv decision.
+  (Taxonomy is no longer its problem: #9 settled it. See Layout.)
 - **#11** -- add a LICENSE (CC BY 4.0 prose/diagrams + MIT code).
 - **#12** -- wide diagrams illegible on narrow screens (~5px labels). A defect,
   deliberately separate from #6.
@@ -244,6 +262,10 @@ the reasoning; this is the index.
   text on purpose.
 - **#15** -- TiledNdArray how-to. Low priority: cheap and it would be the series'
   first runnable code, but the audience is roughly Dev Seed.
+- **#17** -- decide whether `docs/superpowers/` specs and plans should be tracked,
+  and record why. Filed 2026-07-16 from #9. The convention is deliberate (a
+  `docs(specs):` commit exists) but has **no recorded rationale**, so a fresh
+  session cannot tell whether to write one. Not urgent.
 - **#6** -- visual design overhaul (site chrome does not match the diagrams).
   Deferred.
 
@@ -275,10 +297,24 @@ and fit with the framing.
   it first looks like, and it drifts toward data engineering.
 - **Footprints, swaths & point data (GEDI)** -- genuinely underserved; was in the
   original Foundations sketch.
-- The three unfiled CovJSON how-tos sketched in the old `how-to/index.qmd` stub:
-  external references & lazy loading, non-standard domains & custom axes, and
-  `parameterGroups` for vector quantities.
-- **Zarr: dropped.** [developmentseed/zarr-book](https://developmentseed.org/zarr-book/)
-  fills it, and better. The connective tissue (how Zarr relates to the coverage
-  model) is what this series is uniquely placed to add, and #9 turns the stub into
-  links to zarr-book.
+- The three unfiled CovJSON how-tos sketched in the old `how-to/index.qmd` stub
+  (deleted by #9, recorded here so they are not lost): external references & lazy
+  loading, non-standard domains & custom axes, and `parameterGroups` for vector
+  quantities.
+- **Zarr: still off the list, but not for the reason previously recorded.** The
+  old note said [developmentseed/zarr-book](https://developmentseed.org/zarr-book/)
+  "fills it, and better." **That did not survive checking.** As of 2026-07-16 the
+  zarr-book is itself stubs: three commits total, the last "initial stubs for the
+  zarr-book" (2026-06-01) and nothing since; every chapter under 3.3KB; and
+  `data-model/chunks.md` opens with "**Status:** stub" under a
+  "What this chapter will cover" heading.
+  - So **do not link readers to it** until it has real content, and do not treat
+    the Zarr gap as filled. #9 links `zarr.dev` instead.
+  - Zarr stays off the candidate list on **day-job-proximity** grounds (the rule
+    is gap x day-job), and because it is Dev Seed's own book and the natural home
+    if it revives. Revisit if it is still idle.
+  - The connective tissue (how Zarr relates to the coverage model) remains what
+    this series would be uniquely placed to add.
+  - General lesson: this premise sat in `CLAUDE.md` unchecked and nearly shipped
+    reader-facing links to someone else's stubs. Verify "X covers it better"
+    claims before building on them.

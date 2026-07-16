@@ -18,16 +18,7 @@ website:
     contents:
       - text: "Home"
         href: index.qmd
-      - section: "Foundations"
-        contents:
-          - foundations/geospatial-concepts.qmd
-      - section: "Data formats"
-        contents:
-          - formats/coveragejson.qmd
-          - formats/zarr.qmd
-      - section: "How-to guides"
-        contents:
-          - how-to/index.qmd
+      - guides/coveragejson.qmd
 
 format:
   html:
