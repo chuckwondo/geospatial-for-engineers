@@ -671,6 +671,79 @@ longitudes and two latitudes. Grids lean on this heavily, which is what keeps a
 million-cell raster's *domain* description tiny even though its *range* still holds
 a million values.
 
+Both forms leave the same question open. Those three longitudes describe three
+*cells*, and a cell has width, yet each one is labeled by a single number. That
+number is only a **representative point** for its cell, and nothing in the document
+says where in the cell it sits. The two common readings pull apart: read `12.0` as
+the middle of its cell and the cell spans 11.75 to 12.25; read it as the cell's left
+edge and the same cell spans 12.0 to 12.5. The specification does say that an axis
+with no bounds "MAY be derived automatically", but it never says *how*, so two
+readers can each derive an answer, disagree, and both still conform.
+
+![With no `bounds`, the same six positions support two different grids, and nothing in the document chooses between them. The ambiguity belongs to each axis separately, and crossing two axes compounds it: read every coordinate as its cell's center and the shaded grid is meant; read each as its cell's edge and the dashed one is, with every position landing on a corner. The two grids sit half a cell apart along both axes at once.](../diagrams/axis-bounds.svg){#fig-axis-bounds}
+
+::: {.callout-warning}
+**Guess the wrong reading and everything moves half a cell.** This is the classic
+**half-pixel shift**, and it is quiet: a map drawn from shifted data still looks
+like a map, so it survives review and ships. It bites hardest where you feel safest:
+`(lower + upper) / 2` needs the cell's extent, so treating a coordinate that is
+really an edge as the midpoint puts every position you derive off by the same half
+cell. It is the same species as the coordinate-order trap in @sec-crs, where the
+numbers look reasonable and the data quietly lands in the wrong place.
+:::
+
+An axis settles the question with **`bounds`**: an array giving each coordinate an
+explicit lower and upper extent, two numbers per coordinate, at positions `2*i` and
+`2*i+1` for the coordinate at index `i`. Three coordinates therefore carry six
+bounds.
+
+```json
+"axes": {
+  "x": {
+    "values": [12.0, 12.5, 13.0],
+    "bounds": [11.75, 12.25, 12.25, 12.75, 12.75, 13.25]
+  },
+  "y": {
+    "values": [45.0, 45.5],
+    "bounds": [44.75, 45.25, 45.25, 45.75]
+  }
+}
+```
+
+That states the upper reading in @fig-axis-bounds: `12.0` covers 11.75 to 12.25.
+Neighbors share an edge (12.25 closes the first cell and opens the second), which is
+how a document says its cells sit flush rather than gapped or overlapping. It also
+settles the extent: read naively off the coordinates this axis looks 1.0 wide (12.0
+to 13.0), but three cells of 0.5 cover 1.5 (11.75 to 13.25), a whole cell more.
+
+Bounds cost you the compact form, on the axis that carries them. The specification's
+prose defines `bounds` only in terms of the `values` array, and the schema (which
+the standard makes the test of conformance) turns that silence into a rule: an axis
+with no `values` admits nothing besides `start`, `stop`, and `num`. Only that axis
+pays, though, so a domain may pair a bounded, explicit `x` with a compact `y`. And
+the schema checks types, not sense: a bounds array of the wrong length still
+validates, so it will not catch this for you.
+
+You may have met the same distinction in the raster world, where a GeoTIFF states
+which reading it means: `PixelIsPoint` puts the position at its cell's center (the
+shaded grid in @fig-axis-bounds), while `PixelIsArea`, the default, puts it on a
+corner (the dashed grid). GDAL surfaces the choice as an `AREA_OR_POINT` metadata
+item. The asymmetry is the useful part: GeoTIFF has one flag for the whole raster,
+and CoverageJSON has no flag at all, so `bounds` is the only way a document can say
+which reading it means, axis by axis. Same half pixel, same bug.
+
+**Going further.**
+
+- [Specification Section 9.6.1](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_d5c16418-1a20-4dbf-bf7a-8e685062df97):
+  the normative axis definition, including `bounds`.
+- The same half pixel elsewhere: GeoTIFF's `PixelIsArea` vs `PixelIsPoint` and
+  GDAL's `AREA_OR_POINT`
+  ([GDAL RFC 33](https://gdal.org/development/rfc/rfc33_gtiff_pixelispoint.html)),
+  and, in netCDF, the CF Conventions' cell boundaries
+  ([CF Section 7.1](https://cfconventions.org/cf-conventions/cf-conventions.html#cell-boundaries)).
+- The concepts underneath: [Foundations: core geospatial concepts](../foundations/geospatial-concepts.qmd)
+  (planned).
+
 #### Composite axes {#sec-composite-axes}
 
 Cross-product only works when the positions truly fill a grid. A **non-gridded**
@@ -1574,6 +1647,7 @@ rearranged. Read one fluently and you can read them all.
 | **Domain** | The part of a coverage describing the positions (the inputs): its `domainType`, `axes`, and `referencing`. |
 | **`domainType`** | A keyword naming the shape of the positions, such as `Grid`, `Point`, `PointSeries`, or `Trajectory`. |
 | **Axis** | The ordered coordinate values along one dimension, keyed `x`, `y`, `z`, or `t`. |
+| **`bounds`** | An optional axis array giving each coordinate an explicit lower and upper extent (two numbers per coordinate), stating how far its cell reaches instead of leaving it to be guessed. |
 | **Composite axis** | A single axis whose values are tuples of coordinates, used for irregular geometries (`MultiPoint`, `Trajectory`, `Polygon`). |
 | **Range** | The array of values for one parameter, encoded as an `NdArray` or `TiledNdArray`. |
 | **`NdArray`** | An N-dimensional array stored as a flat, row-major `values` list described by `axisNames` and `shape`. |
