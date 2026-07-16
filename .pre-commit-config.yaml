@@ -9,6 +9,12 @@
 #
 # autoupdate moves revs to the latest tags; the script re-pins them to SHAs.
 # The rev-must-be-sha hook below fails if that re-pin step is skipped.
+
+# `prek install` installs only the pre-commit shim by default, which silently
+# leaves the commit-msg hook below inert. Naming both here makes one bare
+# `prek install` set up both.
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
   # General file hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -42,6 +48,14 @@ repos:
     rev: 9257c6050c0261b8c57e712f632dc4a8010109a9 # v1.25.2
     hooks:
       - id: zizmor
+
+  # Commit message style; configured in `.gitlint`. Runs at the commit-msg
+  # stage, which gitlint's own hook definition declares, so it needs no
+  # `stages:` override here.
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: acc9d9de6369b76d22cb4167029d2035e8730b98 # v0.19.1
+    hooks:
+      - id: gitlint
 
   # Fail if any hook `rev:` is a bare tag instead of a commit SHA -- catches a
   # `prek autoupdate` that was not followed by ./scripts/pin-precommit-shas.sh.
