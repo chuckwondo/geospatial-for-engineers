@@ -1,7 +1,16 @@
-# Continuous integration: render the Quarto site and fail on any build error,
-# then check that internal links and section anchors resolve. Runs on every
-# push to main and on every pull request. No Python kernel is needed yet -- all
-# pages are prose; wire up the executable-guide environment here when one exists.
+# Continuous integration, in two independent jobs:
+#
+#   build:   render the Quarto site, fail on any build error, then check that
+#            internal links and section anchors resolve.
+#   hygiene: run the pre-commit hooks, so they hold regardless of whether the
+#            committer ran `prek install` locally.
+#
+# They are separate so a lint failure and a broken render are distinguishable at
+# a glance, and so the hooks do not wait on a Quarto setup they do not need.
+#
+# Runs on every push to main and on every pull request. No Python kernel is
+# needed yet because all pages are prose; wire up the executable-guide
+# environment here when one exists.
 name: CI
 
 on:
@@ -37,3 +46,32 @@ jobs:
           # still verified. Drop --offline (and add caching) for full link checks.
           args: "--offline --include-fragments --no-progress ./_site/**/*.html"
           fail: true
+
+  hygiene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Run pre-commit hooks (prek)
+        # The backstop for a missed `prek install`.
+        #
+        # SCOPE: the pre-commit stage only. gitlint runs at commit-msg, which
+        # `prek run --all-files` does not invoke, so commit messages are checked
+        # by the local hook alone and are NOT enforced here. Deliberate, not an
+        # oversight: covering them needs fetch-depth 0 and a commit range, and a
+        # message rejected at PR time costs a rebase rather than a retype. See
+        # #20 if that trade stops being worth it.
+        #
+        # The action defaults to `prek run --all-files`, and caches the hook
+        # environments itself (its `cache` input defaults to true).
+        uses: j178/prek-action@e98a699c41eb69ab013a45817a0406469a748f8d # v2.0.5
+        with:
+          # Pinned for the same reason every hook `rev:` is a SHA: the input
+          # defaults to `latest`, which would download and execute an unpinned
+          # binary on every run, the very hole the pinning exists to close, one
+          # layer down. Dependabot bumps the action, not this input, so bump it
+          # by hand alongside the local prek.
+          prek-version: "0.4.10"
