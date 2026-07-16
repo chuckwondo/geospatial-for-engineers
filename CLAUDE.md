@@ -14,16 +14,58 @@ written for **experienced software engineers with zero domain background**.
 The defining framing (the gap this fills): most geospatial tutorials assume the
 *domain* knowledge and explain the *code*. This series inverts that -- it assumes
 code/CLI/JSON/data-structure fluency and spends its words on the domain (CRS,
-projections, raster vs. vector, coverages, footprints, COG, Zarr).
+projections, raster vs. vector, coverages, footprints, COG, STAC).
 
 Personal ramp-up project by Chuck Daniels (chuck@developmentseed.org). Dev Seed
 does heavy NASA/EO work and maintains the rio-tiler / TiTiler stack. May later
 move to the `developmentseed` org; for now it lives under `~/src/chuckwondo`.
 
+### A shelf, not a curriculum (decided 2026-07-16)
+
+The series is a **publishing brand plus shared conventions**, not a curriculum
+with a dependency spine. This is load-bearing; do not quietly re-litigate it.
+
+- **Every guide is standalone and self-foundational**, with a real title of its
+  own ("CoverageJSON Uncovered", "COG Uncovered"). The series is the shelf, not
+  the book. Readers arrive from a search for their actual problem and will not
+  read a prerequisite page first.
+- **The site publishes what is done; the roadmap lives here.** No "planned" pages,
+  no stub sections. A page advertising unwritten work makes a finished artifact
+  look unfinished, which is a real cost paid today for a speculative benefit.
+- **A guide absorbs the slice of foundations it needs.** The CovJSON guide already
+  did this in its Section 2 and works standalone. Foundations are less shared than
+  a spine implies: CovJSON needs `referencing` and axis semantics, COG needs
+  projections and tiling schemes. Extract shared material only once the overlap
+  actually hurts.
+- **One repo.** N repos means N CI configs, N licenses, and diagram conventions
+  that stay in sync only by discipline. Splitting would also undo the deliberate
+  2026-06-19 consolidation (see Status).
+- Foundations is not cancelled, it is **promoted**: "Where Things Are: CRS &
+  Projections for Engineers" becomes a standalone peer guide, not homework.
+
+Corollary: pick the next guide by **largest knowledge gap x closest to the day
+job**, not by what would make the series feel complete.
+
 ## Audience & voice
 
 - Reader: seasoned software engineer, new to geospatial/EO. Trust their code
   fluency; teach the domain.
+- **Mind the middle band.** "Trust code fluency, teach the domain" splits the
+  world in two, but a third category sits between: adjacent tech that is neither
+  geospatial nor universal. Parquet, TIFF/IFD internals, HDF5, columnar storage,
+  protobuf. A strong backend engineer may never have touched any of them.
+  - JSON, HTTP, CLIs, data structures: safe to assume.
+  - Geospatial: teach it.
+  - Adjacent-but-not-universal: **ask, do not assume.**
+  - **Chuck is the calibration instrument** (he is the representative learner):
+    if Chuck does not know it, the reader baseline must not assume it. Before
+    scoping a guide, name what it assumes and check the middle-band items with
+    him explicitly.
+  - The check often **narrows** a guide rather than growing it. "The reader does
+    not know compression" does not mean adding a DEFLATE primer to the COG guide;
+    it means noticing that COG only ever needed one property ("tiles decode
+    independently"), and the rest was scope creep wearing a prerequisite's
+    clothes.
 - Patient, example-driven, **diagram-forward** (engaging visuals are a core goal,
   not an afterthought).
 - Set expectations honestly: these are practical on-ramps, not exhaustive
@@ -36,13 +78,19 @@ move to the `developmentseed` org; for now it lives under `~/src/chuckwondo`.
 - `quarto preview` for live local view; `quarto render` builds into `_site/`.
 - `_quarto.yml`: docked sidebar (Foundations / Data formats), light (`cosmo`) +
   dark (`darkly`) themes, search. `render` is restricted to `*.qmd` so
-  `CLAUDE.md`/`README.md` are not turned into pages.
+  `CLAUDE.md`/`README.md` are not turned into pages. The pedagogical sidebar
+  sections get flattened to a peer list of guides by #9.
 - **No Python environment yet.** Every page is currently prose and renders with
   no kernel, so `environment.yml` was removed (YAGNI). When the first
   *executable* guide gets real code, add the env then -- likely **uv**
   (`pyproject.toml` + `uv.lock`): the planned libs (xarray, rio-tiler, zarr,
   virtualizarr, etc.) are all pip-installable, and uv gives a lockfile,
   lockfile-pinned CI, and Dependabot-tracked deps (conda has none of these).
+  - The COG guide (#14) is the likely trigger: its correctness harness is
+    `rio cogeo validate` against real files, which means real deps. Make the
+    call there.
+  - Schema validation in CI (#10) does **not** trigger it: `uvx jsonschema`
+    needs no project environment. Keep it that way.
 - **CI/CD & hygiene** (`.github/` + repo root): `ci.yml` renders the site then
   runs an offline lychee link-check; `publish.yml` deploys to GitHub Pages via
   OIDC (no `gh-pages` branch, no secret); `dependabot.yml` does weekly
@@ -52,12 +100,19 @@ move to the `developmentseed` org; for now it lives under `~/src/chuckwondo`.
 
 ## Layout
 
+As-built today. The three stub pages are **slated for deletion** by issue #9 (see
+"A shelf, not a curriculum"); they still exist until it lands.
+
 - `index.qmd` -- landing page + the framing.
-- `foundations/geospatial-concepts.qmd` -- the spine (stub; write this early).
-- `formats/` -- `coveragejson.qmd` (complete), `zarr.qmd` (stub).
+- `formats/coveragejson.qmd` -- the one complete guide.
 - `diagrams/` -- concept diagrams + their conventions (`diagrams/README.md`).
-- Library guides were removed for now (which ones to cover is undecided); a
-  `libraries/` section returns once that's settled.
+- `foundations/geospatial-concepts.qmd`, `formats/zarr.qmd`, `how-to/index.qmd`
+  -- stubs, all three to be **deleted** (#9). Do not write against them.
+- **Do not move `coveragejson.qmd` yet.** `formats/` honestly describes what is
+  in it today. The *second* guide forces the taxonomy question (CRS is not a
+  format), so decide `guides/` vs. root in that PR (#14), with Quarto `aliases:`
+  to preserve the published URL. Deciding taxonomy at N=1 against a hypothetical
+  N=2 is exactly the habit #9 exists to delete.
 
 ## Prose style (carried from the CoverageJSON guide)
 
@@ -74,7 +129,11 @@ move to the `developmentseed` org; for now it lives under `~/src/chuckwondo`.
   [docs.ogc.org/cs/21-069r2](https://docs.ogc.org/cs/21-069r2/21-069r2.html)).
 - **Validate every JSON example against the relevant JSON Schema** before trusting
   it (the CovJSON guide's examples were all validated against the OGC CoverageJSON
-  schema; keep that discipline for future format guides).
+  schema; keep that discipline for future format guides). Still **manual** until
+  #10 automates it. The authority is `https://schemas.opengis.net/covjson/1.0/`
+  (the spec's Conformance clause), **not** `covjson.org/schema/dev`. Most examples
+  are fragments needing a Domain wrapper first, and the schema checks types, not
+  sense: green is necessary, not sufficient.
 
 ## Callouts
 
@@ -95,8 +154,15 @@ Two lanes, documented in `diagrams/README.md`:
 Reuse the guides' vocabulary verbatim in labels so prose and picture match. The
 full, matured conventions (B-bar, color/accessibility, motion, captions) now live
 in `diagrams/README.md`. The CovJSON guide's main ASCII diagrams (the row-major
-grid; the parameter <-> range key binding) have been converted; convert further
-ASCII blocks as the series grows.
+grid; the parameter <-> range key binding) have been converted.
+
+**"Convert the remaining ASCII blocks" is the wrong goal**; converting the ones
+that are *diagrams* is the right one (#13). A block that is code-shaped (the
+Coverage skeleton in §3.1: a JSON object with inline annotations) stays text: the
+reader parses JSON natively, and an SVG would make it a picture of something they
+would rather read, and kill copy-paste. Convert a block when the picture can
+carry meaning the text physically cannot (e.g., color for the land-cover
+categories in §5.5).
 
 ## Chuck's workflow preferences
 
@@ -117,12 +183,17 @@ ASCII blocks as the series grows.
   original draft in `developmentseed/titiler-covjson` was removed (2026-06-19) and
   that repo returned to its prior state, so there is no duplicate to drift.
 - **Tooling wired up (2026-06-19):** CI, Pages publish, Dependabot, pre-commit,
-  and hygiene files added (see Tech & build). Repo is still **local-only** -- no
-  GitHub remote yet, so the workflows haven't run; deploy needs Pages set to the
-  "GitHub Actions" source once a remote exists.
+  and hygiene files added (see Tech & build).
 - **Initial commit landed 2026-06-22** (scaffold + CovJSON guide + tooling +
   diagram design docs).
-- Remaining content (foundations spine, `zarr.qmd`) is stubs.
+- **Live since 2026-07 (as of 2026-07-16):** remote is
+  `chuckwondo/geospatial-for-engineers`; CI and the Pages publish workflow both
+  run green; the site is deployed at
+  <https://chuckwondo.github.io/geospatial-for-engineers/>. (This supersedes the
+  earlier "local-only, no remote" note.)
+- **No LICENSE yet** (#11). The site is public with no stated terms.
+- Content is one guide deep: `coveragejson.qmd` is ~12k words, the three stub
+  pages are 84-260 words each and are being deleted (#9). COG (#14) is next.
 
 ### CoverageJSON diagram pass -- DONE (2026-06-22)
 
@@ -157,12 +228,57 @@ titiler-covjson work.
 
 ## Backlog / next steps
 
-- Write `foundations/geospatial-concepts.qmd` (the spine the others hang from).
-  Brainstormed shape: a short **spine page + 4 sub-pages** (Where things are /
-  Raster vs. vector / Coverages / Footprints & point data); spine is a
-  mental-model overview that links out ("a pixel's journey" framing held in
-  reserve). First round: spine page only, sub-pages as stubs.
-- Create the GitHub remote, then enable Pages (source: **GitHub Actions**) so
-  `publish.yml` can deploy.
-- Decide which library guides to include, then restore the `libraries/` section.
-- Convert more ASCII diagrams to SVG; grow the diagram style vocabulary.
+Filed as issues 2026-07-16 (roughly in priority order). The issue bodies carry
+the reasoning; this is the index.
+
+- **#9** -- adopt the shelf model: delete the three stub pages, rewire the four
+  links into them, rewrite `index.qmd`, flatten the sidebar. Small, do first.
+- **#10** -- validate the JSON examples against the OGC schema in CI. Highest
+  leverage: see "Why this is load-bearing" below.
+- **#14** -- write "COG Uncovered", the second guide. Forces the taxonomy and uv
+  decisions.
+- **#11** -- add a LICENSE (CC BY 4.0 prose/diagrams + MIT code).
+- **#12** -- wide diagrams illegible on narrow screens (~5px labels). A defect,
+  deliberately separate from #6.
+- **#13** -- convert the two diagram-shaped ASCII blocks; keep §3.1's skeleton as
+  text on purpose.
+- **#15** -- TiledNdArray how-to. Low priority: cheap and it would be the series'
+  first runnable code, but the audience is roughly Dev Seed.
+- **#6** -- visual design overhaul (site chrome does not match the diagrams).
+  Deferred.
+
+### Why #10 is load-bearing
+
+This series is written **to learn**: guides get authored from partial knowledge,
+which is the right way to learn in public but stays honest only if something
+catches a wrong understanding. Two disciplines do that work: validating every
+example against the schema, and citing specs by canonical id + exact anchor. They
+are not hygiene, they are what makes "write to learn, publish the result"
+defensible. One of the two is still manual.
+
+### Candidate guides (not filed)
+
+Ranked by the gap x day-job rule. Chuck self-reported gaps in **all** of these as
+of 2026-07-16, so the gap axis does not discriminate; rank on day-job proximity
+and fit with the framing.
+
+- **STAC Uncovered** -- Dev Seed core, JSON the reader can read cold. The
+  underserved part is the *why*: why a tree of static JSON instead of a database.
+- **Where Things Are: CRS & Projections** -- the deepest, most-searched
+  confusion, and the most-covered. Only wins if the engineer reframing carries
+  it: lon/lat order as an API contract bug, EPSG as a registry lookup, datums as
+  a versioning problem. Done conventionally it is redundant.
+- **Tiling schemes / TileMatrixSet** -- why Web Mercator won despite lying about
+  area. Pairs with COG.
+- **GeoParquet** -- **do not assume the reader knows Parquet** (Chuck does not;
+  see the middle band). That makes it ~1.5 guides, not the cheap "geo delta" win
+  it first looks like, and it drifts toward data engineering.
+- **Footprints, swaths & point data (GEDI)** -- genuinely underserved; was in the
+  original Foundations sketch.
+- The three unfiled CovJSON how-tos sketched in the old `how-to/index.qmd` stub:
+  external references & lazy loading, non-standard domains & custom axes, and
+  `parameterGroups` for vector quantities.
+- **Zarr: dropped.** [developmentseed/zarr-book](https://developmentseed.org/zarr-book/)
+  fills it, and better. The connective tissue (how Zarr relates to the coverage
+  model) is what this series is uniquely placed to add, and #9 turns the stub into
+  links to zarr-book.
