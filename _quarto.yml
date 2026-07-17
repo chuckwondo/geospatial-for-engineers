@@ -12,6 +12,11 @@ website:
     engineers with zero domain background.
   reader-mode: true
   page-navigation: true
+  page-footer:
+    center: >
+      © 2026 Charles "Chuck" Daniels.
+      Prose and diagrams: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+      Code: [MIT](https://github.com/chuckwondo/geospatial-for-engineers/blob/main/LICENSE-CODE).
   sidebar:
     style: docked
     search: true
