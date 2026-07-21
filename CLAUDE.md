@@ -39,7 +39,7 @@ with a dependency spine. This is load-bearing; do not quietly re-litigate it.
   actually hurts.
 - **One repo.** N repos means N CI configs, N licenses, and diagram conventions
   that stay in sync only by discipline. Splitting would also undo the deliberate
-  2026-06-19 consolidation (see Status).
+  2026-06-19 consolidation of the CovJSON guide into this one repo.
 - Foundations is not cancelled, it is **promoted**: "Where Things Are: CRS &
   Projections for Engineers" becomes a standalone peer guide, not homework.
 
@@ -94,10 +94,12 @@ job**, not by what would make the series feel complete.
     needs no project environment. Keep it that way.
 - **CI/CD & hygiene** (`.github/` + repo root): `ci.yml` renders the site then
   runs an offline lychee link-check; `publish.yml` deploys to GitHub Pages via
-  OIDC (no `gh-pages` branch, no secret); `dependabot.yml` does weekly
-  github-actions bumps; `.pre-commit-config.yaml` (+ `scripts/pin-precommit-shas.sh`),
-  `.editorconfig`, `.gitattributes` cover local hygiene. All Actions and
-  pre-commit revs are SHA-pinned with tag comments; run `prek run --all-files`.
+  OIDC (no `gh-pages` branch, no secret), serving the live site at
+  <https://chuckwondo.github.io/geospatial-for-engineers/>; `dependabot.yml` does
+  weekly github-actions bumps; `.pre-commit-config.yaml`
+  (+ `scripts/pin-precommit-shas.sh`), `.editorconfig`, `.gitattributes` cover
+  local hygiene. All Actions and pre-commit revs are SHA-pinned with tag
+  comments; run `prek run --all-files`.
   - **`prek install` is required, per clone, and nothing enforces it.** It was
     never run here until 2026-07-16, so every hook was inert for the repo's
     first month: they only fired when someone typed `prek run --all-files` by
@@ -208,48 +210,6 @@ categories in §5.5).
 - Collaborative authoring: draft a section, then **probe Chuck's understanding**
   as the representative learner before moving on. He likes being asked.
 
-## Status
-
-- Scaffold complete and **building cleanly** (all pages render, no errors).
-- `guides/coveragejson.qmd` is the first complete guide, **ported from**
-  `developmentseed/titiler-covjson/docs/00-coveragejson-beginners-guide.md`.
-  It is the template for the series.
-- **Canonical home resolved:** this series is the home for the CovJSON guide. The
-  original draft in `developmentseed/titiler-covjson` was removed (2026-06-19) and
-  that repo returned to its prior state, so there is no duplicate to drift.
-- **Tooling wired up (2026-06-19):** CI, Pages publish, Dependabot, pre-commit,
-  and hygiene files added (see Tech & build).
-- **Initial commit landed 2026-06-22** (scaffold + CovJSON guide + tooling +
-  diagram design docs).
-- **Live since 2026-07 (as of 2026-07-16):** remote is
-  `chuckwondo/geospatial-for-engineers`; CI and the Pages publish workflow both
-  run green; the site is deployed at
-  <https://chuckwondo.github.io/geospatial-for-engineers/>. (This supersedes the
-  earlier "local-only, no remote" note.)
-- **No LICENSE yet** (#11). The site is public with no stated terms.
-- Content is one guide deep: `coveragejson.qmd` is ~12k words, and it is now the
-  whole site. COG (#14) is next.
-- **Shelf model adopted 2026-07-16 (#9).** The three stub pages are deleted, the
-  guide moved to `guides/`, the sidebar is flat, and no page says "planned".
-  Every published page is finished work. See Layout for the taxonomy decision.
-
-### CoverageJSON diagram pass -- DONE (2026-06-22)
-
-Executed inline. Conventions are codified in `diagrams/README.md`; the as-built
-result and the deviations from the plan are in the "Outcome" note of
-`docs/superpowers/plans/2026-06-22-covjson-diagrams.md`.
-
-- Diagrams now in the CovJSON guide: `coverage-as-function.svg` (enhanced with an
-  amber worked instance), `coverage-shared-domain.svg` (one domain -> multiple
-  ranges -- **replaced** the planned spreadsheet hero), `parameter-range-binding.svg`
-  (Section 3.3), `row-major-grid.svg` (animated, Section 4.3).
-- Also: site-wide figure caption styling (`custom.scss` + `caption-labels.html`);
-  a "Property, parameter, range" callout in 3.3; reworded 2.1 coverage definition
-  ("one function per property, all sharing the same domain"); spreadsheet mental
-  model removed from the prose.
-- Established the **B-bar / animated-C** pattern and the matured palette,
-  accessibility, motion, and caption conventions for the series.
-
 ## Prior art (build on, don't duplicate)
 
 - **Project Pythia Foundations** (Jupyter Book; geoscience Python stack) -- a model
@@ -264,39 +224,7 @@ CoverageJSON is **parked until Chuck is more CovJSON-fluent**. Reminder cue:
 Claude memory (`covjson-geozarr-engagement`), carried over from the
 titiler-covjson work.
 
-## Backlog / next steps
-
-Filed as issues 2026-07-16 (roughly in priority order). The issue bodies carry
-the reasoning; this is the index.
-
-- **#10** -- validate the JSON examples against the OGC schema in CI. Highest
-  leverage: see "Why this is load-bearing" below.
-- **#14** -- write "COG Uncovered", the second guide. Forces the uv decision.
-  (Taxonomy is no longer its problem: #9 settled it. See Layout.)
-- **#11** -- add a LICENSE (CC BY 4.0 prose/diagrams + MIT code).
-- **#12** -- wide diagrams illegible on narrow screens (~5px labels). A defect,
-  deliberately separate from #6.
-- **#13** -- convert the two diagram-shaped ASCII blocks; keep §3.1's skeleton as
-  text on purpose.
-- **#15** -- TiledNdArray how-to. Low priority: cheap and it would be the series'
-  first runnable code, but the audience is roughly Dev Seed.
-- **#17** -- decide whether `docs/superpowers/` specs and plans should be tracked,
-  and record why. Filed 2026-07-16 from #9. The convention is deliberate (a
-  `docs(specs):` commit exists) but has **no recorded rationale**, so a fresh
-  session cannot tell whether to write one. Not urgent.
-- **#6** -- visual design overhaul (site chrome does not match the diagrams).
-  Deferred.
-
-### Why #10 is load-bearing
-
-This series is written **to learn**: guides get authored from partial knowledge,
-which is the right way to learn in public but stays honest only if something
-catches a wrong understanding. Two disciplines do that work: validating every
-example against the schema, and citing specs by canonical id + exact anchor. They
-are not hygiene, they are what makes "write to learn, publish the result"
-defensible. One of the two is still manual.
-
-### Candidate guides (not filed)
+## Candidate guides (not yet filed)
 
 Ranked by the gap x day-job rule. Chuck self-reported gaps in **all** of these as
 of 2026-07-16, so the gap axis does not discriminate; rank on day-job proximity
