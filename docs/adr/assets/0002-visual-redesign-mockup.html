@@ -1,0 +1,1436 @@
+<!--
+  HYBRID VARIANT: SURVEY CONSOLE
+  A refinement of the chosen "Console" direction (terminal / developer-native),
+  fused with Field's lined-ledger graticule LEFT SIDEBAR and a Ledger-style
+  high-contrast DISPLAY SERIF used for the single big hero line ONLY, framed as
+  terminal output. Mono drives the UI/prompt/code; a readable sans carries body.
+
+  Self-hostable web fonts to realize this in production (NOT loaded here — this
+  mockup uses only system stacks, no remote resources of any kind):
+    - Display serif (hero line only): "Fraunces" (variable optical-contrast serif)
+    - Body sans:                       "Inter" or "Söhne"
+    - Mono (UI / prompt / code):       "Berkeley Mono" or "JetBrains Mono"
+
+  "TERRA" palette — a warm, earth-forward landscape read as one coherent scene,
+  not a rainbow: a deep pine/forest-green GROUND (near-black in dark, deep ink-green
+  text in light), a rich terracotta/clay earth as the ONE dominant accent, a clear
+  sky-blue secondary, warm sand/cloud neutrals, and a forest-green support hue.
+  Saturation and tonal variance are pushed for real POP and strong contrast; the
+  brightest/most saturated tones are reserved for small highlights. Both themes are
+  designed from scratch (light = bright cloud-paper, dark = deep saturated pine),
+  not naive inverts. Cursor is a STATIC block (no blink, by request). Content fills
+  the full center-track width (see --shell / --measure and the width notes below).
+-->
+<style>
+  /* ==========================================================================
+     SURVEY CONSOLE — design tokens
+     ========================================================================== */
+  :root {
+    color-scheme: light dark;
+
+    --mono:  "SF Mono", "ui-monospace", "JetBrains Mono", "Menlo", monospace;
+    --sans:  "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    --serif: "Hoefler Text", "Iowan Old Style", "Palatino", Georgia, serif; /* display / hero only */
+
+    /* type scale (1.25 minor-third) */
+    --t-xs:   0.75rem;
+    --t-sm:   0.8125rem;
+    --t-base: 1.0625rem;
+    --t-md:   1.1875rem;
+    --t-lg:   1.5rem;
+    --t-xl:   2rem;
+    --t-2xl:  2.75rem;
+    --t-hero: 4.25rem;   /* serif hero ceiling */
+
+    /* WIDTH: min(120ch,100%) fills the full track up to a 120ch soft cap, so at
+       1200-1440px paragraphs reach the track edge with no gutter; only true
+       ultrawide (>1650px) sees a modest right margin. (Matches Alpine.) */
+    --measure: min(120ch, 100%);
+    --shell: 1760px;     /* wide document shell: fills the center region */
+    --radius: 12px;
+    --radius-sm: 7px;
+
+    /* ---- READABILITY SCRIMS (washes in the --bg color; auto-repaint per theme
+       because they resolve var(--bg) at use time) ----
+       --scrim-lane:   MODERATE wash under the central reading column: enough to
+                       soften the field beneath long-form prose, but deliberately
+                       NOT opaque, so the satellite scene stays faintly perceptible
+                       through the reading column instead of the column reading as
+                       plain paper. Body text stays past AA because the muted field
+                       (patches capped ~0.24 fill) already clears AA un-scrimmed,
+                       and this wash only improves it.
+       --scrim-chrome: light wash under the sidebar / TOC / footer running text,
+                       enough to guarantee WCAG AA over the field while still
+                       letting ~55% of the satellite scene read through. */
+    --scrim-lane:   color-mix(in srgb, var(--bg) 70%, transparent);
+    --scrim-chrome: color-mix(in srgb, var(--bg) 45%, transparent);
+
+    /* ---- LIGHT (Terra): RUSTY GREEN earthed cloud-paper — warmth from an
+       iron-oxide (red/orange) undertone blended into greyed greens, NOT yellow;
+       green-dominant, richer & more present than the old pale sage ---- */
+    --bg:        #dee9d7;         /* warm greyed-green paper (hue ~97, R>B rosy cast, de-yellowed) */
+    --grid-fine: rgba(48, 56, 42, 0.055);
+    --grid-cell: rgba(48, 56, 42, 0.04);
+    --hero-grid: rgba(48, 56, 42, 0.11);  /* warm graticule wash (warm-olive base, not yellow) */
+    --panel:     #e7f0e1;         /* raised warm-green surface (hue ~96, holds accent text 5.0:1) */
+    --panel-2:   #dce7d5;         /* warm greyed-green chrome bars (hue ~97, accent 4.6:1) */
+    --panel-3:   #dbe5d4;         /* deeper warm chrome (hue ~95, accent 4.5:1, teal 5.2:1) */
+    --border:    #a0b496;         /* warm greyed-green border (hue ~100) */
+    --border-strong: #7d9077;     /* warm greyed-green strong border (hue ~106) */
+    --ink:       #1b241a;         /* deep warm pine near-black text */
+    --ink-2:     #33422f;         /* warm forest body text */
+    --ink-muted: #445b38;         /* warm moss labels/captions (>=4.5:1) */
+
+    /* DOMINANT accent: terracotta / clay earth */
+    --accent:      #ac4318;       /* link + accent TEXT (>=4.5:1 on paper) */
+    --accent-ui:   #c85a2a;       /* fills, cursor, carets (non-text, >=3:1) */
+    --accent-soft: rgba(200, 90, 42, 0.15);
+    --accent-line: rgba(200, 90, 42, 0.55);
+
+    /* secondary hue: clear sky blue (var kept named --teal for stability) */
+    --teal:      #175f96;         /* sky-blue TEXT (>=4.5:1) */
+    --teal-ui:   #2a86bf;         /* sky-blue fills / strokes (non-text) */
+    --teal-soft: rgba(42, 134, 191, 0.13);
+
+    /* support hue: forest green (var kept named --olive for stability) */
+    --olive:     #34632f;         /* warm earthed forest-green TEXT */
+    --olive-ui:  #4c8a42;         /* warm forest-green strokes (non-text) */
+
+    --focus: #1a6fb0;
+
+    /* callout hues (each ALSO labelled + shaped — never color alone) */
+    --c-note: #175f96;  --c-note-bg: rgba(42, 134, 191, 0.10);
+    --c-imp:  #ac4318;  --c-imp-bg:  rgba(200, 90, 42, 0.12);
+    --c-warn: #7a5400;  --c-warn-bg: rgba(176, 122, 0, 0.14);
+    --c-caut: #9d2317;  --c-caut-bg: rgba(170, 42, 26, 0.11);
+
+    /* teaching diagram — differ by LUMINANCE + position + shape + label */
+    --dg-panel:     #e7f0e1;
+    --dg-ink:       #152615;
+    --dg-line:      #445b38;          /* survey axis line + labels (>=4.5:1) */
+    --dg-graticule: rgba(48, 56, 42, 0.12);
+    --dg-domain:    #33603a;          /* DARK warm forest — domain (lowest luminance) */
+    --dg-domain-ink:#2f5535;
+    --dg-range:     #2a86bf;          /* sky blue — range strokes/fills */
+    --dg-range-ink: #175f96;          /* sky-blue TEXT */
+    --dg-instance:  #c85a2a;          /* terracotta — worked instance */
+    --dg-instance-ink: #ac4318;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:        #0d190f;         /* deep pine near-black (green-tinted ground) */
+      --grid-fine: rgba(188, 212, 182, 0.06);
+      --grid-cell: rgba(188, 212, 182, 0.032);
+      --hero-grid: rgba(188, 212, 182, 0.13);
+      --panel:     #122114;
+      --panel-2:   #1a2b1c;
+      --panel-3:   #223524;
+      --border:    #2e4230;
+      --border-strong: #425744;
+      --ink:       #e0eade;         /* cool sage-grey (de-yellowed cream) */
+      --ink-2:     #bfcdbe;
+      --ink-muted: #84a481;
+
+      --accent:      #e8895a;       /* terracotta glow — dominant accent */
+      --accent-ui:   #e8895a;
+      --accent-soft: rgba(232, 137, 90, 0.16);
+      --accent-line: rgba(232, 137, 90, 0.48);
+
+      --teal:      #5db4e0;         /* clear sky blue */
+      --teal-ui:   #4ea6d4;
+      --teal-soft: rgba(78, 166, 212, 0.16);
+
+      --olive:     #7bc680;         /* light forest / sage support */
+      --olive-ui:  #66b370;
+
+      --focus: #6fb8ec;
+
+      --c-note: #6fb8ec;  --c-note-bg: rgba(78, 166, 212, 0.15);
+      --c-imp:  #e8895a;  --c-imp-bg:  rgba(232, 137, 90, 0.13);
+      --c-warn: #e6bf5a;  --c-warn-bg: rgba(230, 191, 90, 0.14);
+      --c-caut: #f5836f;  --c-caut-bg: rgba(245, 131, 111, 0.14);
+
+      --dg-panel:     #111c14;
+      --dg-ink:       #e0eade;
+      --dg-line:      #749a74;
+      --dg-graticule: rgba(188, 212, 182, 0.11);
+      --dg-domain:    #a8d6aa;         /* LIGHT sage — domain (highest luminance) */
+      --dg-domain-ink:#a8d6aa;
+      --dg-range:     #4ea6d4;         /* MID sky blue */
+      --dg-range-ink: #8fd0ee;
+      --dg-instance:  #e8895a;         /* terracotta — worked instance */
+      --dg-instance-ink: #f4a878;
+    }
+  }
+
+  /* explicit toggle overrides must win in both directions */
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg:#dee9d7; --grid-fine:rgba(48,56,42,0.055); --grid-cell:rgba(48,56,42,0.04); --hero-grid:rgba(48,56,42,0.11);
+    --panel:#e7f0e1; --panel-2:#dce7d5; --panel-3:#dbe5d4;
+    --border:#a0b496; --border-strong:#7d9077;
+    --ink:#1b241a; --ink-2:#33422f; --ink-muted:#445b38;
+    --accent:#ac4318; --accent-ui:#c85a2a;
+    --accent-soft:rgba(200,90,42,0.15); --accent-line:rgba(200,90,42,0.55);
+    --teal:#175f96; --teal-ui:#2a86bf; --teal-soft:rgba(42,134,191,0.13);
+    --olive:#34632f; --olive-ui:#4c8a42;
+    --focus:#1a6fb0;
+    --c-note:#175f96; --c-note-bg:rgba(42,134,191,0.10);
+    --c-imp:#ac4318; --c-imp-bg:rgba(200,90,42,0.12);
+    --c-warn:#7a5400; --c-warn-bg:rgba(176,122,0,0.14);
+    --c-caut:#9d2317; --c-caut-bg:rgba(170,42,26,0.11);
+    --dg-panel:#e7f0e1; --dg-ink:#152615; --dg-line:#445b38;
+    --dg-graticule:rgba(48,56,42,0.12);
+    --dg-domain:#33603a; --dg-domain-ink:#2f5535;
+    --dg-range:#2a86bf; --dg-range-ink:#175f96;
+    --dg-instance:#c85a2a; --dg-instance-ink:#ac4318;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg:#0d190f; --grid-fine:rgba(188,212,182,0.06); --grid-cell:rgba(188,212,182,0.032); --hero-grid:rgba(188,212,182,0.13);
+    --panel:#122114; --panel-2:#1a2b1c; --panel-3:#223524;
+    --border:#2e4230; --border-strong:#425744;
+    --ink:#e0eade; --ink-2:#bfcdbe; --ink-muted:#84a481;
+    --accent:#e8895a; --accent-ui:#e8895a;
+    --accent-soft:rgba(232,137,90,0.16); --accent-line:rgba(232,137,90,0.48);
+    --teal:#5db4e0; --teal-ui:#4ea6d4; --teal-soft:rgba(78,166,212,0.16);
+    --olive:#7bc680; --olive-ui:#66b370;
+    --focus:#6fb8ec;
+    --c-note:#6fb8ec; --c-note-bg:rgba(78,166,212,0.15);
+    --c-imp:#e8895a; --c-imp-bg:rgba(232,137,90,0.13);
+    --c-warn:#e6bf5a; --c-warn-bg:rgba(230,191,90,0.14);
+    --c-caut:#f5836f; --c-caut-bg:rgba(245,131,111,0.14);
+    --dg-panel:#111c14; --dg-ink:#e0eade; --dg-line:#749a74;
+    --dg-graticule:rgba(188,212,182,0.11);
+    --dg-domain:#a8d6aa; --dg-domain-ink:#a8d6aa;
+    --dg-range:#4ea6d4; --dg-range-ink:#8fd0ee;
+    --dg-instance:#e8895a; --dg-instance-ink:#f4a878;
+  }
+
+  /* ==========================================================================
+     base
+     ========================================================================== */
+  * { box-sizing: border-box; }
+
+  .survey-root {
+    /* faint cartographic graticule wash on the paper base */
+    background:
+      linear-gradient(var(--grid-cell) 1px, transparent 1px) 0 0 / 100% 34px,
+      linear-gradient(90deg, var(--grid-cell) 1px, transparent 1px) 0 0 / 34px 100%,
+      var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--t-base);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    /* own stacking context so the ambient satellite field (a z-index:-1 child)
+       paints ABOVE this element's paper/grid background but BELOW all content
+       and chrome — no layout, palette, or component change, just a back layer. */
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+  }
+  .survey-root ::selection { background: var(--accent-soft); }
+  .mono { font-family: var(--mono); }
+
+  /* ==========================================================================
+     AMBIENT SATELLITE FIELD — whole-page abstracted aerial/land-cover scene
+     --------------------------------------------------------------------------
+     A quiet cartographic texture behind the ENTIRE page (margins, sidebars,
+     content). Three woven layers, all palette-driven so they repaint for
+     light (rusty-sage) and dark (pine, read as a satellite-at-night view):
+       (a) organic land-cover / terrain patches (soft blobby biome regions),
+       (b) a faint graticule (the lat/lon grid of a GIS view),
+       (c) a few faint contour / elevation rings.
+     Fixed to the viewport, painted at z-index:-1 (above the paper, below every
+     content surface), pointer-events:none. The scene is dialled UP so it is
+     plainly visible; the ORGANIC BIOME FILLS (not just the strokes) now carry the
+     perceptibility, with fill-opacity raised to ~0.19-0.24 so the land-cover
+     patches read on their own in the margins. Readability is bought back by SCRIMS
+     (washes in --bg): a MODERATE one under the central reading lane (70% bg, so
+     the scene stays faintly visible through prose instead of the column reading as
+     plain paper) and a light one under the sidebar / TOC / footer running text.
+     Patch cores are spaced and opacity-capped so text over the field still clears
+     WCAG AA in both themes (verified: worst single-patch --ink-muted ~4.55
+     un-scrimmed; under the 0.45 chrome scrim the field tint collapses to ~13% so
+     nav text stays ~4.7+; under the 70% lane scrim body text stays well past AA).
+     Static by request; no motion.
+     ========================================================================== */
+  .satfield {
+    position: fixed; inset: 0; z-index: -1;
+    pointer-events: none; overflow: hidden;
+    contain: layout paint style;
+  }
+  .satfield svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; display: block;
+  }
+  /* (a) land-cover / terrain patches — soft, blurred biome blobs.
+     Fills are palette tokens so the whole scene repaints per theme (in dark it
+     reads as glowing land on a near-black ground: a satellite-at-night view).
+     Per-patch fill-opacity is set on each path, capped so text sitting on the
+     UN-scrimmed field (sidebar / TOC / margins) still clears AA; the dense cores
+     are spaced apart so no two patches stack under one reading line. */
+  .sf-land   { fill: var(--olive-ui); }   /* lowland — mid forest green */
+  .sf-land-b { fill: var(--olive); }      /* upland  — deep forest green */
+  .sf-water  { fill: var(--teal-ui); }    /* water   — sky/teal token   */
+  .sf-arid   { fill: var(--accent-ui); }  /* arid    — warm terracotta  */
+  /* (b) graticule overlay — the GIS lat/lon grid, now a clearly-drawn map line */
+  .sf-grat   { fill: none; stroke: var(--border-strong); stroke-width: 1.2; stroke-opacity: 0.62; }
+  .sf-grat-2 { fill: none; stroke: var(--border-strong); stroke-width: 1.8; stroke-opacity: 0.6; }  /* bold reference meridian/parallel (trimmed so a line crossing small mono glyphs cannot nibble local contrast) */
+  /* (c) contour / elevation rings — stronger, so terrain reads at a glance */
+  .sf-cont-a { fill: none; stroke: var(--accent-line); stroke-width: 1.6; }
+  .sf-cont-t { fill: none; stroke: var(--teal-ui);     stroke-width: 1.5; }
+  .sf-cont-o { fill: none; stroke: var(--olive-ui);    stroke-width: 1.5; }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color .12s ease, text-decoration-thickness .12s ease;
+  }
+  a:hover { text-decoration-thickness: 2px; }
+
+  :where(a, button, input, .card, .toc a, .navlink, .specref):focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* STATIC block cursor — cartographic terminal motif, intentionally NO blink */
+  .cursor {
+    display: inline-block;
+    width: 0.56em; height: 1.02em;
+    background: var(--accent-ui);
+    vertical-align: -0.14em;
+    margin-left: 0.14em;
+    border-radius: 1px;
+  }
+
+  /* ==========================================================================
+     masthead
+     ========================================================================== */
+  .masthead {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--panel) 86%, transparent);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .masthead-in {
+    max-width: var(--shell); margin: 0 auto;
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.6rem 1.25rem;
+  }
+  .brand { display: flex; align-items: center; gap: 0.65rem; min-width: 0; text-decoration: none; }
+  .brand-mark { flex: none; }
+  .brand-prompt {
+    font-family: var(--mono); font-size: var(--t-sm); font-weight: 600;
+    white-space: nowrap;
+  }
+  .brand-prompt .path { color: var(--ink-muted); }
+  .brand-prompt .dollar { color: var(--accent); }
+  .brand-title {
+    font-family: var(--mono); font-weight: 600; font-size: 0.95rem;
+    letter-spacing: -0.01em; color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .mast-spacer { flex: 1; }
+  .mast-coord {
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .mast-coord .val { color: var(--teal); }
+  .mast-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+  .icon-btn {
+    font-family: var(--mono); font-size: var(--t-xs);
+    color: var(--ink-2); background: var(--panel-2);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.42rem 0.62rem; cursor: pointer; line-height: 1;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .icon-btn:hover { border-color: var(--border-strong); color: var(--ink); }
+  .icon-btn .glyph { color: var(--accent); }
+  .nav-toggle { display: none; }
+
+  /* ==========================================================================
+     shell grid
+     ========================================================================== */
+  .shell {
+    max-width: var(--shell); margin: 0 auto;
+    display: grid;
+    grid-template-columns: 288px minmax(0, 1fr) 240px;
+    align-items: start;
+  }
+
+  /* ---- LEFT SIDEBAR: lined survey-ledger (borrowed from Field) ---- */
+  .sidebar {
+    position: sticky; top: 53px; align-self: start;
+    height: calc(100vh - 53px); overflow-y: auto;
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1.15rem 1.5rem;
+    /* ruled field-book lines over a light chrome scrim: the satellite field
+       still reads boldly through the sidebar (~55%), but the wash keeps the
+       nav text safely past WCAG AA even where two field patches overlap. */
+    background:
+      linear-gradient(var(--grid-fine) 1px, transparent 1px) 0 0 / 100% 30px,
+      var(--scrim-chrome);
+  }
+  .ledger-head {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono); font-size: var(--t-xs);
+    color: var(--ink-muted); letter-spacing: 0.14em; text-transform: uppercase;
+    padding-bottom: 0.7rem; margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .ledger-head .sheet { color: var(--olive); }
+
+  .search {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.5rem 0.65rem;
+    margin-bottom: 1.4rem;
+  }
+  .search .mag { color: var(--ink-muted); flex: none; }
+  .search input {
+    border: 0; background: transparent; color: var(--ink);
+    font-family: var(--mono); font-size: var(--t-sm); width: 100%;
+    outline: none; min-width: 0;
+  }
+  .search input::placeholder { color: var(--ink-muted); }
+  .search kbd {
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+    border: 1px solid var(--border-strong); border-radius: 4px;
+    padding: 0.05rem 0.35rem; margin-left: auto;
+  }
+
+  .nav-label {
+    font-family: var(--mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--ink-muted); margin: 0 0 0.55rem 0.2rem;
+  }
+  .navlist { list-style: none; margin: 0 0 1.6rem; padding: 0; }
+  .navlink {
+    display: flex; align-items: baseline; gap: 0.55rem;
+    font-family: var(--mono); font-size: var(--t-sm);
+    color: var(--ink-2); text-decoration: none;
+    padding: 0.5rem 0.6rem; border-radius: var(--radius-sm);
+    border-left: 2px solid transparent;
+  }
+  .navlink:hover { background: var(--panel-2); color: var(--ink); }
+  .navlink .idx { color: var(--ink-muted); font-size: var(--t-xs); }
+  .navlink.active {
+    background: var(--accent-soft); color: var(--ink);
+    border-left-color: var(--accent-ui); font-weight: 600;
+  }
+  .navlink.active .idx { color: var(--accent); }
+
+  /* survey coordinate readout pinned in the ledger */
+  .coord-block {
+    margin-top: 0.5rem;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--panel); overflow: hidden;
+  }
+  .coord-block .cb-head {
+    font-family: var(--mono); font-size: var(--t-xs);
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted);
+    padding: 0.45rem 0.7rem; background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .coord-block .cb-head .dot { color: var(--teal-ui); }
+  .coord-rows {
+    font-family: var(--mono); font-size: var(--t-xs); line-height: 1.9;
+    padding: 0.6rem 0.7rem; color: var(--ink-muted);
+  }
+  .coord-rows div { display: flex; justify-content: space-between; gap: 0.5rem; }
+  .coord-rows .k { color: var(--olive); }
+  .coord-rows .v { color: var(--ink-2); }
+
+  /* ---- CENTER CONTENT — fills the column; wide elements go full-bleed ---- */
+  /* minimal gutters so the content reaches close to both sidebar and TOC */
+  .content {
+    padding: 0 clamp(1rem, 2.4vw, 2.25rem) 5rem; min-width: 0;
+    /* own stacking context so the reading-lane scrim (::before at z-index:-1)
+       paints ABOVE the page satellite field but BELOW all content text. */
+    position: relative; z-index: 0;
+  }
+  /* READING-LANE SCRIM: a soft, blurred wash of --bg the width of the text
+     measure, left-aligned under the running prose. It softens the bold field
+     directly beneath body copy while the column's right gutter (beyond the
+     measure) keeps the field at full strength. Opaque panels (terminal, cards,
+     code, diagrams, callouts) sit above it and are unaffected. */
+  .content::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    top: -2rem; bottom: -2rem;
+    left: clamp(1rem, 2.4vw, 2.25rem);
+    width: min(120ch, calc(100% - 2 * clamp(1rem, 2.4vw, 2.25rem)));
+    background: var(--scrim-lane);
+    border-radius: 64px;
+    filter: blur(32px);
+  }
+
+  /* ---- RIGHT TOC ---- */
+  .toc {
+    position: sticky; top: 53px; align-self: start;
+    height: calc(100vh - 53px); overflow-y: auto;
+    padding: 2.5rem 1.25rem; border-left: 1px solid var(--border);
+    /* light chrome scrim: field reads boldly behind the TOC yet its small
+       muted links stay past AA. */
+    background: var(--scrim-chrome);
+  }
+  .toc-title {
+    font-family: var(--mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--ink-muted); margin: 0 0 0.9rem;
+  }
+  .toc ul { list-style: none; margin: 0; padding: 0; }
+  .toc a {
+    display: block; font-family: var(--mono); font-size: var(--t-xs);
+    color: var(--ink-muted); text-decoration: none; line-height: 1.4;
+    padding: 0.34rem 0.55rem; border-left: 2px solid var(--border);
+  }
+  .toc a:hover { color: var(--ink); border-left-color: var(--border-strong); }
+  .toc a.active {
+    color: var(--accent); border-left-color: var(--accent);
+    border-left-width: 3px; font-weight: 600; padding-left: calc(0.55rem - 1px);
+    position: relative;
+  }
+  .toc a.active::before {
+    content: "›"; position: absolute; left: -0.9rem;
+    color: var(--accent); font-weight: 700;
+  }
+
+  /* ==========================================================================
+     eyebrows / zone rule
+     ========================================================================== */
+  .eyebrow {
+    font-family: var(--mono); font-size: var(--t-xs);
+    letter-spacing: 0.04em; color: var(--ink-muted); margin: 0 0 1rem;
+  }
+  .eyebrow .comment { color: var(--accent); }
+
+  .zone-rule {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 4.5rem 0 3rem; color: var(--ink-muted);
+    font-family: var(--mono); font-size: var(--t-xs);
+    letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .zone-rule::before, .zone-rule::after {
+    content: ""; height: 1px; background: var(--border); flex: 1;
+  }
+
+  /* ==========================================================================
+     terminal frame (shared chrome)
+     ========================================================================== */
+  .terminal {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: 0 1px 0 var(--border), 0 26px 50px -34px rgba(0,0,0,0.55);
+  }
+  .term-bar {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.6rem 0.9rem; background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .term-dots { display: flex; gap: 0.42rem; }
+  .term-dots i {
+    width: 11px; height: 11px; border-radius: 50%; display: block;
+    border: 1px solid rgba(0,0,0,0.14);
+  }
+  .term-dots i:nth-child(1){ background:#d76a3a; }  /* terracotta */
+  .term-dots i:nth-child(2){ background:#d9b24e; }  /* warm gold */
+  .term-dots i:nth-child(3){ background:#4f9e62; }  /* forest green */
+  .term-name {
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+    margin-left: 0.4rem;
+  }
+  .term-name .coord { color: var(--teal); }
+  .term-spacer { flex: 1; }
+  .term-crs {
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+    letter-spacing: 0.08em; white-space: nowrap;
+  }
+
+  /* ==========================================================================
+     ZONE 1 — hero (serif output inside terminal, with cartographic backdrop)
+     ========================================================================== */
+  .hero { padding-top: 3.25rem; }
+  .term-body {
+    position: relative; overflow: hidden;
+    padding: clamp(1.5rem, 3.5vw, 2.75rem);
+  }
+  /* contour + graticule backdrop woven inside the terminal chrome */
+  .hero-backdrop {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(var(--hero-grid) 1px, transparent 1px) 0 0 / 100% 40px,
+      linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px) 0 0 / 40px 100%;
+  }
+  .hero-contours { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* orange contour rings — the dominant woven flair */
+  .hero-contours .ring { fill: none; stroke: var(--accent-ui); stroke-opacity: 0.5; stroke-width: 1.5; }
+  /* teal graticule sweep — the supporting cartographic hue in the weave */
+  .hero-contours .sweep { fill: none; stroke: var(--teal-ui); stroke-opacity: 0.32; stroke-width: 1.25; }
+  .hero-fore { position: relative; }
+
+  .hero-ticks {
+    position: absolute; top: 0; right: 0;
+    font-family: var(--mono); font-size: var(--t-xs);
+    color: var(--ink-muted); text-align: right; line-height: 1.6;
+  }
+  .hero-ticks .val { color: var(--teal); }
+
+  .cmd-line {
+    font-family: var(--mono); font-size: var(--t-sm);
+    color: var(--ink-2); margin: 0 0 1.6rem;
+  }
+  .cmd-line .prompt { color: var(--accent); }
+  .cmd-line .cmd { color: var(--ink); }
+
+  /* the ONE serif display line — Ledger sophistication, framed as terminal output */
+  .hero-thesis {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.15rem, 5.6vw, var(--t-hero));
+    line-height: 1.06; letter-spacing: -0.015em;
+    margin: 0; color: var(--ink); max-width: 40ch;
+    text-wrap: balance;
+  }
+  .hero-thesis .flip {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .hero-tagline {
+    margin: 1.8rem 0 0; max-width: min(78ch, 100%); color: var(--ink-2);
+    font-size: var(--t-md); line-height: 1.6;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 0.6rem; margin-top: 1.75rem;
+  }
+  .tag {
+    font-family: var(--mono); font-size: var(--t-xs);
+    color: var(--ink-muted); background: var(--panel-2);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 0.32rem 0.72rem;
+  }
+  .tag .k { color: var(--accent); }
+  .tag.teal .k { color: var(--teal); }
+
+  /* ==========================================================================
+     prose
+     ========================================================================== */
+  .prose { min-width: 0; }
+  .prose h2 {
+    font-family: var(--mono); font-weight: 600;
+    font-size: var(--t-lg); letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 1rem; scroll-margin-top: 70px;
+    display: flex; align-items: baseline; gap: 0.6rem;
+  }
+  .prose h2 .hprompt { color: var(--accent); font-size: 0.8em; }
+  .prose h3 {
+    font-family: var(--mono); font-weight: 600; font-size: var(--t-md);
+    color: var(--ink); margin: 2.5rem 0 1rem; scroll-margin-top: 70px;
+  }
+  .prose p { margin: 0 0 1.25rem; color: var(--ink-2); max-width: var(--measure); }
+  .prose strong { color: var(--ink); font-weight: 600; }
+  .prose em { font-style: italic; }
+  .prose .mono-inline {
+    font-family: var(--mono); font-size: 0.9em;
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 0.05em 0.35em; color: var(--ink);
+  }
+  .section-block { margin-top: 3rem; }
+  .section-block p { max-width: var(--measure); }
+
+  /* guide card — fills column width */
+  .cards-label {
+    font-family: var(--mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--ink-muted); margin: 2.75rem 0 1rem;
+  }
+  .cards-label .sub { text-transform: none; letter-spacing: 0; color: var(--ink-2); }
+  .card {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    transition: border-color .14s ease, transform .14s ease;
+  }
+  .card:hover { border-color: var(--accent-line); transform: translateY(-2px); }
+  .card-head {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.55rem 1rem; background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+  }
+  .card-head .dollar { color: var(--accent); }
+  .card-head .spacer { flex: 1; }
+  .card-head .coord { color: var(--teal); }
+  .card-body {
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem 1.5rem;
+    align-items: end; padding: 1.5rem 1.6rem 1.6rem;
+  }
+  .card-title {
+    font-family: var(--mono); font-weight: 600; font-size: var(--t-lg);
+    color: var(--ink); margin: 0 0 0.55rem; letter-spacing: -0.01em;
+  }
+  .card-desc { margin: 0; color: var(--ink-2); font-size: var(--t-base); max-width: none; }
+  .card-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap;
+    font-family: var(--mono); font-size: var(--t-sm); color: var(--accent);
+  }
+  .card-cta .arrow { transition: transform .14s ease; }
+  .card:hover .card-cta .arrow { transform: translateX(3px); }
+
+  /* ==========================================================================
+     ZONE 2 — guide read
+     ========================================================================== */
+  .guide-eyebrow {
+    font-family: var(--mono); font-size: var(--t-xs);
+    color: var(--accent); letter-spacing: 0.04em; margin: 0 0 0.9rem;
+  }
+  .guide-title {
+    font-family: var(--mono); font-weight: 600;
+    font-size: clamp(2rem, 5vw, var(--t-2xl));
+    letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 1rem; color: var(--ink);
+  }
+  .guide-sub {
+    max-width: var(--measure); color: var(--ink-2);
+    font-size: var(--t-md); line-height: 1.6; margin: 0 0 2rem;
+  }
+
+  /* callout */
+  .callout {
+    border: 1px solid var(--border); border-left: 3px solid var(--c-imp);
+    background: var(--c-imp-bg); border-radius: var(--radius-sm);
+    padding: 1.1rem 1.3rem; margin: 1.75rem 0;
+  }
+  .callout-head {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--c-imp); margin-bottom: 0.55rem; font-weight: 600;
+  }
+  .callout-head .badge {
+    border: 1px solid currentColor; border-radius: 4px;
+    padding: 0.05rem 0.4rem; font-size: 0.85em;
+  }
+  .callout p { margin: 0; color: var(--ink); max-width: var(--measure); }
+  .callout-imp { border-left-color: var(--c-imp); background: var(--c-imp-bg); }
+
+  /* callout variant legend */
+  .callout-legend {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0;
+  }
+  .legend-chip {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--mono); font-size: var(--t-xs);
+    padding: 0.35rem 0.62rem; border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .legend-chip .dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+  .legend-chip .lbl { color: var(--ink-2); }
+  .legend-chip .glyph { font-weight: 700; }
+  .lc-note { background: var(--c-note-bg); } .lc-note .dot{ background: var(--c-note);} .lc-note .glyph{ color: var(--c-note);}
+  .lc-warn { background: var(--c-warn-bg); } .lc-warn .dot{ background: var(--c-warn);} .lc-warn .glyph{ color: var(--c-warn);}
+  .lc-caut { background: var(--c-caut-bg); } .lc-caut .dot{ background: var(--c-caut);} .lc-caut .glyph{ color: var(--c-caut);}
+
+  /* figure / teaching diagram — full-bleed within column */
+  figure.diagram {
+    margin: 2.5rem 0;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .diagram-frame {
+    padding: 0.55rem 0.9rem; background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .diagram-frame .dollar { color: var(--accent); }
+  .diagram-frame .spacer { flex: 1; }
+  .diagram-frame .coord { color: var(--teal); }
+  .diagram-svg-wrap { padding: 1.5rem clamp(1rem, 3vw, 2rem); overflow-x: auto; }
+  figure.diagram svg.dg { display: block; width: 100%; height: auto; min-width: 420px; }
+  figure.diagram svg.dg text { font-family: var(--mono); }
+  figure.diagram figcaption {
+    font-family: var(--mono); font-size: var(--t-xs); line-height: 1.5;
+    color: var(--ink-muted); padding: 0 clamp(1rem,3vw,2rem) 1.3rem;
+  }
+  figure.diagram figcaption .figlabel { color: var(--accent); }
+
+  /* code block — a developer's beautiful JSON, full-bleed within column */
+  .codeblock {
+    margin: 2rem 0;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .code-bar {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.5rem 0.75rem 0.5rem 1rem; background: var(--panel-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .code-name { font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted); }
+  .code-name .dot { color: var(--teal-ui); }
+  .code-lang {
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+    border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.4rem;
+  }
+  .copy-btn {
+    margin-left: auto; font-family: var(--mono); font-size: var(--t-xs);
+    color: var(--ink-2); background: var(--panel-3);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0.32rem 0.6rem; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .copy-btn:hover { border-color: var(--border-strong); color: var(--ink); }
+  .copy-btn .glyph { color: var(--accent); }
+  .copy-btn.copied { color: var(--accent); border-color: var(--accent-line); }
+  .code-scroll { overflow-x: auto; }
+  pre.code {
+    margin: 0; padding: 1.2rem 1.3rem; font-family: var(--mono);
+    font-size: var(--t-sm); line-height: 1.7; color: var(--ink-2); tab-size: 2;
+  }
+  pre.code .tok-key  { color: var(--accent); }
+  pre.code .tok-str  { color: var(--ink); }
+  pre.code .tok-num  { color: var(--teal); }       /* teal woven into syntax */
+  pre.code .tok-punc { color: var(--ink-muted); }
+
+  /* spec reference / further reading deep-link */
+  .specref {
+    display: flex; align-items: flex-start; gap: 1rem;
+    margin: 2rem 0 0;
+    background: var(--panel); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: var(--radius-sm);
+    padding: 1.1rem 1.3rem; text-decoration: none; color: inherit;
+    transition: border-color .14s ease, transform .14s ease;
+  }
+  .specref:hover { border-color: var(--accent-line); transform: translateY(-1px); }
+  .specref .glyph {
+    font-family: var(--mono); font-size: 1.2rem; color: var(--accent); margin-top: 0.05rem;
+  }
+  .specref .sr-body { min-width: 0; flex: 1; }
+  .specref .sr-kicker {
+    font-family: var(--mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-muted); margin: 0 0 0.25rem;
+  }
+  .specref .sr-title {
+    font-family: var(--sans); font-weight: 600; color: var(--ink); margin: 0 0 0.2rem;
+  }
+  .specref .sr-url {
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--accent);
+    word-break: break-all; text-decoration: underline; text-underline-offset: 2px;
+  }
+
+  /* ==========================================================================
+     footer
+     ========================================================================== */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 1.25rem; text-align: center;
+    /* light chrome scrim so the centered footer line (which spills past the
+       reading-lane band) stays past AA over the field. */
+    background: var(--scrim-chrome);
+  }
+  .footer p {
+    font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+    margin: 0; line-height: 1.7;
+  }
+  .footer .sep { color: var(--border-strong); margin: 0 0.4rem; }
+
+  /* ==========================================================================
+     responsive
+     ========================================================================== */
+  @media (max-width: 1100px) {
+    .shell { grid-template-columns: 264px minmax(0, 1fr); }
+    .toc { display: none; }
+  }
+  @media (max-width: 860px) {
+    .shell { grid-template-columns: minmax(0, 1fr); }
+    .sidebar {
+      position: static; height: auto; overflow: visible;
+      border-right: 0; border-bottom: 1px solid var(--border);
+      display: none; padding: 1.1rem 1.25rem;
+    }
+    .sidebar.open { display: block; }
+    .nav-toggle { display: inline-flex; }
+    .mast-coord { display: none; }
+    .card-body { grid-template-columns: 1fr; align-items: start; }
+  }
+  @media (max-width: 480px) {
+    .brand-title { display: none; }
+    .hero { padding-top: 2rem; }
+    .hero-ticks { display: none; }
+    /* On phones let the dense teaching diagram scale to fit rather than force a
+       horizontal scroll at 360px. Meaning is preserved by the SVG's role=img +
+       aria-labelledby description and the figcaption, so shrinking loses no
+       information (labels get small, but the text alternative carries them). */
+    .diagram-svg-wrap { padding: 1rem 0.75rem; }
+    figure.diagram svg.dg { min-width: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+  }
+</style>
+
+<div class="survey-root">
+
+  <!-- ============ AMBIENT SATELLITE FIELD (whole-page back layer) ============ -->
+  <div class="satfield" aria-hidden="true">
+    <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- soft edges so the land-cover patches read as blurred biome regions,
+             like a coarse land-cover raster seen from orbit, not hard shapes.
+             Kept small (14) so patches are DEFINED, not vague clouds. -->
+        <filter id="sfSoft" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="14"/>
+        </filter>
+      </defs>
+
+      <!-- (a) LAND-COVER / WATER PATCHES — soft blobby biome regions, dialled up
+           so the scene is plainly visible. Fill-opacity raised to 0.19-0.24 so the
+           organic biome fills (not just the strokes) carry the perceptibility, and
+           the dense CORES spaced >=180 viewBox-units apart, so on the un-scrimmed
+           field (sidebar / TOC / margins) no reading line sits over two stacked
+           patches; single-patch cover keeps even --ink-muted past AA in both
+           themes. Under the central reading lane the --scrim-lane wash softens
+           all of this further. Greens (land), the sky/teal token (water) and the
+           warm terracotta token (arid) are held distinct for biome variance. -->
+      <g filter="url(#sfSoft)">
+        <!-- water — sits lowest, like ocean beneath the land -->
+        <path class="sf-water" fill-opacity="0.23"
+              d="M-120 640 C 120 560 360 640 372 790 C 384 940 180 1010 -60 986 C -220 968 -260 720 -120 640 Z"/>
+        <path class="sf-water" fill-opacity="0.22"
+              d="M1300 96 C 1470 52 1660 120 1690 268 C 1712 388 1560 470 1400 448 C 1250 428 1188 258 1244 172 C 1266 138 1276 116 1300 96 Z"/>
+        <path class="sf-water" fill-opacity="0.19"
+              d="M624 852 C 736 812 852 862 858 954 C 862 1030 742 1064 636 1048 C 546 1034 512 916 560 872 C 584 852 600 860 624 852 Z"/>
+        <!-- land — lowland (mid forest green) -->
+        <path class="sf-land" fill-opacity="0.24"
+              d="M130 118 C 300 44 470 96 508 246 C 540 372 430 470 274 462 C 132 454 40 344 68 224 C 82 164 94 148 130 118 Z"/>
+        <path class="sf-land" fill-opacity="0.23"
+              d="M686 440 C 850 372 1010 448 1016 604 C 1020 720 872 792 720 762 C 590 736 528 566 596 490 C 622 462 662 452 686 440 Z"/>
+        <path class="sf-land" fill-opacity="0.23"
+              d="M1082 648 C 1240 588 1392 664 1388 800 C 1384 918 1236 984 1084 954 C 954 928 900 758 968 690 C 1000 660 1058 658 1082 648 Z"/>
+        <!-- land — upland (deep forest green) -->
+        <path class="sf-land-b" fill-opacity="0.22"
+              d="M912 176 C 1088 104 1252 180 1258 336 C 1262 452 1114 524 962 494 C 832 468 770 298 838 222 C 864 194 888 186 912 176 Z"/>
+        <path class="sf-land-b" fill-opacity="0.22"
+              d="M356 366 C 500 306 648 370 654 508 C 658 616 524 682 388 656 C 272 634 216 484 276 416 C 300 388 332 376 356 366 Z"/>
+        <!-- arid — warm terracotta earth -->
+        <path class="sf-arid" fill-opacity="0.22"
+              d="M1338 448 C 1484 416 1616 476 1610 596 C 1606 700 1470 758 1338 732 C 1226 710 1180 566 1240 502 C 1266 474 1314 458 1338 448 Z"/>
+        <path class="sf-arid" fill-opacity="0.19"
+              d="M584 100 C 712 70 828 122 822 232 C 818 322 700 372 588 350 C 494 332 456 200 508 148 C 530 122 560 112 584 100 Z"/>
+      </g>
+
+      <!-- (b) GRATICULE — the lat/lon grid of a GIS view, drawn clearly as a real
+           map overlay (one bold reference meridian + parallel). -->
+      <g class="sf-grat">
+        <!-- parallels (slightly curved, as on a projected globe) -->
+        <path d="M-40 150 C 400 128 1200 128 1640 150"/>
+        <path d="M-40 320 C 400 304 1200 304 1640 320"/>
+        <path d="M-40 680 C 400 690 1200 690 1640 680"/>
+        <path d="M-40 850 C 400 864 1200 864 1640 850"/>
+        <!-- meridians -->
+        <path d="M260 -40 C 246 300 246 700 272 1040"/>
+        <path d="M520 -40 C 510 300 510 700 528 1040"/>
+        <path d="M1080 -40 C 1092 300 1092 700 1068 1040"/>
+        <path d="M1340 -40 C 1356 300 1356 700 1328 1040"/>
+      </g>
+      <g class="sf-grat-2">
+        <!-- bold reference lines -->
+        <path d="M-40 500 C 400 490 1200 490 1640 500"/>
+        <path d="M800 -40 L 800 1040"/>
+      </g>
+
+      <!-- (c) CONTOUR / ELEVATION RINGS — several nested clusters concentrated in
+           the margins / hero band where no body text sits, so terrain reads at a
+           glance without ever crowding prose. -->
+      <g class="sf-cont-a" stroke-opacity="0.42">
+        <ellipse cx="1440" cy="588" rx="46"  ry="36"/>
+        <ellipse cx="1440" cy="588" rx="88"  ry="68"/>
+        <ellipse cx="1440" cy="588" rx="132" ry="102"/>
+        <ellipse cx="1440" cy="588" rx="178" ry="138"/>
+      </g>
+      <!-- nudged down into the lower-left margin (was cy=792, overlapping the
+           sidebar text band) and eased, so patches + contours + graticule do not
+           pile up in one sidebar region. -->
+      <g class="sf-cont-t" stroke-opacity="0.32">
+        <ellipse cx="150" cy="900" rx="40"  ry="32"/>
+        <ellipse cx="150" cy="900" rx="78"  ry="62"/>
+        <ellipse cx="150" cy="900" rx="120" ry="96"/>
+      </g>
+      <g class="sf-cont-o" stroke-opacity="0.36">
+        <ellipse cx="1082" cy="284" rx="42"  ry="34"/>
+        <ellipse cx="1082" cy="284" rx="82"  ry="66"/>
+        <ellipse cx="1082" cy="284" rx="126" ry="100"/>
+      </g>
+      <g class="sf-cont-a" stroke-opacity="0.34">
+        <ellipse cx="612" cy="176" rx="38"  ry="30"/>
+        <ellipse cx="612" cy="176" rx="74"  ry="58"/>
+        <ellipse cx="612" cy="176" rx="114" ry="90"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="masthead">
+    <div class="masthead-in">
+      <a class="brand" href="#top">
+        <svg class="brand-mark" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="none" stroke="var(--border-strong)"/>
+          <path d="M8 8h16M8 14h16M8 20h16M8 26h16" stroke="var(--border-strong)" stroke-width="1"/>
+          <path d="M8 8v18M14 8v18M20 8v18M26 8v18" stroke="var(--border-strong)" stroke-width="1"/>
+          <path d="M6 22c4-9 16-9 20 0" fill="none" stroke="var(--teal-ui)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="15" r="2.6" fill="var(--accent-ui)"/>
+        </svg>
+        <span class="brand-prompt mono"><span class="path">~/geo</span> <span class="dollar">$</span></span>
+        <span class="brand-title">Geospatial&nbsp;for&nbsp;Engineers</span>
+      </a>
+      <div class="mast-spacer"></div>
+      <span class="mast-coord mono" aria-hidden="true">LAT <span class="val">45.3000&deg;N</span> &nbsp; LON <span class="val">12.5000&deg;E</span></span>
+      <div class="mast-actions">
+        <button class="icon-btn nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false">
+          <span class="glyph mono">::</span> nav
+        </button>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle light or dark theme">
+          <span class="glyph mono" id="themeGlyph">&#9680;</span> <span id="themeText" class="mono">theme</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell" id="top">
+
+    <!-- ============ LEFT SIDEBAR (survey ledger) ============ -->
+    <aside class="sidebar" id="sidebar" aria-label="Site navigation">
+      <div class="ledger-head mono">
+        <span>Field&nbsp;book</span>
+        <span class="sheet">sheet 01</span>
+      </div>
+
+      <div class="search">
+        <svg class="mag" width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M11 11l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input type="search" placeholder="Search the guides" aria-label="Search the guides" />
+        <kbd class="mono" aria-hidden="true">/</kbd>
+      </div>
+
+      <p class="nav-label">The shelf</p>
+      <ul class="navlist">
+        <li>
+          <a class="navlink" href="#top">
+            <span class="idx mono">00</span> Home
+          </a>
+        </li>
+        <li>
+          <a class="navlink active" href="#guide" aria-current="page">
+            <span class="idx mono">01</span> CoverageJSON Uncovered
+          </a>
+        </li>
+      </ul>
+
+      <div class="coord-block">
+        <div class="cb-head mono"><span class="dot" aria-hidden="true">&#9673;</span> cursor</div>
+        <div class="coord-rows mono" aria-hidden="true">
+          <div><span class="k">lat</span><span class="v">45.3000&deg;N</span></div>
+          <div><span class="k">lon</span><span class="v">12.5000&deg;E</span></div>
+          <div><span class="k">crs</span><span class="v">EPSG:4326</span></div>
+          <div><span class="k">t</span><span class="v">2024-07-01</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ CENTER CONTENT ============ -->
+    <main class="content">
+
+      <!-- ---------- ZONE 1: LANDING ---------- -->
+      <section class="hero" aria-labelledby="hero-thesis">
+        <p class="eyebrow mono"><span class="comment">// </span>geospatial-for-engineers &middot; earth observation, without the domain gatekeeping</p>
+
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="term-name mono">manifesto.txt &mdash; ~/geo &middot; <span class="coord">45.3&deg;N 12.5&deg;E</span></span>
+            <span class="term-spacer"></span>
+            <span class="term-crs mono" aria-hidden="true">WGS&nbsp;84</span>
+          </div>
+          <div class="term-body">
+            <div class="hero-backdrop" aria-hidden="true">
+              <svg class="hero-contours" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <!-- teal graticule sweep woven behind the contours -->
+                <path class="sweep" d="M-20 120 C220 60 480 180 900 96"/>
+                <path class="sweep" d="M-20 220 C240 168 520 288 900 214"/>
+                <path class="sweep" d="M-20 330 C220 288 500 392 900 330"/>
+                <!-- nested orange contour rings — the dominant flair -->
+                <path class="ring" d="M690 40 C810 78 856 190 792 288 C724 392 556 402 500 316 C452 244 500 128 610 88 C646 74 664 52 690 40Z"/>
+                <path class="ring" d="M700 78 C796 110 832 200 780 280 C726 356 592 366 546 300 C508 246 546 150 634 118 C662 108 682 88 700 78Z"/>
+                <path class="ring" d="M708 118 C782 144 810 204 770 268 C732 328 632 336 596 288 C568 250 596 182 662 156 C684 148 696 128 708 118Z"/>
+                <path class="ring" d="M716 158 C770 180 790 220 762 262 C734 306 664 310 636 274 C616 246 636 200 682 180Z"/>
+                <path class="ring" d="M722 198 C756 214 768 238 750 264 C732 292 692 292 674 268 C660 248 680 218 706 206Z"/>
+              </svg>
+            </div>
+            <div class="hero-fore">
+              <div class="hero-ticks mono" aria-hidden="true">GRID&nbsp;WGS&nbsp;84<br/><span class="val">EPSG:4326</span></div>
+              <p class="cmd-line mono"><span class="prompt">~/geo $</span> <span class="cmd">cat manifesto.txt</span></p>
+              <h1 class="hero-thesis" id="hero-thesis">Most geospatial tutorials explain the code and assume the domain. <span class="flip">This series does the opposite.</span><span class="cursor" aria-hidden="true"></span></h1>
+              <p class="hero-tagline">
+                Earth observation and geospatial data, explained for experienced
+                software engineers with zero domain background.
+              </p>
+              <div class="hero-meta">
+                <span class="tag mono"><span class="k">assumes:</span> JSON, CLI, data structures</span>
+                <span class="tag mono teal"><span class="k">teaches:</span> CRS, coverage, raster, COG</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block prose">
+          <h2 id="who"><span class="hprompt mono">$</span> Who this is for</h2>
+          <p>
+            You already write software. You are comfortable with JSON, the command
+            line, data structures, and reading an unfamiliar API. What you
+            <em>don't</em> have is a geospatial or earth-observation (EO)
+            background: terms like <span class="mono-inline">CRS</span>,
+            <span class="mono-inline">projection</span>,
+            <span class="mono-inline">raster</span>,
+            <span class="mono-inline">coverage</span>,
+            <span class="mono-inline">footprint</span>,
+            <span class="mono-inline">COG</span>, and
+            <span class="mono-inline">Zarr</span> go by without quite landing, and
+            most tutorials assume the domain knowledge you're missing while
+            carefully explaining the code you already understand.
+          </p>
+          <p>
+            This series inverts that assumption. It spends its words on the
+            <strong>domain</strong> (what these concepts <em>mean</em> and
+            <em>why they exist</em>) and trusts you with the code. It is the
+            on-ramp I wanted when I started doing EO work without the background.
+          </p>
+        </div>
+
+        <p class="cards-label mono">The guides <span class="sub">&mdash; each self-contained; start wherever your problem is</span></p>
+        <a class="card" href="#guide">
+          <div class="card-head mono">
+            <span class="dollar">$</span> open guides/coveragejson.qmd
+            <span class="spacer"></span>
+            <span class="coord">01 / 01</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3 class="card-title">CoverageJSON Uncovered</h3>
+              <p class="card-desc">
+                A complete, ground-up guide to reading coverage data on the web,
+                from your first document through the edge cases.
+              </p>
+            </div>
+            <span class="card-cta mono">read the guide <span class="arrow">&rarr;</span></span>
+          </div>
+        </a>
+      </section>
+
+      <div class="zone-rule mono">guide view</div>
+
+      <!-- ---------- ZONE 2: GUIDE READ ---------- -->
+      <article class="prose" id="guide">
+        <p class="guide-eyebrow mono">// guide 01 &middot; reading coverage data</p>
+        <h1 class="guide-title">CoverageJSON Uncovered</h1>
+        <p class="guide-sub">
+          A complete, ground-up guide to reading coverage data on the web:
+          every concept, from your first document to the edge cases.
+        </p>
+
+        <p id="intro">
+          This guide is for people new to <em>CoverageJSON</em> (often shortened
+          to <em>CovJSON</em>) who need to understand what it is, why it exists,
+          and how to read a CovJSON document, starting from no prior knowledge of
+          geospatial data formats. It assumes you can read JSON and nothing else.
+          The geospatial ideas it relies on are introduced as they come up and
+          explained just far enough to read CoverageJSON with confidence.
+        </p>
+
+        <h2 id="what-is-coverage"><span class="hprompt mono">&sect;</span> What a "coverage" actually is</h2>
+        <p>The single most important idea in this entire guide is this:</p>
+
+        <div class="callout callout-imp">
+          <div class="callout-head mono"><span class="badge">!</span> important</div>
+          <p>
+            A <strong>coverage</strong> maps positions in space and time to
+            values: one function per property, all sharing the same domain.
+          </p>
+        </div>
+
+        <div class="callout-legend" aria-label="Other callout types used in this series">
+          <span class="legend-chip lc-note mono"><span class="dot" aria-hidden="true"></span><span class="glyph" aria-hidden="true">i</span><span class="lbl">note / tip</span></span>
+          <span class="legend-chip lc-warn mono"><span class="dot" aria-hidden="true"></span><span class="glyph" aria-hidden="true">&#9651;</span><span class="lbl">warning</span></span>
+          <span class="legend-chip lc-caut mono"><span class="dot" aria-hidden="true"></span><span class="glyph" aria-hidden="true">&#9587;</span><span class="lbl">caution</span></span>
+        </div>
+
+        <!-- ---------- REDESIGNED TEACHING DIAGRAM ---------- -->
+        <figure class="diagram" id="figure">
+          <div class="diagram-frame mono">
+            <span class="dollar">$</span> render coverage-as-function.svg
+            <span class="spacer"></span>
+            <span class="coord">domain &rarr; range</span>
+          </div>
+          <div class="diagram-svg-wrap">
+            <svg viewBox="0 0 760 380" role="img" aria-labelledby="dgTitle dgDesc" class="dg" xmlns="http://www.w3.org/2000/svg">
+              <title id="dgTitle">Coverage as a function: domain maps to range</title>
+              <desc id="dgDesc">
+                A coverage is a function. On the left, the domain is a set of positions in
+                space and time, drawn as a graticule with coordinate axes x (longitude) and
+                y (latitude) and one highlighted position at x 12.5, y 45.3, time
+                2024-07-01 12:00 UTC. A labelled arrow, the coverage function, points to the
+                right, where the range holds the measured values, showing 18.4 degrees
+                Celsius for that position. The domain panel is drawn in dark olive, the range
+                panel in mid teal, and the worked instance in contour orange; the three parts
+                differ in luminance and are separated in space and labelled, not distinguished
+                by color alone.
+              </desc>
+
+              <defs>
+                <marker id="dgArrow" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+                  <path d="M1,1 L10,6 L1,11 Z" style="fill:var(--dg-instance)"/>
+                </marker>
+                <pattern id="dgGrat" width="19" height="19" patternUnits="userSpaceOnUse">
+                  <path d="M19 0 L0 0 0 19" style="fill:none;stroke:var(--dg-graticule)" stroke-width="1"/>
+                </pattern>
+              </defs>
+
+              <!-- ===== DOMAIN panel (dark olive, lowest luminance) ===== -->
+              <g>
+                <rect x="18" y="54" width="300" height="292" rx="10"
+                      style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.5"/>
+                <rect x="18" y="54" width="300" height="292" rx="10" fill="url(#dgGrat)"/>
+
+                <text x="34" y="42" style="fill:var(--dg-domain-ink)" font-size="13" font-weight="700" letter-spacing="1.5">DOMAIN</text>
+                <text x="110" y="42" style="fill:var(--dg-line)" font-size="11">positions in space + time</text>
+
+                <!-- axes -->
+                <line x1="70" y1="300" x2="286" y2="300" style="stroke:var(--dg-line)" stroke-width="1.5"/>
+                <line x1="70" y1="300" x2="70" y2="100" style="stroke:var(--dg-line)" stroke-width="1.5"/>
+                <polygon points="286,300 278,296 278,304" style="fill:var(--dg-line)"/>
+                <polygon points="70,100 66,108 74,108" style="fill:var(--dg-line)"/>
+                <text x="266" y="320" style="fill:var(--dg-line)" font-size="11">x &#8594; lon</text>
+                <text x="30" y="112" style="fill:var(--dg-line)" font-size="11" transform="rotate(-90 40 200)">y &#8594; lat</text>
+
+                <!-- candidate positions (squares — shape cue) -->
+                <g style="fill:var(--dg-domain)" opacity="0.5">
+                  <rect x="112" y="248" width="6" height="6"/><rect x="156" y="268" width="6" height="6"/>
+                  <rect x="206" y="228" width="6" height="6"/><rect x="244" y="198" width="6" height="6"/>
+                  <rect x="124" y="178" width="6" height="6"/><rect x="186" y="158" width="6" height="6"/>
+                </g>
+
+                <!-- highlighted worked position (orange ring) -->
+                <g>
+                  <line x1="70" y1="203" x2="196" y2="203" style="stroke:var(--dg-instance)" stroke-width="1" stroke-dasharray="3 3" opacity="0.85"/>
+                  <line x1="196" y1="300" x2="196" y2="203" style="stroke:var(--dg-instance)" stroke-width="1" stroke-dasharray="3 3" opacity="0.85"/>
+                  <circle cx="196" cy="203" r="7" style="fill:var(--dg-instance);stroke:var(--dg-panel)" stroke-width="2"/>
+                </g>
+
+                <!-- coordinate readout -->
+                <g font-size="11.5">
+                  <rect x="34" y="316" width="268" height="20" rx="5" style="fill:var(--dg-instance)" opacity="0.14"/>
+                  <text x="44" y="330" style="fill:var(--dg-ink)">
+                    <tspan style="fill:var(--dg-instance-ink)" font-weight="700">position</tspan>
+                    <tspan dx="6">x=12.5  y=45.3  t=2024-07-01T12:00Z</tspan>
+                  </text>
+                </g>
+              </g>
+
+              <!-- ===== FUNCTION arrow ===== -->
+              <g>
+                <line x1="326" y1="200" x2="422" y2="200" style="stroke:var(--dg-instance)" stroke-width="2.5" marker-end="url(#dgArrow)"/>
+                <rect x="328" y="164" width="94" height="26" rx="13" style="fill:var(--dg-panel);stroke:var(--dg-instance)" stroke-width="1.5"/>
+                <text x="375" y="181" style="fill:var(--dg-instance-ink)" font-size="11.5" font-weight="700" text-anchor="middle">f( pos )</text>
+                <text x="373" y="228" style="fill:var(--dg-line)" font-size="10.5" text-anchor="middle">coverage function</text>
+              </g>
+
+              <!-- ===== RANGE panel (mid teal) ===== -->
+              <g>
+                <rect x="430" y="54" width="312" height="292" rx="10"
+                      style="fill:var(--dg-panel);stroke:var(--dg-range)" stroke-width="1.5"/>
+
+                <text x="446" y="42" style="fill:var(--dg-range-ink)" font-size="13" font-weight="700" letter-spacing="1.5">RANGE</text>
+                <text x="506" y="42" style="fill:var(--dg-line)" font-size="11">measured values</text>
+
+                <text x="458" y="108" style="fill:var(--dg-line)" font-size="11.5">parameter: temperature</text>
+
+                <!-- value cell -->
+                <rect x="458" y="126" width="256" height="118" rx="10" style="fill:var(--dg-range)" opacity="0.16"/>
+                <rect x="458" y="126" width="256" height="118" rx="10" style="fill:none;stroke:var(--dg-range)" stroke-width="1.5"/>
+                <text x="586" y="196" style="fill:var(--dg-ink)" font-size="46" font-weight="700" text-anchor="middle">18.4</text>
+                <text x="586" y="224" style="fill:var(--dg-range-ink)" font-size="14" font-weight="700" text-anchor="middle">&deg;C</text>
+
+                <!-- value ramp: luminance-varied (also positioned + labelled) -->
+                <g>
+                  <text x="458" y="278" style="fill:var(--dg-line)" font-size="10.5">value ramp (cool &rarr; warm)</text>
+                  <rect x="458" y="286" width="46" height="14" style="fill:var(--dg-range)" opacity="0.30"/>
+                  <rect x="504" y="286" width="46" height="14" style="fill:var(--dg-range)" opacity="0.50"/>
+                  <rect x="550" y="286" width="46" height="14" style="fill:var(--dg-range)" opacity="0.70"/>
+                  <rect x="596" y="286" width="46" height="14" style="fill:var(--dg-range)" opacity="0.88"/>
+                  <rect x="642" y="286" width="46" height="14" style="fill:var(--dg-range)"/>
+                </g>
+                <g font-size="11.5">
+                  <rect x="458" y="316" width="256" height="20" rx="5" style="fill:var(--dg-instance)" opacity="0.14"/>
+                  <text x="468" y="330" style="fill:var(--dg-ink)">
+                    <tspan style="fill:var(--dg-instance-ink)" font-weight="700">value</tspan>
+                    <tspan dx="6">18.4 &deg;C  at that position</tspan>
+                  </text>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <figcaption class="mono">
+            <span class="figlabel">fig. 1 &mdash;</span> A coverage function maps a
+            <strong style="color:var(--dg-domain-ink)">domain</strong>
+            (positions in space and time) to a
+            <strong style="color:var(--dg-range-ink)">range</strong>
+            (the measured values).
+          </figcaption>
+        </figure>
+
+        <p>
+          A coverage is exactly that kind of function, made concrete: its
+          <strong>domain</strong> is a collection of positions in space and time,
+          and its <strong>range</strong> is the set of values measured or modeled
+          at those positions. Ask a coverage "what is the value <em>here</em>?"
+          and it answers. Hold onto the words <em>domain</em> and <em>range</em>:
+          they are the literal names of the two main parts of every CoverageJSON
+          document.
+        </p>
+
+        <h3 id="first-doc">A first document</h3>
+        <div class="codeblock">
+          <div class="code-bar">
+            <span class="code-name mono"><span class="dot">&#9673;</span> point-coverage.json</span>
+            <span class="code-lang mono">json</span>
+            <button class="copy-btn" id="copyBtn" aria-label="Copy code to clipboard">
+              <span class="glyph mono">&#9707;</span> <span id="copyLabel">copy</span>
+            </button>
+          </div>
+          <div class="code-scroll">
+<pre class="code" id="codeContent"><span class="tok-punc">{</span>
+  <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"Coverage"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"domain"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"Domain"</span><span class="tok-punc">,</span>
+    <span class="tok-key">"domainType"</span><span class="tok-punc">:</span> <span class="tok-str">"Point"</span><span class="tok-punc">,</span>
+    <span class="tok-key">"axes"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+      <span class="tok-key">"x"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span> <span class="tok-key">"values"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-num">12.5</span><span class="tok-punc">] },</span>
+      <span class="tok-key">"y"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span> <span class="tok-key">"values"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-num">45.3</span><span class="tok-punc">] },</span>
+      <span class="tok-key">"t"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span> <span class="tok-key">"values"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-str">"2024-07-01T12:00:00Z"</span><span class="tok-punc">] }</span>
+    <span class="tok-punc">}</span>
+  <span class="tok-punc">},</span>
+  <span class="tok-key">"parameters"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="tok-key">"temperature"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+      <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"Parameter"</span><span class="tok-punc">,</span>
+      <span class="tok-key">"unit"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span> <span class="tok-key">"label"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span> <span class="tok-key">"en"</span><span class="tok-punc">:</span> <span class="tok-str">"degree Celsius"</span> <span class="tok-punc">},</span> <span class="tok-key">"symbol"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span> <span class="tok-key">"value"</span><span class="tok-punc">:</span> <span class="tok-str">"Cel"</span> <span class="tok-punc">} }</span>
+    <span class="tok-punc">}</span>
+  <span class="tok-punc">},</span>
+  <span class="tok-key">"ranges"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="tok-key">"temperature"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+      <span class="tok-key">"type"</span><span class="tok-punc">:</span> <span class="tok-str">"NdArray"</span><span class="tok-punc">,</span>
+      <span class="tok-key">"dataType"</span><span class="tok-punc">:</span> <span class="tok-str">"float"</span><span class="tok-punc">,</span>
+      <span class="tok-key">"values"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span><span class="tok-num">18.4</span><span class="tok-punc">]</span>
+    <span class="tok-punc">}</span>
+  <span class="tok-punc">}</span>
+<span class="tok-punc">}</span></pre>
+          </div>
+        </div>
+
+        <a class="specref" href="https://docs.ogc.org/cs/21-069r2/21-069r2.html">
+          <span class="glyph mono" aria-hidden="true">&sect;</span>
+          <span class="sr-body">
+            <p class="sr-kicker mono">Further reading &middot; authoritative spec</p>
+            <p class="sr-title">CoverageJSON &mdash; OGC 21-069r2</p>
+            <span class="sr-url mono">docs.ogc.org/cs/21-069r2 &#8599;</span>
+          </span>
+        </a>
+
+      </article>
+
+      <!-- ============ FOOTER ============ -->
+      <footer class="footer">
+        <p class="mono">
+          &copy; 2026 Charles "Chuck" Daniels.
+          <span class="sep">&middot;</span> Prose &amp; diagrams: CC BY 4.0
+          <span class="sep">&middot;</span> Code: MIT
+        </p>
+      </footer>
+
+    </main>
+
+    <!-- ============ RIGHT TOC ============ -->
+    <nav class="toc" aria-label="On this page">
+      <p class="toc-title">On this page</p>
+      <ul>
+        <li><a href="#intro">Intro</a></li>
+        <li><a href="#what-is-coverage" class="active">What a "coverage" is</a></li>
+        <li><a href="#figure">Coverage as a function</a></li>
+        <li><a href="#first-doc">A first document</a></li>
+      </ul>
+    </nav>
+
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+
+    // ---- theme toggle (honors data-theme override; falls back to media query) ----
+    var tBtn = document.getElementById('themeToggle');
+    var tText = document.getElementById('themeText');
+    function prefersDark() {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    function current() {
+      return root.getAttribute('data-theme') || (prefersDark() ? 'dark' : 'light');
+    }
+    function apply(mode) {
+      root.setAttribute('data-theme', mode);
+      tText.textContent = mode === 'dark' ? 'light' : 'dark';
+    }
+    apply(current());
+    tBtn.addEventListener('click', function () {
+      apply(current() === 'dark' ? 'light' : 'dark');
+    });
+
+    // ---- mobile nav ----
+    var nBtn = document.getElementById('navToggle');
+    var side = document.getElementById('sidebar');
+    nBtn.addEventListener('click', function () {
+      var open = side.classList.toggle('open');
+      nBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    // ---- copy button ----
+    var cBtn = document.getElementById('copyBtn');
+    var cLabel = document.getElementById('copyLabel');
+    var code = document.getElementById('codeContent');
+    cBtn.addEventListener('click', function () {
+      var text = code.innerText;
+      var done = function () {
+        cBtn.classList.add('copied');
+        cLabel.textContent = 'copied ✓';
+        setTimeout(function () {
+          cBtn.classList.remove('copied');
+          cLabel.textContent = 'copy';
+        }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else { done(); }
+    });
+  })();
+</script>
