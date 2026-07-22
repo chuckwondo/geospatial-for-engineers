@@ -1,0 +1,35 @@
+/*-- scss:rules --*/
+
+/* ==========================================================================
+   Self-hosted OFL fonts. Bare url("fonts/NAME.woff2") with NO project.resources
+   entry (spike recipe #4, solves quarto-cli #9518): Quarto's dependency copier
+   places these adjacent to the compiled CSS at site_libs/bootstrap/fonts/, so
+   the bare url resolves at any page depth and under the GitHub Pages subpath.
+   Do NOT rewrite to ../fonts (escapes the project root) or add a resources entry
+   (copies to _site/fonts/, the wrong place). Files + OFL.txt live in /fonts.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Fraunces"; font-style: normal; font-weight: 600;
+  font-display: swap; src: url("fonts/fraunces-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Fraunces"; font-style: italic; font-weight: 600;
+  font-display: swap; src: url("fonts/fraunces-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("fonts/inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter"; font-style: normal; font-weight: 600;
+  font-display: swap; src: url("fonts/inter-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("fonts/jetbrains-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono"; font-style: normal; font-weight: 600;
+  font-display: swap; src: url("fonts/jetbrains-mono-600.woff2") format("woff2");
+}

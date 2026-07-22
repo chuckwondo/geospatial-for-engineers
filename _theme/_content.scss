@@ -1,0 +1,203 @@
+/*-- scss:rules --*/
+
+/* ==========================================================================
+   Content components (Survey Console), ported from the accepted mockup. The
+   hero, terminal frame, cards, tags, and zone rule are used verbatim as classes
+   in raw-HTML blocks (index.qmd). The prose rules are retargeted from the
+   mockup's `.prose` onto Quarto's generated content (`#quarto-document-content`)
+   so guide headings/paragraphs pick them up; the mockup's per-heading `.hprompt`
+   span becomes a `::before` glyph.
+   ========================================================================== */
+
+/* The landing page uses `pagetitle` (no `title`), so Quarto emits an EMPTY
+   title-block header; hide it so it adds no gap above the hero. Guide pages keep
+   their populated title block (not empty, so unaffected). */
+#title-block-header:empty { display: none; }
+
+/* ---- eyebrow + zone rule ---- */
+.eyebrow {
+  font-family: var(--mono); font-size: var(--t-xs);
+  letter-spacing: 0.04em; color: var(--ink-muted); margin: 0 0 1rem;
+}
+.eyebrow .comment { color: var(--accent); }
+.zone-rule {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 4.5rem 0 3rem; color: var(--ink-muted);
+  font-family: var(--mono); font-size: var(--t-xs);
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.zone-rule::before, .zone-rule::after {
+  content: ""; height: 1px; background: var(--border); flex: 1;
+}
+
+/* ---- terminal frame (shared chrome for hero + card) ---- */
+.terminal {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: 0 1px 0 var(--border), 0 26px 50px -34px rgba(0, 0, 0, 0.55);
+}
+.term-bar {
+  display: flex; align-items: center; gap: 0.55rem;
+  padding: 0.6rem 0.9rem; background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
+.term-dots { display: flex; gap: 0.42rem; }
+.term-dots i {
+  width: 11px; height: 11px; border-radius: 50%; display: block;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+}
+.term-dots i:nth-child(1) { background: #d76a3a; }
+.term-dots i:nth-child(2) { background: #d9b24e; }
+.term-dots i:nth-child(3) { background: #4f9e62; }
+.term-name {
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+  margin-left: 0.4rem;
+}
+.term-name .coord { color: var(--teal); }
+.term-spacer { flex: 1; }
+.term-crs {
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+  letter-spacing: 0.08em; white-space: nowrap;
+}
+
+/* ---- hero (serif output inside the terminal, cartographic backdrop) ---- */
+/* Aligned top baseline: all three column heads sit at ~75px below the viewport
+   top. The content column starts ~25px lower than the sidebar/TOC (nested Quarto
+   grid offset not reachable in CSS), so an empirical -24px margin pulls the hero
+   up to 75 (measured before: ledger 81, hero 99, TOC 67). Ledger/TOC compensated
+   in _chrome.scss. */
+.hero { padding-top: 0.6rem; margin-top: -24px; }
+.term-body {
+  position: relative; overflow: hidden;
+  padding: clamp(1.5rem, 3.5vw, 2.75rem);
+  padding-top: 1.35rem;
+}
+.hero-backdrop {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(var(--hero-grid) 1px, transparent 1px) 0 0 / 100% 40px,
+    linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px) 0 0 / 40px 100%;
+}
+.hero-contours { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-contours .ring { fill: none; stroke: var(--accent-ui); stroke-opacity: 0.5; stroke-width: 1.5; }
+.hero-contours .sweep { fill: none; stroke: var(--teal-ui); stroke-opacity: 0.32; stroke-width: 1.25; }
+.hero-fore { position: relative; }
+.hero-ticks {
+  position: absolute; top: 0; right: 0;
+  font-family: var(--mono); font-size: var(--t-xs);
+  color: var(--ink-muted); text-align: right; line-height: 1.6;
+}
+.hero-ticks .val { color: var(--teal); }
+.cmd-line {
+  font-family: var(--mono); font-size: var(--t-sm);
+  color: var(--ink-2); margin: 0 0 1.6rem;
+}
+.cmd-line .prompt { color: var(--accent); }
+.cmd-line .cmd { color: var(--ink); }
+
+/* the ONE serif display line -- the single expressive peak */
+.hero-thesis {
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(2.15rem, 5.6vw, var(--t-hero));
+  line-height: 1.06; letter-spacing: -0.015em;
+  margin: 0; color: var(--ink); max-width: 40ch; text-wrap: balance;
+}
+.hero-thesis .flip { color: var(--accent); font-style: italic; }
+.hero-tagline {
+  margin: 1.8rem 0 0; max-width: min(78ch, 100%); color: var(--ink-2);
+  font-size: var(--t-md); line-height: 1.6;
+}
+.hero-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 0.6rem; margin-top: 1.75rem; }
+.tag {
+  font-family: var(--mono); font-size: var(--t-xs);
+  color: var(--ink-muted); background: var(--panel-2);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 0.32rem 0.72rem;
+}
+.tag .k { color: var(--accent); }
+.tag.teal .k { color: var(--teal); }
+
+/* static (non-blinking) block cursor that closes the hero */
+.cursor {
+  display: inline-block; width: 0.56em; height: 1.02em;
+  background: var(--accent-ui); vertical-align: -0.14em;
+  margin-left: 0.14em; border-radius: 1px;
+}
+
+/* ==========================================================================
+   PROSE -- retarget mockup `.prose` onto Quarto's generated content. Headings
+   read as mono, tracked, with an accent prompt glyph; body stays readable sans
+   capped at the measure so lines do not over-run the filled column.
+   ========================================================================== */
+/* Scope to Quarto's section headings (`<section class="levelN"> > hN`) so raw-HTML
+   component headings (e.g. the guide card's `.gcard-title`, an <h3> in a <div>)
+   are NOT swept up and given the prose margin/size. */
+#quarto-document-content section > h2 {
+  font-family: var(--mono); font-weight: 600;
+  font-size: var(--t-lg); letter-spacing: -0.01em; color: var(--ink);
+  margin: 2.75rem 0 1rem; scroll-margin-top: 70px;
+  display: flex; align-items: baseline; gap: 0.6rem;
+}
+#quarto-document-content section > h2::before {
+  content: "\00a7"; color: var(--accent); font-size: 0.8em;
+  font-family: var(--mono); font-weight: 600;
+}
+#quarto-document-content section > h3 {
+  font-family: var(--mono); font-weight: 600; font-size: var(--t-md);
+  color: var(--ink); margin: 2.5rem 0 1rem; scroll-margin-top: 70px;
+}
+#quarto-document-content p { color: var(--ink-2); }
+#quarto-document-content strong { color: var(--ink); font-weight: 600; }
+/* measure cap: only Quarto's generated prose (unclassed p / list items), never
+   the classed hero/card paragraphs or full-bleed figures/code. */
+#quarto-document-content p:not([class]),
+#quarto-document-content li { max-width: var(--measure); }
+
+.mono-inline {
+  font-family: var(--mono); font-size: 0.9em;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 0.05em 0.35em; color: var(--ink);
+}
+
+/* ---- landing: who-section + guide card ---- */
+.section-block { margin-top: 3rem; }
+.gcards-label {
+  font-family: var(--mono); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--ink-muted); margin: 2.75rem 0 1rem;
+}
+.gcards-label .sub { text-transform: none; letter-spacing: 0; color: var(--ink-2); }
+.gcard {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: border-color 0.14s ease, transform 0.14s ease;
+}
+.gcard:hover { border-color: var(--accent-line); transform: translateY(-2px); }
+.gcard-head {
+  display: flex; align-items: center; gap: 0.55rem;
+  padding: 0.55rem 1rem; background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+}
+.gcard-head .dollar { color: var(--accent); }
+.gcard-head .spacer { flex: 1; }
+.gcard-head .coord { color: var(--teal); }
+.gcard-body {
+  display: grid; grid-template-columns: 1fr auto; gap: 1rem 1.5rem;
+  align-items: end; padding: 0.7rem 1.6rem 1.4rem;
+}
+.gcard-title {
+  font-family: var(--mono); font-weight: 600; font-size: var(--t-lg);
+  color: var(--ink); margin: 0 0 0.55rem; letter-spacing: -0.01em;
+}
+.gcard-desc { margin: 0; color: var(--ink-2); font-size: var(--t-base); max-width: none; }
+.gcard-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap;
+  font-family: var(--mono); font-size: var(--t-sm); color: var(--accent);
+}
+.gcard-cta .arrow { transition: transform 0.14s ease; }
+.gcard:hover .gcard-cta .arrow { transform: translateX(3px); }
+
+/* diagram text inherits the mono UI face (used by the inline SVGs, Task 10+) */
+figure.diagram svg.dg text, svg.dg text { font-family: var(--mono); }

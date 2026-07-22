@@ -12,33 +12,75 @@ website:
     engineers with zero domain background.
   reader-mode: true
   page-navigation: true
+  search:
+    # Render search inline in the ledger sidebar (mockup design + preferred), not
+    # as a navbar button. The #quarto-search div is empty in the static HTML and
+    # is hydrated into an inline autocomplete input at runtime; styled in
+    # _chrome.scss to read as the ledger search panel.
+    location: sidebar
+  navbar:
+    background: light
+    tools: []
+  sidebar:
+    style: docked
+    search: true
+    header: |
+      ::: {.ledger-head}
+      **Field book** [sheet 01]{.sheet}
+      :::
+    footer: |
+      ```{=html}
+      <div class="coord-block">
+        <div class="cb-head"><span class="dot">●</span> cursor</div>
+        <div class="coord-rows">
+          <div><span class="k">lat</span><span class="v">45.3000°N</span></div>
+          <div><span class="k">lon</span><span class="v">12.5000°E</span></div>
+          <div><span class="k">crs</span><span class="v">EPSG:4326</span></div>
+          <div><span class="k">t</span><span class="v">2024-07-01</span></div>
+        </div>
+      </div>
+      ```
+    contents:
+      - text: "Home"
+        href: index.qmd
+      - guides/coveragejson.qmd
   page-footer:
     center: >
       © 2026 Charles "Chuck" Daniels.
       Prose and diagrams: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
       Code: [MIT](https://github.com/chuckwondo/geospatial-for-engineers/blob/main/LICENSE-CODE).
-  sidebar:
-    style: docked
-    search: true
-    contents:
-      - text: "Home"
-        href: index.qmd
-      - guides/coveragejson.qmd
 
 format:
   html:
     theme:
       light:
         - cosmo
+        - _theme/_tokens.scss
+        - _theme/_fonts.scss
+        - _theme/_chrome.scss
+        - _theme/_content.scss
         - custom.scss
       dark:
         - darkly
+        - _theme/_tokens.scss
+        - _theme/_fonts.scss
+        - _theme/_chrome.scss
+        - _theme/_content.scss
         - custom.scss
+    grid:
+      # Fill the center track (ADR-0002: no narrow band with empty gutters).
+      # Mirrors the mockup shell (sidebar 288 | content | TOC 240 within ~1760px);
+      # widens Quarto's default 900px body so the reading lane fills the width.
+      sidebar-width: 288px
+      body-width: 1180px
+      margin-width: 240px
+      gutter-width: 1.5rem
     toc: true
     toc-depth: 3
-    number-sections: true
+    number-sections: false
     code-copy: true
     code-overflow: wrap
     fig-cap-location: bottom
     link-external-newwindow: true
+    include-before-body: _includes/satfield.html
     include-after-body: caption-labels.html

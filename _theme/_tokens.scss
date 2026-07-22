@@ -1,0 +1,161 @@
+/*-- scss:rules --*/
+
+/* ==========================================================================
+   Terra Rusty token system (ported verbatim from the accepted mockup,
+   docs/adr/assets/0002-visual-redesign-mockup.html). Values are the
+   adversarially contrast-verified originals; do not re-derive.
+
+   Quarto owns the light/dark scheme by swapping two Bootstrap bundles and
+   toggling body.quarto-light / body.quarto-dark. So: :root carries the LIGHT
+   tokens, body.quarto-dark carries the DARK overrides, and custom.scss is
+   compiled into BOTH bundles. The mockup's @media(prefers-color-scheme) and
+   :root[data-theme] blocks are dropped (Quarto selects the initial bundle).
+   ========================================================================== */
+
+:root {
+  /* self-hosted OFL families (Task 3); system fallbacks kept */
+  --mono:  "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  --sans:  "Inter", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --serif: "Fraunces", "Iowan Old Style", Palatino, Georgia, serif; /* display / hero only */
+
+  /* type scale (1.25 minor-third) */
+  --t-xs:   0.75rem;
+  --t-sm:   0.8125rem;
+  --t-base: 1.0625rem;
+  --t-md:   1.1875rem;
+  --t-lg:   1.5rem;
+  --t-xl:   2rem;
+  --t-2xl:  2.75rem;
+  --t-hero: 4.25rem;   /* serif hero ceiling */
+
+  /* WIDTH: min(120ch,100%) fills the full track up to a 120ch soft cap, so at
+     1200-1440px paragraphs reach the track edge with no gutter; only true
+     ultrawide (>1650px) sees a modest right margin. */
+  --measure: min(120ch, 100%);
+  --shell: 1760px;     /* wide document shell: fills the center region */
+  --radius: 12px;
+  --radius-sm: 7px;
+
+  /* ---- READABILITY SCRIMS (washes in the --bg color; auto-repaint per theme
+     because they resolve var(--bg) at use time) ----
+     --scrim-lane:   MODERATE wash under the central reading column: softens the
+                     field beneath long-form prose but is NOT opaque, so the
+                     satellite scene stays faintly perceptible. Body text stays
+                     past AA because the muted field (patches capped ~0.24 fill)
+                     already clears AA un-scrimmed, and this wash only improves it.
+     --scrim-chrome: lighter wash under the sidebar / TOC / footer running text,
+                     enough to guarantee WCAG AA over the field while still
+                     letting ~55% of the satellite scene read through. */
+  --scrim-lane:   color-mix(in srgb, var(--bg) 70%, transparent);
+  --scrim-chrome: color-mix(in srgb, var(--bg) 45%, transparent);
+
+  /* ---- LIGHT (Terra): RUSTY GREEN earthed cloud-paper — warmth from an
+     iron-oxide (red/orange) undertone blended into greyed greens, NOT yellow;
+     green-dominant, richer & more present than the old pale sage ---- */
+  --bg:        #dee9d7;         /* warm greyed-green paper (hue ~97, R>B rosy cast, de-yellowed) */
+  --grid-fine: rgba(48, 56, 42, 0.055);
+  --grid-cell: rgba(48, 56, 42, 0.04);
+  --hero-grid: rgba(48, 56, 42, 0.11);  /* warm graticule wash (warm-olive base, not yellow) */
+  --panel:     #e7f0e1;         /* raised warm-green surface (hue ~96, holds accent text 5.0:1) */
+  --panel-2:   #dce7d5;         /* warm greyed-green chrome bars (hue ~97, accent 4.6:1) */
+  --panel-3:   #dbe5d4;         /* deeper warm chrome (hue ~95, accent 4.5:1, teal 5.2:1) */
+  --border:    #a0b496;         /* warm greyed-green border (hue ~100) */
+  --border-strong: #7d9077;     /* warm greyed-green strong border (hue ~106) */
+  --ink:       #1b241a;         /* deep warm pine near-black text */
+  --ink-2:     #33422f;         /* warm forest body text */
+  --ink-muted: #445b38;         /* warm moss labels/captions (>=4.5:1) */
+
+  /* DOMINANT accent: terracotta / clay earth */
+  --accent:      #ac4318;       /* link + accent TEXT (>=4.5:1 on paper) */
+  --accent-ui:   #c85a2a;       /* fills, cursor, carets (non-text, >=3:1) */
+  --accent-soft: rgba(200, 90, 42, 0.15);
+  --accent-line: rgba(200, 90, 42, 0.55);
+
+  /* secondary hue: clear sky blue (var kept named --teal for stability) */
+  --teal:      #175f96;         /* sky-blue TEXT (>=4.5:1) */
+  --teal-ui:   #2a86bf;         /* sky-blue fills / strokes (non-text) */
+  --teal-soft: rgba(42, 134, 191, 0.13);
+
+  /* support hue: forest green (var kept named --olive for stability) */
+  --olive:     #34632f;         /* warm earthed forest-green TEXT */
+  --olive-ui:  #4c8a42;         /* warm forest-green strokes (non-text) */
+
+  --focus: #1a6fb0;
+
+  /* callout hues (each ALSO labelled + shaped — never color alone) */
+  --c-note: #175f96;  --c-note-bg: rgba(42, 134, 191, 0.10);
+  --c-imp:  #ac4318;  --c-imp-bg:  rgba(200, 90, 42, 0.12);
+  --c-warn: #7a5400;  --c-warn-bg: rgba(176, 122, 0, 0.14);
+  --c-caut: #9d2317;  --c-caut-bg: rgba(170, 42, 26, 0.11);
+
+  /* teaching diagram — roles differ by LUMINANCE + position + shape + label */
+  --dg-panel:     #e7f0e1;
+  --dg-ink:       #152615;
+  --dg-line:      #445b38;          /* survey axis line + labels (>=4.5:1) */
+  --dg-graticule: rgba(48, 56, 42, 0.12);
+  --dg-domain:    #33603a;          /* DARK warm forest — domain (lowest luminance) */
+  --dg-domain-ink:#2f5535;
+  --dg-range:     #2a86bf;          /* sky blue — range strokes/fills */
+  --dg-range-ink: #175f96;          /* sky-blue TEXT */
+  --dg-instance:  #c85a2a;          /* terracotta — worked instance */
+  --dg-instance-ink: #ac4318;
+}
+
+body.quarto-dark {
+  /* ---- DARK (Terra): deep pine near-black ground, designed from scratch ---- */
+  --bg:        #0d190f;         /* deep pine near-black (green-tinted ground) */
+  --grid-fine: rgba(188, 212, 182, 0.06);
+  --grid-cell: rgba(188, 212, 182, 0.032);
+  --hero-grid: rgba(188, 212, 182, 0.13);
+
+  /* Scrims MUST be redeclared here, NOT inherited from :root. Their color-mix
+     resolves var(--bg) against the --bg in scope where the token is declared;
+     :root's --bg is the LIGHT paper, so a scrim declared only on :root bakes a
+     LIGHT wash and never repaints for dark (that light value inherits down).
+    Redeclaring alongside the dark --bg makes the wash a dark near-black,
+      so the
+     reading lane stays dark and body text, links, and mono captions read.
+     (The mockup avoided this only because it co-declared --bg and the scrims on
+     :root; Quarto moved the dark --bg onto body.quarto-dark, splitting them.) */
+  --scrim-lane:   color-mix(in srgb, var(--bg) 70%, transparent);
+  --scrim-chrome: color-mix(in srgb, var(--bg) 45%, transparent);
+
+  --panel:     #122114;
+  --panel-2:   #1a2b1c;
+  --panel-3:   #223524;
+  --border:    #2e4230;
+  --border-strong: #425744;
+  --ink:       #e0eade;         /* cool sage-grey (de-yellowed cream) */
+  --ink-2:     #bfcdbe;
+  --ink-muted: #84a481;
+
+  --accent:      #e8895a;       /* terracotta glow — dominant accent */
+  --accent-ui:   #e8895a;
+  --accent-soft: rgba(232, 137, 90, 0.16);
+  --accent-line: rgba(232, 137, 90, 0.48);
+
+  --teal:      #5db4e0;         /* clear sky blue */
+  --teal-ui:   #4ea6d4;
+  --teal-soft: rgba(78, 166, 212, 0.16);
+
+  --olive:     #7bc680;         /* light forest / sage support */
+  --olive-ui:  #66b370;
+
+  --focus: #6fb8ec;
+
+  --c-note: #6fb8ec;  --c-note-bg: rgba(78, 166, 212, 0.15);
+  --c-imp:  #e8895a;  --c-imp-bg:  rgba(232, 137, 90, 0.13);
+  --c-warn: #e6bf5a;  --c-warn-bg: rgba(230, 191, 90, 0.14);
+  --c-caut: #f5836f;  --c-caut-bg: rgba(245, 131, 111, 0.14);
+
+  --dg-panel:     #111c14;
+  --dg-ink:       #e0eade;
+  --dg-line:      #749a74;
+  --dg-graticule: rgba(188, 212, 182, 0.11);
+  --dg-domain:    #a8d6aa;         /* LIGHT sage — domain (highest luminance) */
+  --dg-domain-ink:#a8d6aa;
+  --dg-range:     #4ea6d4;         /* MID sky blue */
+  --dg-range-ink: #8fd0ee;
+  --dg-instance:  #e8895a;         /* terracotta — worked instance */
+  --dg-instance-ink: #f4a878;
+}

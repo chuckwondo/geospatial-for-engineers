@@ -1,0 +1,100 @@
+<!-- ============ AMBIENT SATELLITE FIELD (whole-page back layer) ============
+     Ported verbatim from docs/adr/assets/0002-visual-redesign-mockup.html.
+     Lands in #quarto-html-before-body (first in <body>); painted at z-index:-1
+     behind all content via body's isolation. Palette-token-driven, so it
+     repaints per theme for free. Static (no motion), aria-hidden. -->
+<div class="satfield" aria-hidden="true">
+  <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- soft edges so the land-cover patches read as blurred biome regions,
+           like a coarse land-cover raster seen from orbit, not hard shapes.
+           Kept small (14) so patches are DEFINED, not vague clouds. -->
+      <filter id="sfSoft" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="14"/>
+      </filter>
+    </defs>
+
+    <!-- (a) LAND-COVER / WATER PATCHES — soft blobby biome regions, dialled up
+         so the scene is plainly visible. Fill-opacity raised to 0.19-0.24 so the
+         organic biome fills (not just the strokes) carry the perceptibility, and
+         the dense CORES spaced >=180 viewBox-units apart, so on the un-scrimmed
+         field (sidebar / TOC / margins) no reading line sits over two stacked
+         patches; single-patch cover keeps even --ink-muted past AA in both
+         themes. Under the central reading lane the --scrim-lane wash softens
+         all of this further. Greens (land), the sky/teal token (water) and the
+         warm terracotta token (arid) are held distinct for biome variance. -->
+    <g filter="url(#sfSoft)">
+      <!-- water — sits lowest, like ocean beneath the land -->
+      <path class="sf-water" fill-opacity="0.23"
+            d="M-120 640 C 120 560 360 640 372 790 C 384 940 180 1010 -60 986 C -220 968 -260 720 -120 640 Z"/>
+      <path class="sf-water" fill-opacity="0.22"
+            d="M1300 96 C 1470 52 1660 120 1690 268 C 1712 388 1560 470 1400 448 C 1250 428 1188 258 1244 172 C 1266 138 1276 116 1300 96 Z"/>
+      <path class="sf-water" fill-opacity="0.19"
+            d="M624 852 C 736 812 852 862 858 954 C 862 1030 742 1064 636 1048 C 546 1034 512 916 560 872 C 584 852 600 860 624 852 Z"/>
+      <!-- land — lowland (mid forest green) -->
+      <path class="sf-land" fill-opacity="0.24"
+            d="M130 118 C 300 44 470 96 508 246 C 540 372 430 470 274 462 C 132 454 40 344 68 224 C 82 164 94 148 130 118 Z"/>
+      <path class="sf-land" fill-opacity="0.23"
+            d="M686 440 C 850 372 1010 448 1016 604 C 1020 720 872 792 720 762 C 590 736 528 566 596 490 C 622 462 662 452 686 440 Z"/>
+      <path class="sf-land" fill-opacity="0.23"
+            d="M1082 648 C 1240 588 1392 664 1388 800 C 1384 918 1236 984 1084 954 C 954 928 900 758 968 690 C 1000 660 1058 658 1082 648 Z"/>
+      <!-- land — upland (deep forest green) -->
+      <path class="sf-land-b" fill-opacity="0.22"
+            d="M912 176 C 1088 104 1252 180 1258 336 C 1262 452 1114 524 962 494 C 832 468 770 298 838 222 C 864 194 888 186 912 176 Z"/>
+      <path class="sf-land-b" fill-opacity="0.22"
+            d="M356 366 C 500 306 648 370 654 508 C 658 616 524 682 388 656 C 272 634 216 484 276 416 C 300 388 332 376 356 366 Z"/>
+      <!-- arid — warm terracotta earth -->
+      <path class="sf-arid" fill-opacity="0.22"
+            d="M1338 448 C 1484 416 1616 476 1610 596 C 1606 700 1470 758 1338 732 C 1226 710 1180 566 1240 502 C 1266 474 1314 458 1338 448 Z"/>
+      <path class="sf-arid" fill-opacity="0.19"
+            d="M584 100 C 712 70 828 122 822 232 C 818 322 700 372 588 350 C 494 332 456 200 508 148 C 530 122 560 112 584 100 Z"/>
+    </g>
+
+    <!-- (b) GRATICULE — the lat/lon grid of a GIS view, drawn clearly as a real
+         map overlay (one bold reference meridian + parallel). -->
+    <g class="sf-grat">
+      <!-- parallels (slightly curved, as on a projected globe) -->
+      <path d="M-40 150 C 400 128 1200 128 1640 150"/>
+      <path d="M-40 320 C 400 304 1200 304 1640 320"/>
+      <path d="M-40 680 C 400 690 1200 690 1640 680"/>
+      <path d="M-40 850 C 400 864 1200 864 1640 850"/>
+      <!-- meridians -->
+      <path d="M260 -40 C 246 300 246 700 272 1040"/>
+      <path d="M520 -40 C 510 300 510 700 528 1040"/>
+      <path d="M1080 -40 C 1092 300 1092 700 1068 1040"/>
+      <path d="M1340 -40 C 1356 300 1356 700 1328 1040"/>
+    </g>
+    <g class="sf-grat-2">
+      <!-- bold reference lines -->
+      <path d="M-40 500 C 400 490 1200 490 1640 500"/>
+      <path d="M800 -40 L 800 1040"/>
+    </g>
+
+    <!-- (c) CONTOUR / ELEVATION RINGS — several nested clusters concentrated in
+         the margins / hero band where no body text sits, so terrain reads at a
+         glance without ever crowding prose. -->
+    <g class="sf-cont-a" stroke-opacity="0.42">
+      <ellipse cx="1440" cy="588" rx="46"  ry="36"/>
+      <ellipse cx="1440" cy="588" rx="88"  ry="68"/>
+      <ellipse cx="1440" cy="588" rx="132" ry="102"/>
+      <ellipse cx="1440" cy="588" rx="178" ry="138"/>
+    </g>
+    <!-- nudged down into the lower-left margin and eased, so patches + contours +
+         graticule do not pile up in one sidebar region. -->
+    <g class="sf-cont-t" stroke-opacity="0.32">
+      <ellipse cx="150" cy="900" rx="40"  ry="32"/>
+      <ellipse cx="150" cy="900" rx="78"  ry="62"/>
+      <ellipse cx="150" cy="900" rx="120" ry="96"/>
+    </g>
+    <g class="sf-cont-o" stroke-opacity="0.36">
+      <ellipse cx="1082" cy="284" rx="42"  ry="34"/>
+      <ellipse cx="1082" cy="284" rx="82"  ry="66"/>
+      <ellipse cx="1082" cy="284" rx="126" ry="100"/>
+    </g>
+    <g class="sf-cont-a" stroke-opacity="0.34">
+      <ellipse cx="612" cy="176" rx="38"  ry="30"/>
+      <ellipse cx="612" cy="176" rx="74"  ry="58"/>
+      <ellipse cx="612" cy="176" rx="114" ry="90"/>
+    </g>
+  </svg>
+</div>

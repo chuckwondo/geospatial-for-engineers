@@ -33,3 +33,17 @@ caption {
   font-weight: 600;
   color: var(--bs-body-color, #1a1a1a);
 }
+
+// Inline code (`foo`) -- NOT code blocks. Darkly hands inline <code> a near-white
+// #f8f9fa background box with an inherited light text colour, so in dark mode it
+// reads white-on-white (worst inside the mono-heavy figure captions). Repaint it
+// with Terra tokens so it stays legible in both themes. The `:not(pre) > code`
+// selector hits inline code only and outranks Bootstrap's bare `code` rule.
+// (Task 9 folds this into the full terminal-panel code styling.)
+:not(pre) > code {
+  background: var(--panel-2);
+  color: var(--accent);
+  padding: 0.08em 0.36em;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
