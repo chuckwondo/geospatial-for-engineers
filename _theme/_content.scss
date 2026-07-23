@@ -199,8 +199,60 @@
 .gcard-cta .arrow { transition: transform 0.14s ease; }
 .gcard:hover .gcard-cta .arrow { transform: translateX(3px); }
 
-/* diagram text inherits the mono UI face (used by the inline SVGs, Task 10+) */
-figure.diagram svg.dg text, svg.dg text { font-family: var(--mono); }
+/* ==========================================================================
+   TEACHING DIAGRAMS (Task 10) — the inline token-driven SVG pattern that Stage
+   B (Tasks 11-24) repeats. Each diagram is a `::: {#fig-id .diagram}` crossref
+   div holding a `{=html}` block: a `.diagram-frame` terminal bar, a
+   `.diagram-svg-wrap`, and the `svg.dg`; the caption paragraph follows. Quarto
+   renders it as `<div id="fig-id" class="diagram quarto-float quarto-figure
+   quarto-figure-center anchored">` with a trailing
+   `<figcaption class="quarto-float-caption">`, and `@fig-id` still resolves to a
+   numbered reference. SVG color comes from --dg-* (defined per theme in
+   _tokens.scss) so every diagram repaints in dark mode; roles differ by
+   luminance + position + shape + label, never color alone. The #12 mobile fix:
+   drop the min-width floor below 480px so wide diagrams are not clipped to
+   illegible labels (they scroll in the .diagram-svg-wrap above that width).
+   ========================================================================== */
+.quarto-figure.diagram {
+  width: 100%; margin: 2.5rem 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.diagram .diagram-frame {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 0.9rem; background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono); font-size: var(--t-xs); color: var(--ink-muted);
+}
+.diagram .diagram-frame .dollar { color: var(--accent); }
+.diagram .diagram-frame .spacer { flex: 1; }
+/* reserve a slot at the far right of the frame bar for the hover anchor-link
+   (below) so the coord label no longer sits under it; sized to sit a few px off
+   the icon, not a wide gap */
+.diagram .diagram-frame .coord { color: var(--teal); margin-right: 1rem; }
+/* anchor.js adds a hover deep-link anchor at the figure's top-right (top:.6em;
+   right:.5em); keep it so readers can link straight to a figure, but theme its
+   color to the frame and let the reserved coord slot keep them from colliding. */
+.diagram > .anchorjs-link { color: var(--ink-muted); }
+.diagram > .anchorjs-link:hover { color: var(--accent); }
+.diagram .diagram-svg-wrap { padding: 1.5rem clamp(1rem, 3vw, 2rem); overflow-x: auto; }
+.diagram svg.dg { display: block; width: 100%; height: auto; min-width: 420px; }
+/* diagram text inherits the mono UI face (used by every inline SVG) */
+svg.dg text { font-family: var(--mono); }
+/* caption sits inside the panel: mono, left-aligned, padded; figlabel in accent
+   (overrides the centered/narrow default in custom.scss via higher specificity) */
+.diagram figcaption.quarto-float-caption {
+  font-family: var(--mono); font-size: var(--t-xs); line-height: 1.5;
+  color: var(--ink-muted); text-align: left;
+  max-width: none; margin: 0;
+  padding: 0 clamp(1rem, 3vw, 2rem) 1.3rem;
+}
+.diagram figcaption .caption-label { color: var(--accent); font-weight: 600; }
+@media (max-width: 480px) {
+  .diagram svg.dg { min-width: 0; }
+}
 
 /* ==========================================================================
    CALLOUTS (Task 9) — restyle Quarto's five callout types into the Terra --c-*

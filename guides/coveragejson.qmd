@@ -194,7 +194,61 @@ A **coverage** maps positions in space and time to values: one function per
 property, all sharing the same domain.
 :::
 
-![A coverage function maps a domain (positions in space and time) to a range (the measured values).](../diagrams/coverage-as-function.svg){#fig-coverage-function}
+::: {#fig-coverage-function .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render coverage-as-function.svg<span class="spacer"></span><span class="coord">domain &rarr; range</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" role="img" aria-labelledby="cf-title cf-desc" class="dg">
+  <title id="cf-title">A coverage function maps a domain to a range</title>
+  <desc id="cf-desc">A box labeled Domain holds a grid of positions in space and time; an arrow labeled f, the coverage, maps it to a box labeled Range holding a matching grid of measured values, one value per position. A worked instance is highlighted: one position marked "here" in the domain is threaded across to its value in the matching cell of the range, annotated f of (12.5 degrees, 45.3 degrees, 12:00) equals 18.4 -- asking the coverage for the value at one position returns one number. Domain is drawn in dark forest green, range in sky blue, and the worked instance in terracotta; the three parts differ in luminance and are separated in space and labelled, not distinguished by color alone.</desc>
+
+  <rect x="1" y="1" width="758" height="318" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <text x="380" y="48" text-anchor="middle" font-size="22" font-weight="700" style="fill:var(--dg-ink)">A coverage function maps a domain to a range</text>
+
+  <!-- Domain: a grid of positions -->
+  <rect x="48" y="96" width="250" height="156" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2.5"/>
+  <text x="173" y="130" text-anchor="middle" font-size="18" font-weight="700" style="fill:var(--dg-domain-ink)">DOMAIN</text>
+  <text x="173" y="154" text-anchor="middle" font-size="13" style="fill:var(--dg-domain-ink)">positions in space &amp; time</text>
+  <text x="173" y="172" text-anchor="middle" font-size="13" style="fill:var(--dg-domain-ink)">(the inputs)</text>
+  <g style="fill:var(--dg-domain)">
+    <circle cx="113" cy="202" r="4"/><circle cx="173" cy="202" r="4"/><circle cx="233" cy="202" r="4"/>
+    <circle cx="113" cy="226" r="4"/><circle cx="173" cy="226" r="4"/><circle cx="233" cy="226" r="4"/>
+  </g>
+  <!-- worked instance: one position "here" (terracotta spotlight) -->
+  <circle cx="113" cy="202" r="10" style="fill:var(--dg-instance)" opacity="0.25"/>
+  <circle cx="113" cy="202" r="6" style="fill:var(--dg-instance);stroke:var(--dg-panel)" stroke-width="1.2"/>
+  <text x="113" y="190" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--dg-instance-ink)">here</text>
+
+  <!-- Range: a matching grid of values, one per position -->
+  <rect x="462" y="96" width="250" height="156" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-range)" stroke-width="2.5"/>
+  <text x="587" y="130" text-anchor="middle" font-size="18" font-weight="700" style="fill:var(--dg-range-ink)">RANGE</text>
+  <text x="587" y="154" text-anchor="middle" font-size="13" style="fill:var(--dg-range-ink)">measured values</text>
+  <text x="587" y="172" text-anchor="middle" font-size="13" style="fill:var(--dg-range-ink)">(the outputs)</text>
+  <!-- highlight the value in the matching cell -->
+  <rect x="505" y="192" width="44" height="20" rx="4" style="fill:var(--dg-instance);stroke:var(--dg-instance)" fill-opacity="0.18" stroke-width="1.5"/>
+  <g style="fill:var(--dg-range-ink)" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="527" y="207">18.4</text><text x="587" y="207">17.9</text><text x="647" y="207">19.2</text>
+    <text x="527" y="231">18.1</text><text x="587" y="231">null</text><text x="647" y="231">18.8</text>
+  </g>
+
+  <!-- Arrow: the coverage as a whole -->
+  <line x1="306" y1="174" x2="452" y2="174" style="stroke:var(--dg-line)" stroke-width="3"/>
+  <polygon points="462,174 446,166 446,182" style="fill:var(--dg-line)"/>
+  <text x="382" y="162" text-anchor="middle" font-size="16" font-weight="700" font-style="italic" style="fill:var(--dg-line)">f</text>
+  <text x="382" y="196" text-anchor="middle" font-size="12" style="fill:var(--dg-line)">the coverage</text>
+
+  <!-- the concrete mapping: this position -> its value in the matching cell -->
+  <path d="M113 202 Q 308 248, 496 202" style="fill:none;stroke:var(--dg-instance)" stroke-width="2"/>
+  <polygon points="505,202 495,197 495,207" style="fill:var(--dg-instance)"/>
+
+  <text x="380" y="284" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--dg-instance-ink)">f(12.5&#176;, 45.3&#176;, 12:00) = 18.4</text>
+  <text x="380" y="302" text-anchor="middle" font-size="11.5" style="fill:var(--dg-line)">ask &#8220;what is the value here?&#8221; and it answers</text>
+</svg>
+</div>
+```
+A coverage function maps a domain (positions in space and time) to a range (the measured values).
+:::
 
 That sentence is doing a lot of work, so let us unpack it with a little
 arithmetic vocabulary you already know. In mathematics, a *function* takes an
