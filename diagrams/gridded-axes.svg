@@ -1,30 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="1 22 451 142" role="img" aria-labelledby="grid-title grid-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
-  <title id="grid-title">A gridded lattice uses individual axes</title>
-  <desc id="grid-desc">On the left, two individual axes -- x with three longitudes and y with two latitudes -- cross-product to fill all six cells of a regular two-by-three lattice. On the right, the label reads: a gridded lattice maps to individual axes, since every x pairs with every y. This is the gridded case.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="1 22 451 142" role="img" aria-labelledby="grd-title grd-desc" class="dg">
+  <title id="grd-title">A gridded lattice uses individual axes</title>
+  <desc id="grd-desc">On the left, two individual axes -- x with three longitudes and y with two latitudes -- cross-product to fill all six cells of a regular two-by-three lattice. On the right, the label reads: a gridded lattice maps to individual axes, since every x pairs with every y. This is the gridded case.</desc>
 
-  <rect x="2" y="23" width="449" height="140" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="2" y="23" width="449" height="140" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
 
   <!-- LEFT: the gridded lattice (x / y axes labelled) -->
-  <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3 3">
+  <g style="stroke:var(--dg-graticule)" stroke-width="1" stroke-dasharray="3 3">
     <line x1="80" y1="58" x2="80" y2="110"/><line x1="148" y1="58" x2="148" y2="110"/><line x1="216" y1="58" x2="216" y2="110"/>
     <line x1="80" y1="58" x2="216" y2="58"/><line x1="80" y1="110" x2="216" y2="110"/>
   </g>
-  <g fill="#4338ca">
+  <g style="fill:var(--dg-domain)">
     <circle cx="80" cy="58" r="5.5"/><circle cx="148" cy="58" r="5.5"/><circle cx="216" cy="58" r="5.5"/>
     <circle cx="80" cy="110" r="5.5"/><circle cx="148" cy="110" r="5.5"/><circle cx="216" cy="110" r="5.5"/>
   </g>
-  <g font-size="11" fill="#4338ca" font-family="ui-monospace, Menlo, monospace">
+  <g font-size="11" style="fill:var(--dg-domain-ink)">
     <g text-anchor="end"><text x="64" y="62">45.5</text><text x="64" y="114">45.0</text></g>
     <g text-anchor="middle"><text x="80" y="128">12.0</text><text x="148" y="128">12.5</text><text x="216" y="128">13.0</text></g>
   </g>
-  <text x="24" y="88" font-size="12" font-style="italic" font-weight="700" fill="#3730a3" text-anchor="middle">y</text>
-  <text x="148" y="144" font-size="12" font-style="italic" font-weight="700" fill="#3730a3" text-anchor="middle">x</text>
+  <text x="24" y="88" font-size="12" font-style="italic" font-weight="700" style="fill:var(--dg-domain-ink)" text-anchor="middle">y</text>
+  <text x="148" y="144" font-size="12" font-style="italic" font-weight="700" style="fill:var(--dg-domain-ink)" text-anchor="middle">x</text>
 
-  <line x1="242" y1="42" x2="242" y2="128" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="242" y1="42" x2="242" y2="128" style="stroke:var(--dg-graticule)" stroke-width="1"/>
 
   <!-- RIGHT: bold heading + original-style subtitles -->
-  <text x="258" y="60" font-size="13" font-weight="700" fill="#334155">A gridded lattice</text>
-  <text x="258" y="75" font-size="13" font-weight="700" fill="#3730a3">&#8594; individual axes</text>
-  <text x="258" y="102" font-size="10.5" fill="#475569">shared x's &#215; shared y's</text>
-  <text x="258" y="117" font-size="9" fill="#94a3b8">every x with every y &#8594; a full 2 &#215; 3 grid</text>
+  <text x="258" y="60" font-size="13" font-weight="700" style="fill:var(--dg-line)">A gridded lattice</text>
+  <text x="258" y="75" font-size="13" font-weight="700" style="fill:var(--dg-domain-ink)">&#8594; individual axes</text>
+  <text x="258" y="102" font-size="10.5" style="fill:var(--dg-line)">shared x's &#215; shared y's</text>
+  <text x="258" y="117" font-size="9" style="fill:var(--dg-line)" opacity="0.7">every x with every y &#8594; a full 2 &#215; 3 grid</text>
 </svg>

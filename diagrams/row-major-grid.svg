@@ -1,50 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" role="img" aria-labelledby="rm-title rm-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" role="img" aria-labelledby="rm-title rm-desc" class="dg">
   <title id="rm-title">Row-major order: a flat values list folds onto a grid</title>
   <desc id="rm-desc">The flat values list one through six fills a two-row by three-column grid row by row, so the last axis x varies fastest. Values one, two, three form the first row y0; values four, five, six form the second row y1.</desc>
-  <style>
-    .hl { opacity: 0; animation: rm-pulse 6s linear infinite; }
-    @keyframes rm-pulse { 0% {opacity:0} 3% {opacity:.55} 13% {opacity:.55} 17% {opacity:0} 100% {opacity:0} }
-    @media (prefers-reduced-motion: reduce) { .hl { animation: none; opacity: 0; } }
-  </style>
 
-  <rect x="1" y="1" width="518" height="218" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="1" y="1" width="518" height="218" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
 
   <!-- flat strip: one contiguous run of six, colour-coded into two rows (centred on x=260) -->
-  <g font-size="15" font-weight="700" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">
-    <g fill="#c7d2fe" stroke="#4338ca" stroke-width="1.5">
+  <g font-size="15" font-weight="700" text-anchor="middle">
+    <g style="fill:var(--dg-domain);stroke:var(--dg-domain)" fill-opacity="0.2" stroke-width="1.5">
       <rect x="138" y="18" width="34" height="30" rx="5"/><rect x="180" y="18" width="34" height="30" rx="5"/><rect x="222" y="18" width="34" height="30" rx="5"/>
     </g>
-    <g fill="#ccfbf1" stroke="#0f766e" stroke-width="1.5">
+    <g style="fill:var(--dg-range);stroke:var(--dg-range)" fill-opacity="0.2" stroke-width="1.5">
       <rect x="264" y="18" width="34" height="30" rx="5"/><rect x="306" y="18" width="34" height="30" rx="5"/><rect x="348" y="18" width="34" height="30" rx="5"/>
     </g>
-    <g fill="#3730a3"><text x="155" y="38">1</text><text x="197" y="38">2</text><text x="239" y="38">3</text></g>
-    <g fill="#0f766e"><text x="281" y="38">4</text><text x="323" y="38">5</text><text x="365" y="38">6</text></g>
+    <g style="fill:var(--dg-domain-ink)"><text x="155" y="38">1</text><text x="197" y="38">2</text><text x="239" y="38">3</text></g>
+    <g style="fill:var(--dg-range-ink)"><text x="281" y="38">4</text><text x="323" y="38">5</text><text x="365" y="38">6</text></g>
   </g>
 
   <!-- brackets + row labels -->
-  <path d="M138 54 v6 h118 v-6" fill="none" stroke="#4338ca" stroke-width="1.5"/>
-  <path d="M264 54 v6 h118 v-6" fill="none" stroke="#0f766e" stroke-width="1.5"/>
-  <text x="197" y="74" text-anchor="middle" font-size="11" font-weight="600" fill="#4338ca">row y0</text>
-  <text x="323" y="74" text-anchor="middle" font-size="11" font-weight="600" fill="#0f766e">row y1</text>
+  <path d="M138 54 v6 h118 v-6" style="fill:none;stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <path d="M264 54 v6 h118 v-6" style="fill:none;stroke:var(--dg-range)" stroke-width="1.5"/>
+  <text x="197" y="74" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--dg-domain-ink)">row y0</text>
+  <text x="323" y="74" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--dg-range-ink)">row y1</text>
 
   <!-- grid (block columns centred on x=260) -->
-  <text x="260" y="98" text-anchor="middle" font-size="11" fill="#64748b">x varies fastest &#8594;</text>
-  <g font-size="12" fill="#64748b" text-anchor="middle" font-family="ui-monospace, Menlo, monospace"><text x="205" y="112">x0</text><text x="260" y="112">x1</text><text x="315" y="112">x2</text></g>
-  <g font-size="12" font-weight="600" text-anchor="end" font-family="ui-monospace, Menlo, monospace"><text x="170" y="144" fill="#4338ca">y0</text><text x="170" y="190" fill="#0f766e">y1</text></g>
-  <g fill="#c7d2fe" stroke="#4338ca" stroke-width="1.5"><rect x="180" y="122" width="50" height="36" rx="6"/><rect x="235" y="122" width="50" height="36" rx="6"/><rect x="290" y="122" width="50" height="36" rx="6"/></g>
-  <g fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"><rect x="180" y="166" width="50" height="36" rx="6"/><rect x="235" y="166" width="50" height="36" rx="6"/><rect x="290" y="166" width="50" height="36" rx="6"/></g>
-  <g font-size="15" font-weight="700" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">
-    <g fill="#3730a3"><text x="205" y="145">1</text><text x="260" y="145">2</text><text x="315" y="145">3</text></g>
-    <g fill="#0f766e"><text x="205" y="189">4</text><text x="260" y="189">5</text><text x="315" y="189">6</text></g>
+  <text x="260" y="98" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">x varies fastest &#8594;</text>
+  <g font-size="12" text-anchor="middle" style="fill:var(--dg-line)"><text x="205" y="112">x0</text><text x="260" y="112">x1</text><text x="315" y="112">x2</text></g>
+  <g font-size="12" font-weight="600" text-anchor="end"><text x="170" y="144" style="fill:var(--dg-domain-ink)">y0</text><text x="170" y="190" style="fill:var(--dg-range-ink)">y1</text></g>
+  <g style="fill:var(--dg-domain);stroke:var(--dg-domain)" fill-opacity="0.2" stroke-width="1.5"><rect x="180" y="122" width="50" height="36" rx="6"/><rect x="235" y="122" width="50" height="36" rx="6"/><rect x="290" y="122" width="50" height="36" rx="6"/></g>
+  <g style="fill:var(--dg-range);stroke:var(--dg-range)" fill-opacity="0.2" stroke-width="1.5"><rect x="180" y="166" width="50" height="36" rx="6"/><rect x="235" y="166" width="50" height="36" rx="6"/><rect x="290" y="166" width="50" height="36" rx="6"/></g>
+  <g font-size="15" font-weight="700" text-anchor="middle">
+    <g style="fill:var(--dg-domain-ink)"><text x="205" y="145">1</text><text x="260" y="145">2</text><text x="315" y="145">3</text></g>
+    <g style="fill:var(--dg-range-ink)"><text x="205" y="189">4</text><text x="260" y="189">5</text><text x="315" y="189">6</text></g>
   </g>
 
-  <!-- C: amber highlight overlays (flat cell + matching grid cell pulse together, staggered row-major) -->
-  <g fill="#f59e0b">
-    <rect class="hl" style="animation-delay:0s" x="138" y="18" width="34" height="30" rx="5"/><rect class="hl" style="animation-delay:0s" x="180" y="122" width="50" height="36" rx="6"/>
-    <rect class="hl" style="animation-delay:1s" x="180" y="18" width="34" height="30" rx="5"/><rect class="hl" style="animation-delay:1s" x="235" y="122" width="50" height="36" rx="6"/>
-    <rect class="hl" style="animation-delay:2s" x="222" y="18" width="34" height="30" rx="5"/><rect class="hl" style="animation-delay:2s" x="290" y="122" width="50" height="36" rx="6"/>
-    <rect class="hl" style="animation-delay:3s" x="264" y="18" width="34" height="30" rx="5"/><rect class="hl" style="animation-delay:3s" x="180" y="166" width="50" height="36" rx="6"/>
-    <rect class="hl" style="animation-delay:4s" x="306" y="18" width="34" height="30" rx="5"/><rect class="hl" style="animation-delay:4s" x="235" y="166" width="50" height="36" rx="6"/>
-    <rect class="hl" style="animation-delay:5s" x="348" y="18" width="34" height="30" rx="5"/><rect class="hl" style="animation-delay:5s" x="290" y="166" width="50" height="36" rx="6"/>
-  </g>
 </svg>
