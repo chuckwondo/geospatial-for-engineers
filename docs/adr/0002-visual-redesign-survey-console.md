@@ -119,3 +119,28 @@ live in the mockup; the tokens above are the summary.
 - Implementation (#6) is staged for review: the chrome, palette, fonts, and the
   diagram-inlining mechanism first, then the diagram conversion, and the live
   site is not deployed until the whole set is coherent.
+- **Verified in implementation (#6).** The spike and build confirmed the recipes
+  below and refined the caveats above:
+  1. *Self-hosted fonts (#9518):* put `@font-face { src: url("fonts/x.woff2") }`
+     in the theme SCSS with **no** `project.resources` entry. Quarto then copies
+     the font adjacent to the compiled CSS (`site_libs/bootstrap/fonts/`), so the
+     bare url resolves at any page depth and under the GitHub Pages subpath.
+  2. *The dark signal is `body.quarto-dark`, not `[data-theme]`.* Quarto swaps two
+     Bootstrap bundles, so one shared `custom.scss` carries `:root { light }` plus
+     `body.quarto-dark { dark }`, compiled into both. Any token whose value is a
+     `color-mix`/`var(--bg)` (the scrims) must be redeclared inside
+     `body.quarto-dark`, or it bakes the light value.
+  3. *`brand.yml` was evaluated and not used* (refines caveat 2). A single shared
+     `custom.scss` carries the full bespoke token set (`--dg-*`, `--panel-*`,
+     `--scrim-*`, the type scale) more simply than brand.yml's curated,
+     Bootstrap-facing subset.
+  4. *Diagrams inline via a `::: {#fig-id}` div wrapping a `{=html}` block*
+     (refines caveat 4): this keeps the `@fig-` cross-reference and lets the
+     `--dg-*` tokens resolve against the page. See
+     [ADR-0003](0003-teaching-diagrams-theme-adaptive.md) and `diagrams/README.md`.
+  5. *Full-width content needed a docked page-grid override* (the body track made
+     fluid, the trailing outer gutter collapsed); `page-layout: full` is a no-op
+     against Quarto's explicit grid.
+  6. *WCAG AA holds in both themes* (hand-checked): every body/label pair clears
+     4.5:1 and every UI/stroke pair clears 3:1, including the `--dg-*` diagram
+     tokens.

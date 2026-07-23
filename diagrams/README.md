@@ -5,21 +5,25 @@ Concept diagrams for the guides. Two lanes, by purpose:
 ## 1. Hand-authored "hero" SVGs
 
 For graphics that *teach a core concept*. Hand-code the SVG and commit it as
-source (it diffs cleanly and stays editable). These follow the **B-bar** and
-optional **C motion layer** described below.
+source (it diffs cleanly and stays editable). Each is **theme-adaptive**: its
+colors come from `--dg-*` custom properties (see below), so the same file
+repaints for the light and dark site themes. The `.svg` file is the editable
+source; its body is also **inlined** into the guide (see Embedding) so the
+tokens resolve and the figure gets a Quarto cross-reference.
 
 Inventory (all used in the CoverageJSON guide):
 
-- `coverage-as-function.svg` -- a coverage is a function: domain -> range, with an
-  amber **worked instance** (one position "here" threaded to its value). Section 2.1.
+- `coverage-as-function.svg` -- a coverage is a function: domain -> range, with a
+  terracotta **worked instance** (one position "here" threaded to its value).
+  Section 2.1.
 - `coverage-shared-domain.svg` -- one shared domain fanning to **multiple ranges**
   (the plural-`ranges` idea: one function per property, one domain). Section 2.1.
 - `parameter-range-binding.svg` -- a shared key binds a parameter to its range.
   Section 3.3.
 - `row-major-grid.svg` -- a flat `values` list folds onto a grid in row-major
-  order; **animated** (C layer) with a static fallback. Section 4.3.
+  order, read from the color-coded rows and the "x varies fastest" cue. Section 4.3.
 - `pointseries-daily-curve.svg` -- a PointSeries as a daily temperature curve
-  (time = domain, values = range; the noon peak spotlit in amber). Section 5.2.
+  (time = domain, values = range; the noon peak spotlit as the instance). Section 5.2.
 - `gridded-axes.svg` -- two individual `x`/`y` axes cross-product into a full
   regular 2x3 lattice: the gridded case. Section 4.2.1.
 - `axis-bounds.svg` -- the same 2x3 lattice as `gridded-axes.svg`, with two candidate
@@ -33,7 +37,7 @@ Inventory (all used in the CoverageJSON guide):
 - `polygon-composite-axis.svg` -- a polygon as a list of rings: an irregular outer
   boundary with a triangular inner ring punched out as a hole. Section 4.2.
 - `domain-types-gallery.svg` -- the common domain types grouped by axis structure:
-  independent-axis types (`Point`, `PointSeries`, `VerticalProfile`, `Grid`) vs
+  individual-axis types (`Point`, `PointSeries`, `VerticalProfile`, `Grid`) vs
   composite-axis types (`MultiPoint`, `Trajectory`, `Polygon`, `MultiPolygon`).
   Section 4.1.
 - `multipointseries-through-time.svg` -- a `MultiPointSeries` as three side-by-side
@@ -42,10 +46,8 @@ Inventory (all used in the CoverageJSON guide):
   Section 4.1.
 - `section-curtain.svg` -- a `Section` as the equation `Trajectory` x
   `VerticalProfile`: a composite `(t, x, y)` axis (listed as tuples) crossed with a
-  `z` depth axis fills a curtain of values. **Animated** (C layer): one highlight
-  advances station by station across the track, the composite-axis list, and the
-  curtain in sync (`t` ticking forward), with a static fallback frozen on station 1.
-  Section 4.2.
+  `z` depth axis fills a curtain of values, with one worked station highlighted
+  across the track, the list, and the curtain. Section 4.2.
 
 ## 2. Text-based structural diagrams
 
@@ -55,91 +57,115 @@ cleanly in git. (None committed yet.)
 
 ---
 
-## The B-bar: the static quality floor
+## The `--dg-*` token system
 
-Every hero SVG meets this bar before any motion is considered.
+Every hero SVG is painted from a small set of custom properties defined for both
+themes in [`_theme/_tokens.scss`](../_theme/_tokens.scss). Because the values are
+CSS variables, one file repaints for light and dark automatically; the palette is
+never baked into the diagram.
 
-- **Palette.** Domain/inputs indigo `#6366f1`; range/outputs teal `#14b8a6`;
-  neutral slate `#0f172a`; arrows/links slate-700 `#334155`. Amber `#f59e0b` is
-  reserved for **highlight/motion only** -- never a category color.
-- **Light card.** Wrap the diagram in a white (`#fff`) rounded rect with a
-  hairline `#e2e8f0` border, so it reads on both the light (`cosmo`) and dark
-  (`darkly`) site themes. (SVG `<img>` embeds don't get a theme-aware background,
-  so the diagram supplies its own.)
-- **An explanatory device.** A diagram must do more than label boxes: a worked
-  instance, a bracket, a connector, a color-map -- something that *shows* the
-  relationship, not just names it.
-- **Vocabulary parity.** Reuse the guide's exact words in labels (domain, range,
-  parameter, positions, values) so prose and picture say the same thing.
+| Role | Token |
+| --- | --- |
+| Panel / surface fill | `--dg-panel` |
+| Titles, primary ink | `--dg-ink` |
+| Axis lines, secondary labels | `--dg-line` |
+| Faint borders / graticule | `--dg-graticule` |
+| Domain stroke / fill | `--dg-domain` |
+| Domain text | `--dg-domain-ink` |
+| Range stroke / fill | `--dg-range` |
+| Range text | `--dg-range-ink` |
+| Worked-instance stroke / fill | `--dg-instance` |
+| Worked-instance text | `--dg-instance-ink` |
+
+Rules for using them:
+
+- **CSS variables only work in a `style` attribute, not a presentation
+  attribute.** Write `style="fill:var(--dg-range)"`, never `fill="var(--dg-range)"`
+  (the latter is invalid and renders black/transparent). Combine fill and stroke
+  in one `style`: `style="fill:var(--dg-panel);stroke:var(--dg-domain)"`.
+- **Opacity ramps stay on one token.** For a value ramp or a stacked depth cue,
+  vary `fill-opacity` (or blend toward another token with `color-mix`) on a single
+  hue; never introduce a new color.
+- **Map by role, not by old hex.** Converting a pre-token diagram, match each
+  element to its *role* above rather than to the raw color it used to be.
+
+## Accessibility rules
+
+- **Roles differ by luminance + position + shape + label, never color alone.**
+  Every categorical distinction is also carried by where it sits, its shape, or a
+  text label, so it survives grayscale and color-blind vision. Verify with Chrome
+  DevTools -> Rendering -> "Emulate vision deficiencies" (`Deuteranopia`,
+  `Achromatopsia`). The token luminances are ordered so domain/range/instance stay
+  separable without color; keep them so.
+- **Refer to elements by role, never by color.** In-figure keys, axis text, and
+  the `<desc>` must name elements by an unambiguous structural handle (e.g., "the
+  dots", "the value label", "the highlighted station with the heavier outline"),
+  not by fill ("the teal dots", "the terracotta ring"). Color names do not survive
+  grayscale, fail color-blind readers, and break when the palette changes.
 - **Accessibility metadata.** Every SVG has `role="img"` plus a linked `<title>`
   and `<desc>` (`aria-labelledby="… …"`). The `<desc>` describes what the figure
-  shows, in the guide's vocabulary.
-- **Even margins.** Pad the content evenly on all four sides and let the `viewBox`
-  wrap it snugly -- no dead space, no lopsided gutters. Center sibling groups on a
-  shared axis.
+  shows, in the guide's vocabulary. Because 15 diagrams share one page, **prefix
+  every internal id per diagram** (title/desc, markers, patterns, gradients) with a
+  short slug (`cf-`, `sec-`, `tt-`, …) and update every `url(#…)` and
+  `aria-labelledby` reference, or the ids collide across figures.
+- **Contrast is a hard gate, both themes.** Diagram label text clears WCAG AA
+  (>=4.5:1) and role strokes clear >=3:1 against `--dg-panel`, in light and dark.
+  Re-check after any token change.
 
-## Color and accessibility rules
+## Typography
 
-- **Contrast: pastel fills, darker strokes.** Fills use pastel tints (`#eef2ff`,
-  `#f0fdfa`, `#e0e7ff`, `#ccfbf1`); strokes, borders, and small text use the
-  darker `#4338ca` (indigo-700) and `#0f766e` (teal-700). **Never** use light teal
-  `#14b8a6` as a stroke or for small text -- it is only ~2.5:1 on white, below the
-  3:1 non-text-contrast floor. (This is why `coverage-as-function.svg`'s range card
-  stroke is `#0f766e`, not `#14b8a6`.)
-- **No color-alone encoding.** Every categorical distinction is *also* carried by
-  position, a text label, or a bracket/shape -- so it survives for color-blind
-  readers. Verify with Chrome DevTools -> Rendering -> "Emulate vision
-  deficiencies" (`Deuteranopia`).
-- **Refer to elements by role, never by color.** In-figure keys, axis text, and
-  the `<desc>` must name elements by an unambiguous structural/role handle (e.g.,
-  "the dots", "the value label", "the highlighted station with the heavier
-  outline"), not by their fill ("the teal dots", "the amber ring"). Color names do
-  not survive grayscale, fail color-blind readers, and break when the palette
-  changes. Pick handles that are themselves unambiguous: "dots" and "value label"
-  rather than "ring"/"fill", since a dot can look like a ring and every dot is
-  filled.
-- **Luminance separation.** Two category fills must differ in *luminance*, not only
-  hue, or they collapse together in grayscale (achromatopsia). Indigo-100
-  (`#e0e7ff`) and teal-100 (`#ccfbf1`) are both very light and nearly
-  indistinguishable in grayscale; when two fills must read apart, deepen one (e.g.,
-  the `row-major-grid.svg` "y0" row uses indigo-200 `#c7d2fe`). Verify with
-  `Achromatopsia`.
+Diagram text carries **no `font-family`**: it inherits the mono UI face through
+the `svg.dg text` rule in [`_theme/_content.scss`](../_theme/_content.scss). Mono
+glyphs are wider than a proportional face, so when converting or authoring, keep
+labels short and let the `viewBox` (and the inner panel rect, sized to match) wrap
+the content with even margins; verify nothing clips at the panel edge.
 
-## The C motion layer (optional)
+## Motion is deferred
 
-Add motion **only where it teaches what a static frame cannot** (e.g., the
-row-major fold walking value-by-value into the grid).
-
-- **Mechanism.** CSS `@keyframes` inside a `<style>` block *within the SVG*. No
-  JS, no SMIL.
-- **Reduced-motion guard.** Always wrap the animation in
-  `@media (prefers-reduced-motion: reduce) { … animation: none … }`.
-- **Information parity.** The static frame must convey the full concept on its own;
-  motion only re-illustrates what the static layer already shows. (This is also the
-  safety net for the caveat below.)
-- **Embedding.** Standard Markdown `![](…)` works -- CSS-in-SVG animations *do*
-  run when the SVG is embedded via `<img>`. (Verified; no raw inline-SVG block
-  needed.)
-- **Reduced-motion caveat.** DevTools' "Emulate prefers-reduced-motion" override
-  does **not** propagate into an `<img>`-embedded SVG -- it renders in its own
-  document context. To verify the guard, open the `.svg` as a *top-level* document
-  and emulate there; the real OS-level "Reduce motion" setting *does* reach the
-  embedded `<img>`. Because some browsers may not propagate it, information parity
-  is what guarantees the figure still works for a reduced-motion reader.
+The site currently ships a **static substrate**. Diagram motion is a deliberate,
+later pass (see the `diagram-interactivity-deferred` decision), designed as one
+consistent language across the set rather than per-diagram one-offs. Two diagrams
+(`section-curtain`, `row-major-grid`) previously carried ad-hoc CSS sweeps; they
+are frozen to their static resting state, and the sweep logic remains in git
+history as a starting point for that pass. Do not add new in-SVG animation here
+until then.
 
 ## Captions live in Quarto, not the SVG
 
 Keep in-SVG text to **structural labels** (axis names, card titles, the
-explanatory device). Put the **explanatory sentence in the Quarto figure caption**
-(`![caption](…){#fig-…}`): it is real, selectable, accessible, searchable text,
-and it gets the series' caption styling (smaller, muted, constrained measure, with
-a bold "Figure N:" label) from `custom.scss` + `caption-labels.html`. Do not bake
-a prose caption into the image.
+explanatory device). Put the **explanatory sentence in the Quarto figure caption**:
+it is real, selectable, accessible, searchable text, and it gets the series'
+caption styling (smaller, muted, constrained measure, with a bold "Figure N:"
+label) from `custom.scss` + `caption-labels.html`. Do not bake a prose caption
+into the image.
+
+## Embedding
+
+Diagrams are **inlined**, not linked as images, so the `--dg-*` tokens resolve
+against the page. In the guide, wrap the SVG body in a Quarto cross-reference div
+with a raw-HTML block:
+
+````markdown
+::: {#fig-example .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render example.svg<span class="spacer"></span><span class="coord">short hint</span></div>
+<div class="diagram-svg-wrap">
+<svg viewBox="…" role="img" aria-labelledby="ex-title ex-desc" class="dg"> … </svg>
+</div>
+```
+The explanatory caption sentence.
+:::
+````
+
+Quarto renders this as a numbered figure (`@fig-example` resolves), and
+`.diagram`/`svg.dg` styling in `_theme/_content.scss` supplies the terminal frame,
+scrolling wrap, and caption. Keep the `.svg` file and the inlined copy in sync.
 
 ## File conventions
 
 - Hand-coded SVG, committed as source. Kebab-case filenames in `diagrams/`.
 - Verify well-formedness with `xmllint --noout diagrams/<file>.svg` before
   committing.
-- Embed with Quarto image syntax and a stable `#fig-…` id; reference figures by
-  that id so cross-references and the link check resolve.
+- Give the `<svg>` `class="dg"`, a stable `#fig-…` id on the wrapping div, and a
+  per-diagram id prefix; reference figures by that id so cross-references and the
+  link check resolve.
