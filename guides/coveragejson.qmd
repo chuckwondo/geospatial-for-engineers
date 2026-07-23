@@ -194,7 +194,61 @@ A **coverage** maps positions in space and time to values: one function per
 property, all sharing the same domain.
 :::
 
-![A coverage function maps a domain (positions in space and time) to a range (the measured values).](../diagrams/coverage-as-function.svg){#fig-coverage-function}
+::: {#fig-coverage-function .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render coverage-as-function.svg<span class="spacer"></span><span class="coord">domain &rarr; range</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" role="img" aria-labelledby="cf-title cf-desc" class="dg">
+  <title id="cf-title">A coverage function maps a domain to a range</title>
+  <desc id="cf-desc">A box labeled Domain holds a grid of positions in space and time; an arrow labeled f, the coverage, maps it to a box labeled Range holding a matching grid of measured values, one value per position. A worked instance is highlighted: one position marked "here" in the domain is threaded across to its value in the matching cell of the range, annotated f of (12.5 degrees, 45.3 degrees, 12:00) equals 18.4 -- asking the coverage for the value at one position returns one number. Domain is drawn in dark forest green, range in sky blue, and the worked instance in terracotta; the three parts differ in luminance and are separated in space and labelled, not distinguished by color alone.</desc>
+
+  <rect x="1" y="1" width="758" height="318" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <text x="380" y="48" text-anchor="middle" font-size="22" font-weight="700" style="fill:var(--dg-ink)">A coverage function maps a domain to a range</text>
+
+  <!-- Domain: a grid of positions -->
+  <rect x="48" y="96" width="250" height="156" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2.5"/>
+  <text x="173" y="130" text-anchor="middle" font-size="18" font-weight="700" style="fill:var(--dg-domain-ink)">DOMAIN</text>
+  <text x="173" y="154" text-anchor="middle" font-size="13" style="fill:var(--dg-domain-ink)">positions in space &amp; time</text>
+  <text x="173" y="172" text-anchor="middle" font-size="13" style="fill:var(--dg-domain-ink)">(the inputs)</text>
+  <g style="fill:var(--dg-domain)">
+    <circle cx="113" cy="202" r="4"/><circle cx="173" cy="202" r="4"/><circle cx="233" cy="202" r="4"/>
+    <circle cx="113" cy="226" r="4"/><circle cx="173" cy="226" r="4"/><circle cx="233" cy="226" r="4"/>
+  </g>
+  <!-- worked instance: one position "here" (terracotta spotlight) -->
+  <circle cx="113" cy="202" r="10" style="fill:var(--dg-instance)" opacity="0.25"/>
+  <circle cx="113" cy="202" r="6" style="fill:var(--dg-instance);stroke:var(--dg-panel)" stroke-width="1.2"/>
+  <text x="113" y="190" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--dg-instance-ink)">here</text>
+
+  <!-- Range: a matching grid of values, one per position -->
+  <rect x="462" y="96" width="250" height="156" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-range)" stroke-width="2.5"/>
+  <text x="587" y="130" text-anchor="middle" font-size="18" font-weight="700" style="fill:var(--dg-range-ink)">RANGE</text>
+  <text x="587" y="154" text-anchor="middle" font-size="13" style="fill:var(--dg-range-ink)">measured values</text>
+  <text x="587" y="172" text-anchor="middle" font-size="13" style="fill:var(--dg-range-ink)">(the outputs)</text>
+  <!-- highlight the value in the matching cell -->
+  <rect x="505" y="192" width="44" height="20" rx="4" style="fill:var(--dg-instance);stroke:var(--dg-instance)" fill-opacity="0.18" stroke-width="1.5"/>
+  <g style="fill:var(--dg-range-ink)" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="527" y="207">18.4</text><text x="587" y="207">17.9</text><text x="647" y="207">19.2</text>
+    <text x="527" y="231">18.1</text><text x="587" y="231">null</text><text x="647" y="231">18.8</text>
+  </g>
+
+  <!-- Arrow: the coverage as a whole -->
+  <line x1="306" y1="174" x2="452" y2="174" style="stroke:var(--dg-line)" stroke-width="3"/>
+  <polygon points="462,174 446,166 446,182" style="fill:var(--dg-line)"/>
+  <text x="382" y="162" text-anchor="middle" font-size="16" font-weight="700" font-style="italic" style="fill:var(--dg-line)">f</text>
+  <text x="382" y="196" text-anchor="middle" font-size="12" style="fill:var(--dg-line)">the coverage</text>
+
+  <!-- the concrete mapping: this position -> its value in the matching cell -->
+  <path d="M113 202 Q 308 248, 496 202" style="fill:none;stroke:var(--dg-instance)" stroke-width="2"/>
+  <polygon points="505,202 495,197 495,207" style="fill:var(--dg-instance)"/>
+
+  <text x="380" y="284" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--dg-instance-ink)">f(12.5&#176;, 45.3&#176;, 12:00) = 18.4</text>
+  <text x="380" y="302" text-anchor="middle" font-size="11.5" style="fill:var(--dg-line)">ask &#8220;what is the value here?&#8221; and it answers</text>
+</svg>
+</div>
+```
+A coverage function maps a domain (positions in space and time) to a range (the measured values).
+:::
 
 That sentence is doing a lot of work, so let us unpack it with a little
 arithmetic vocabulary you already know. In mathematics, a *function* takes an
@@ -223,7 +277,59 @@ each takes the same positions as input, but each returns values for a different
 property, so each has its own range. The shared inputs are described once, in
 `"domain"`; the separate outputs live in `"ranges"`, one per property.
 
-![One coverage, one shared domain, multiple ranges: the positions are described once in `domain`, and each property gets its own array of values in `ranges`: one range per property.](../diagrams/coverage-shared-domain.svg){#fig-shared-domain}
+::: {#fig-shared-domain .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render coverage-shared-domain.svg<span class="spacer"></span><span class="coord">one domain &rarr; many ranges</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 388" role="img" aria-labelledby="sd-title sd-desc" class="dg">
+  <title id="sd-title">One domain, multiple ranges</title>
+  <desc id="sd-desc">A single box labeled Domain, holding a grid of positions in space and time, fans out by two arrows labeled f1 and f2 to two separate boxes on the right: a temperature range and a humidity range. Each range holds its own grid of measured values for the same positions, showing multiple functions that share one domain within a single coverage -- one range per property.</desc>
+
+  <rect x="1" y="1" width="718" height="386" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <text x="360" y="48" text-anchor="middle" font-size="22" font-weight="700" style="fill:var(--dg-ink)">One domain &#8594; multiple ranges</text>
+
+  <!-- the single shared domain -->
+  <rect x="35" y="144" width="250" height="156" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2.5"/>
+  <text x="160" y="180" text-anchor="middle" font-size="18" font-weight="700" style="fill:var(--dg-domain-ink)">DOMAIN</text>
+  <text x="160" y="204" text-anchor="middle" font-size="13" style="fill:var(--dg-domain-ink)">positions in space &amp; time</text>
+  <text x="160" y="222" text-anchor="middle" font-size="13" style="fill:var(--dg-domain-ink)">(the shared inputs)</text>
+  <g style="fill:var(--dg-domain)">
+    <circle cx="100" cy="252" r="4"/><circle cx="160" cy="252" r="4"/><circle cx="220" cy="252" r="4"/>
+    <circle cx="100" cy="276" r="4"/><circle cx="160" cy="276" r="4"/><circle cx="220" cy="276" r="4"/>
+  </g>
+
+  <!-- range 1: temperature -->
+  <rect x="435" y="92" width="250" height="116" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-range)" stroke-width="2.5"/>
+  <text x="560" y="120" text-anchor="middle" font-size="16" font-weight="700" style="fill:var(--dg-range-ink)">RANGE: temperature</text>
+  <text x="560" y="138" text-anchor="middle" font-size="11.5" style="fill:var(--dg-range-ink)">measured values, in &#176;C</text>
+  <g style="fill:var(--dg-range-ink)" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="490" y="172">18.4</text><text x="560" y="172">17.9</text><text x="630" y="172">19.2</text>
+    <text x="490" y="196">18.1</text><text x="560" y="196">null</text><text x="630" y="196">18.8</text>
+  </g>
+
+  <!-- range 2: humidity -->
+  <rect x="435" y="236" width="250" height="116" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-range)" stroke-width="2.5"/>
+  <text x="560" y="264" text-anchor="middle" font-size="16" font-weight="700" style="fill:var(--dg-range-ink)">RANGE: humidity</text>
+  <text x="560" y="282" text-anchor="middle" font-size="11.5" style="fill:var(--dg-range-ink)">measured values, in %</text>
+  <g style="fill:var(--dg-range-ink)" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="490" y="316">66.2</text><text x="560" y="316">70.4</text><text x="630" y="316">71.1</text>
+    <text x="490" y="340">64.8</text><text x="560" y="340">null</text><text x="630" y="340">69.3</text>
+  </g>
+
+  <!-- multiple ranges fan out from the one shared domain (a single coverage) -->
+  <path d="M287 214 L 405 156 L 425 156" style="fill:none;stroke:var(--dg-line)" stroke-width="2.5"/>
+  <polygon points="435,156 425,151 425,161" style="fill:var(--dg-line)"/>
+  <path d="M287 230 L 405 288 L 425 288" style="fill:none;stroke:var(--dg-line)" stroke-width="2.5"/>
+  <polygon points="435,288 425,283 425,293" style="fill:var(--dg-line)"/>
+  <text x="338" y="180" text-anchor="middle" font-size="16" font-weight="700" font-style="italic" style="fill:var(--dg-line)">f&#8321;</text>
+  <text x="338" y="272" text-anchor="middle" font-size="16" font-weight="700" font-style="italic" style="fill:var(--dg-line)">f&#8322;</text>
+  <text x="360" y="227" text-anchor="middle" font-size="11.5" style="fill:var(--dg-line)">one range per property</text>
+</svg>
+</div>
+```
+One coverage, one shared domain, multiple ranges: the positions are described once in `domain`, and each property gets its own array of values in `ranges`: one range per property.
+:::
 
 Whatever shape the positions take, a coverage bundles them and their values
 together with enough description (the units, what each property is, how the
@@ -454,7 +560,58 @@ Parameters live in the `parameters` object, keyed by a short name you choose
 the *values*: a parameter and a range that share the same key describe the same
 property. Lining the two objects up side by side makes the binding obvious:
 
-![The shared key (here `temperature`) is the glue: a parameter and the range with the same key describe the same property. A second property simply adds a second matching key in each object.](../diagrams/parameter-range-binding.svg){#fig-parameter-range-binding}
+::: {#fig-parameter-range-binding .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render parameter-range-binding.svg<span class="spacer"></span><span class="coord">parameters &harr; ranges</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 536 236" role="img" aria-labelledby="prb-title prb-desc" class="dg">
+  <title id="prb-title">A shared key binds a parameter to its range</title>
+  <desc id="prb-desc">Two cards side by side: a parameters card on the left, describing each parameter, and a ranges card on the right, holding the values. Both contain a key named temperature, highlighted and joined by a connector labelled shared key. The left temperature entry is a Parameter object with unit Cel; the right is an NdArray object whose values are an array of numbers. A faint humidity entry in each card, joined by a dashed connector labelled another shared key, shows that a second parameter adds a second matching key.</desc>
+
+  <rect x="1" y="1" width="534" height="234" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- parameters card (a description of each parameter) -->
+  <rect x="18" y="18" width="216" height="200" rx="12" style="fill:var(--dg-panel);stroke:var(--dg-line)" stroke-width="2"/>
+  <text x="32" y="44" font-size="14" font-weight="700" style="fill:var(--dg-ink)">"parameters"</text>
+  <text x="32" y="62" font-size="10.5" style="fill:var(--dg-line)">a description of each parameter</text>
+
+  <!-- ranges card (one data array per parameter) -->
+  <rect x="302" y="18" width="216" height="200" rx="12" style="fill:var(--dg-panel);stroke:var(--dg-range)" stroke-width="2"/>
+  <text x="316" y="44" font-size="14" font-weight="700" style="fill:var(--dg-range-ink)">"ranges"</text>
+  <text x="316" y="62" font-size="10.5" style="fill:var(--dg-range-ink)">one data array per parameter</text>
+
+  <!-- shared key highlight: temperature (amber) -->
+  <rect x="28" y="78" width="196" height="96" rx="8" style="fill:var(--dg-instance);stroke:var(--dg-instance)" fill-opacity="0.18" stroke-width="1.5"/>
+  <g>
+    <text x="38" y="99" font-size="12.5" font-weight="700" style="fill:var(--dg-instance-ink)">"temperature": {</text>
+    <text x="54" y="120" font-size="11" style="fill:var(--dg-line)">"type": "Parameter",</text>
+    <text x="54" y="140" font-size="11" style="fill:var(--dg-line)">"unit": "Cel"</text>
+    <text x="38" y="160" font-size="12.5" font-weight="700" style="fill:var(--dg-instance-ink)">}</text>
+  </g>
+
+  <rect x="312" y="78" width="196" height="96" rx="8" style="fill:var(--dg-instance);stroke:var(--dg-instance)" fill-opacity="0.18" stroke-width="1.5"/>
+  <g>
+    <text x="322" y="99" font-size="12.5" font-weight="700" style="fill:var(--dg-instance-ink)">"temperature": {</text>
+    <text x="338" y="120" font-size="11" style="fill:var(--dg-line)">"type": "NdArray",</text>
+    <text x="338" y="140" font-size="11" style="fill:var(--dg-line)">"values": [18.4, 18.9, &#8230;]</text>
+    <text x="322" y="160" font-size="12.5" font-weight="700" style="fill:var(--dg-instance-ink)">}</text>
+  </g>
+
+  <!-- connector for the shared key (label centred in the gap, clear of both borders) -->
+  <line x1="224" y1="93" x2="312" y2="93" style="stroke:var(--dg-instance)" stroke-width="2.5"/>
+  <text x="268" y="84" text-anchor="middle" font-size="10" font-weight="600" style="fill:var(--dg-instance-ink)">shared key</text>
+
+  <!-- faint second pair: humidity (another shared key, same pattern) -->
+  <text x="38" y="206" font-size="12" style="fill:var(--dg-line)" opacity="0.6">"humidity": { ... }</text>
+  <text x="322" y="206" font-size="12" style="fill:var(--dg-line)" opacity="0.6">"humidity": { ... }</text>
+  <line x1="224" y1="202" x2="312" y2="202" style="stroke:var(--dg-line)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.45"/>
+  <text x="268" y="188" text-anchor="middle" font-size="8.5" font-weight="600" style="fill:var(--dg-line)" opacity="0.6">another</text>
+  <text x="268" y="198" text-anchor="middle" font-size="8.5" font-weight="600" style="fill:var(--dg-line)" opacity="0.6">shared key</text>
+</svg>
+</div>
+```
+The shared key (here `temperature`) is the glue: a parameter and the range with the same key describe the same property. A second property simply adds a second matching key in each object.
+:::
 
 The parameter says what the numbers mean; the range holds the numbers. A document
 with two properties simply has two matching keys in each object (for example,
@@ -604,7 +761,110 @@ through time. The full list, including `VerticalProfile`, `MultiPointSeries`,
 (A `domain` may also omit `domainType` and simply describe its axes, but using a
 standard type lets generic software know what to expect.)
 
-![The common domain types, grouped by how their axes are structured: the same split the table draws in words. The **individual-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (@sec-axes). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).](../diagrams/domain-types-gallery.svg){#fig-domain-types}
+::: {#fig-domain-types .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render domain-types-gallery.svg<span class="spacer"></span><span class="coord">individual &amp; composite</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 402" role="img" aria-labelledby="dt-title dt-desc" class="dg">
+  <title id="dt-title">CoverageJSON domain types, grouped by axis structure</title>
+  <desc id="dt-desc">A gallery of common CoverageJSON domain types in two groups. Top group, individual axes where each dimension is its own axis: Point is a single position; PointSeries samples one fixed location along a time axis t; VerticalProfile samples one fixed location along a vertical axis z; Grid is a regular lattice of positions. Bottom group, a composite axis whose entries are coordinate tuples: MultiPoint is a scatter of unconnected positions; Trajectory is a path of positions joined in order through space and time; Polygon is a closed ring of vertices; MultiPolygon is several separate rings.</desc>
+
+  <defs>
+    <marker id="dt-ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-line)"/></marker>
+    <marker id="dt-traj" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-domain)"/></marker>
+  </defs>
+
+  <rect x="1" y="1" width="678" height="400" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- ===== GROUP 1: individual axes ===== -->
+  <text x="16" y="38"><tspan font-size="15" font-weight="700" style="fill:var(--dg-domain-ink)">Individual axes</tspan><tspan font-size="13" style="fill:var(--dg-line)"> &#8212; each dimension is its own axis</tspan></text>
+  <rect x="12" y="46" width="656" height="150" rx="8" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
+
+  <!-- Point -->
+  <g transform="translate(16,50)">
+    <circle cx="75" cy="56" r="6.5" style="fill:var(--dg-domain)"/>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Point</text>
+  </g>
+
+  <!-- PointSeries -->
+  <g transform="translate(182,50)">
+    <line x1="30" y1="74" x2="112" y2="74" style="stroke:var(--dg-line)" stroke-width="1.5" marker-end="url(#dt-ax)"/>
+    <text x="122" y="78" font-size="13" font-style="italic" style="fill:var(--dg-line)">t</text>
+    <g style="fill:var(--dg-domain)"><circle cx="40" cy="74" r="5"/><circle cx="62" cy="74" r="5"/><circle cx="84" cy="74" r="5"/><circle cx="106" cy="74" r="5"/></g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">PointSeries</text>
+  </g>
+
+  <!-- VerticalProfile -->
+  <g transform="translate(348,50)">
+    <line x1="75" y1="102" x2="75" y2="30" style="stroke:var(--dg-line)" stroke-width="1.5" marker-end="url(#dt-ax)"/>
+    <text x="86" y="40" font-size="13" font-style="italic" style="fill:var(--dg-line)">z</text>
+    <g style="fill:var(--dg-domain)"><circle cx="75" cy="94" r="5"/><circle cx="75" cy="76" r="5"/><circle cx="75" cy="58" r="5"/><circle cx="75" cy="40" r="5"/></g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">VerticalProfile</text>
+  </g>
+
+  <!-- Grid -->
+  <g transform="translate(514,50)">
+    <g style="stroke:var(--dg-graticule)" stroke-width="1" stroke-dasharray="3 3">
+      <line x1="40" y1="28" x2="40" y2="94"/><line x1="62" y1="28" x2="62" y2="94"/><line x1="84" y1="28" x2="84" y2="94"/><line x1="106" y1="28" x2="106" y2="94"/>
+      <line x1="40" y1="28" x2="106" y2="28"/><line x1="40" y1="50" x2="106" y2="50"/><line x1="40" y1="72" x2="106" y2="72"/><line x1="40" y1="94" x2="106" y2="94"/>
+    </g>
+    <g style="fill:var(--dg-domain)">
+      <circle cx="40" cy="28" r="4.5"/><circle cx="62" cy="28" r="4.5"/><circle cx="84" cy="28" r="4.5"/><circle cx="106" cy="28" r="4.5"/>
+      <circle cx="40" cy="50" r="4.5"/><circle cx="62" cy="50" r="4.5"/><circle cx="84" cy="50" r="4.5"/><circle cx="106" cy="50" r="4.5"/>
+      <circle cx="40" cy="72" r="4.5"/><circle cx="62" cy="72" r="4.5"/><circle cx="84" cy="72" r="4.5"/><circle cx="106" cy="72" r="4.5"/>
+      <circle cx="40" cy="94" r="4.5"/><circle cx="62" cy="94" r="4.5"/><circle cx="84" cy="94" r="4.5"/><circle cx="106" cy="94" r="4.5"/>
+    </g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Grid</text>
+  </g>
+
+  <!-- ===== GROUP 2: composite axis ===== -->
+  <text x="16" y="224"><tspan font-size="15" font-weight="700" style="fill:var(--dg-domain-ink)">Composite axis</tspan><tspan font-size="13" style="fill:var(--dg-line)"> &#8212; positions are tuples, no row-and-column grid</tspan></text>
+  <rect x="12" y="236" width="656" height="150" rx="8" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
+
+  <!-- MultiPoint -->
+  <g transform="translate(16,240)">
+    <g style="fill:var(--dg-domain)">
+      <circle cx="32" cy="40" r="5"/><circle cx="60" cy="75" r="5"/><circle cx="95" cy="30" r="5"/>
+      <circle cx="120" cy="58" r="5"/><circle cx="46" cy="100" r="5"/><circle cx="106" cy="96" r="5"/>
+    </g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">MultiPoint</text>
+  </g>
+
+  <!-- Trajectory -->
+  <g transform="translate(182,240)">
+    <polyline points="24,90 46,56 70,80 96,42 118,62" style="fill:none;stroke:var(--dg-domain)" stroke-width="2" marker-end="url(#dt-traj)"/>
+    <g style="fill:var(--dg-domain)">
+      <circle cx="24" cy="90" r="5"/><circle cx="46" cy="56" r="5"/><circle cx="70" cy="80" r="5"/><circle cx="96" cy="42" r="5"/>
+    </g>
+    <text x="128" y="58" font-size="13" font-style="italic" style="fill:var(--dg-line)">t</text>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Trajectory</text>
+  </g>
+
+  <!-- Polygon -->
+  <g transform="translate(348,240)">
+    <path d="M40,38 L96,30 L120,68 L92,100 L46,92 L26,64 Z" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2"/>
+    <g style="fill:var(--dg-domain)">
+      <circle cx="40" cy="38" r="4.5"/><circle cx="96" cy="30" r="4.5"/><circle cx="120" cy="68" r="4.5"/>
+      <circle cx="92" cy="100" r="4.5"/><circle cx="46" cy="92" r="4.5"/><circle cx="26" cy="64" r="4.5"/>
+    </g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Polygon</text>
+  </g>
+
+  <!-- MultiPolygon -->
+  <g transform="translate(514,240)">
+    <path d="M28,44 L66,34 L76,64 L50,88 L24,68 Z" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2"/>
+    <path d="M96,52 L122,48 L126,74 L104,88 L90,70 Z" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2"/>
+    <g style="fill:var(--dg-domain)">
+      <circle cx="28" cy="44" r="4"/><circle cx="66" cy="34" r="4"/><circle cx="76" cy="64" r="4"/><circle cx="50" cy="88" r="4"/><circle cx="24" cy="68" r="4"/>
+      <circle cx="96" cy="52" r="4"/><circle cx="122" cy="48" r="4"/><circle cx="126" cy="74" r="4"/><circle cx="104" cy="88" r="4"/><circle cx="90" cy="70" r="4"/>
+    </g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">MultiPolygon</text>
+  </g>
+</svg>
+</div>
+```
+The common domain types, grouped by how their axes are structured: the same split the table draws in words. The **individual-axis** types name each spatial dimension as its own axis, so the multi-valued one stands out: time (`t`) for `PointSeries`, the vertical (`z`) for `VerticalProfile`, both `x` and `y` for `Grid`. The **composite-axis** types have no row-and-column structure, so a single `composite` axis lists their positions as coordinate tuples (@sec-axes). Each shape also has a `...Series` form that adds a `t` axis to carry it through time; the full vocabulary, including `Section`, is in [specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e).
+:::
 
 The `...Series` forms repay a closer look, because they make the
 domain-versus-range split concrete. A `MultiPointSeries` is, in effect, many
@@ -613,7 +873,110 @@ move, while the *values* are the range and change at every timestep. Reading one
 station across the frames (same coordinates, a different value each time) is
 exactly what a time series is.
 
-![A `MultiPointSeries` reading a sensor network at three times. The dots are the **domain**: the same positions in every frame, fixed because the geometry does not move. The label on each dot is the **range**: the value measured there, which changes from `t0` to `t1` to `t2`. Following the highlighted station (the dashed arrows) makes the split plain: its position (`x=12.5, y=45.3`) is identical in all three frames while its value rises then falls. A single multi-valued `t` axis carries the whole geometry through time; that added `t` axis is all that separates a `...Series` type from its plain form.](../diagrams/multipointseries-through-time.svg){#fig-series-through-time}
+::: {#fig-series-through-time .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render multipointseries-through-time.svg<span class="spacer"></span><span class="coord">fixed geometry &rarr; t</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 518 226" role="img" aria-labelledby="stt-title stt-desc" class="dg">
+  <title id="stt-title">A MultiPointSeries carries the same geometry through time</title>
+  <desc id="stt-desc">A MultiPointSeries shown as three side-by-side frames labelled t0, t1 and t2 along a shared time axis t. Each frame holds the same five sensor positions, drawn as dots in the same places; the dots never move because the domain geometry is fixed. Each dot carries a value label, and those labels change from frame to frame because the range values vary through time. One station is highlighted with a heavier outline and joined across the frames by dashed arrows; its position label x=12.5, y=45.3 is identical in every frame, showing the position is fixed, while its value reads twelve, then fifteen, then thirteen.</desc>
+
+  <defs>
+    <marker id="stt-ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-line)"/></marker>
+    <marker id="stt-tie" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-instance)"/></marker>
+  </defs>
+
+  <rect x="1" y="1" width="516" height="224" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- heading + encoding key (refer to elements by role, not color) -->
+  <text x="259" y="26" text-anchor="middle" font-size="14.5" font-weight="700" style="fill:var(--dg-ink)">MultiPointSeries: one geometry, sampled through time</text>
+  <text x="259" y="43" text-anchor="middle" font-size="9.5" style="fill:var(--dg-line)">same dots = fixed positions  &#183;  only the value labels change with t</text>
+
+  <!-- frame labels -->
+  <g font-size="13" font-weight="600" style="fill:var(--dg-line)" text-anchor="middle">
+    <text x="91" y="60">t<tspan dy="2.5" font-size="9.5">0</tspan></text>
+    <text x="259" y="60">t<tspan dy="2.5" font-size="9.5">1</tspan></text>
+    <text x="427" y="60">t<tspan dy="2.5" font-size="9.5">2</tspan></text>
+  </g>
+
+  <!-- frame sub-cards -->
+  <g style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1">
+    <rect x="16" y="66" width="150" height="130" rx="8"/>
+    <rect x="184" y="66" width="150" height="130" rx="8"/>
+    <rect x="352" y="66" width="150" height="130" rx="8"/>
+  </g>
+
+  <!-- dashed arrows threading the worked-instance station forward through time -->
+  <g style="stroke:var(--dg-instance)" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.7">
+    <line x1="105" y1="92" x2="245" y2="92" marker-end="url(#stt-tie)"/>
+    <line x1="273" y1="92" x2="413" y2="92" marker-end="url(#stt-tie)"/>
+  </g>
+
+  <!-- ===== t0 ===== -->
+  <g transform="translate(16,66)">
+    <g style="stroke:var(--dg-domain)" stroke-width="2">
+      <circle cx="36" cy="66" r="8" style="fill:var(--dg-range)" fill-opacity="0.30"/>
+      <circle cx="116" cy="62" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="50" cy="104" r="8" style="fill:var(--dg-range)" fill-opacity="0.30"/>
+      <circle cx="104" cy="106" r="8" style="fill:var(--dg-range)" fill-opacity="0.30"/>
+      <circle cx="75" cy="26" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+    </g>
+    <circle cx="75" cy="26" r="11.5" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+    <g font-size="9" font-weight="700" text-anchor="middle" style="fill:var(--dg-line)">
+      <text x="36" y="86">10&#176;</text><text x="116" y="82">11&#176;</text><text x="50" y="126">9&#176;</text><text x="104" y="128">10&#176;</text>
+    </g>
+    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--dg-instance-ink)">12&#176;</text>
+    <g font-size="7.5" text-anchor="middle" style="fill:var(--dg-line)">
+      <text x="75" y="60">x=12.5</text><text x="75" y="70">y=45.3</text>
+    </g>
+  </g>
+
+  <!-- ===== t1 ===== -->
+  <g transform="translate(184,66)">
+    <g style="stroke:var(--dg-domain)" stroke-width="2">
+      <circle cx="36" cy="66" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
+      <circle cx="116" cy="62" r="8" style="fill:var(--dg-range)" fill-opacity="1"/>
+      <circle cx="50" cy="104" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="104" cy="106" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
+      <circle cx="75" cy="26" r="8" style="fill:var(--dg-range)" fill-opacity="1"/>
+    </g>
+    <circle cx="75" cy="26" r="11.5" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+    <g font-size="9" font-weight="700" text-anchor="middle" style="fill:var(--dg-line)">
+      <text x="36" y="86">13&#176;</text><text x="116" y="82">14&#176;</text><text x="50" y="126">12&#176;</text><text x="104" y="128">13&#176;</text>
+    </g>
+    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--dg-instance-ink)">15&#176;</text>
+    <g font-size="7.5" text-anchor="middle" style="fill:var(--dg-line)">
+      <text x="75" y="60">x=12.5</text><text x="75" y="70">y=45.3</text>
+    </g>
+  </g>
+
+  <!-- ===== t2 ===== -->
+  <g transform="translate(352,66)">
+    <g style="stroke:var(--dg-domain)" stroke-width="2">
+      <circle cx="36" cy="66" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="116" cy="62" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="50" cy="104" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
+      <circle cx="104" cy="106" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="75" cy="26" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
+    </g>
+    <circle cx="75" cy="26" r="11.5" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+    <g font-size="9" font-weight="700" text-anchor="middle" style="fill:var(--dg-line)">
+      <text x="36" y="86">12&#176;</text><text x="116" y="82">12&#176;</text><text x="50" y="126">11&#176;</text><text x="104" y="128">11&#176;</text>
+    </g>
+    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--dg-instance-ink)">13&#176;</text>
+    <g font-size="7.5" text-anchor="middle" style="fill:var(--dg-line)">
+      <text x="75" y="60">x=12.5</text><text x="75" y="70">y=45.3</text>
+    </g>
+  </g>
+
+  <!-- shared time axis -->
+  <line x1="40" y1="206" x2="486" y2="206" style="stroke:var(--dg-line)" stroke-width="1.5" marker-end="url(#stt-ax)"/>
+  <text x="495" y="210" font-size="13" font-style="italic" style="fill:var(--dg-line)">t</text>
+</svg>
+</div>
+```
+A `MultiPointSeries` reading a sensor network at three times. The dots are the **domain**: the same positions in every frame, fixed because the geometry does not move. The label on each dot is the **range**: the value measured there, which changes from `t0` to `t1` to `t2`. Following the highlighted station (the dashed arrows) makes the split plain: its position (`x=12.5, y=45.3`) is identical in all three frames while its value rises then falls. A single multi-valued `t` axis carries the whole geometry through time; that added `t` axis is all that separates a `...Series` type from its plain form.
+:::
 
 ### How axes encode their coordinates {#sec-axes}
 
@@ -632,7 +995,44 @@ paired with every `y`), so a few longitudes and latitudes define a full regular
 lattice. Three longitudes crossed with two latitudes, for instance, give a 2 × 3
 grid of six positions.
 
-![Two individual axes (three longitudes and two latitudes) cross-product to fill all six cells of a regular 2 × 3 lattice: a gridded coverage.](../diagrams/gridded-axes.svg){#fig-gridded}
+::: {#fig-gridded .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render gridded-axes.svg<span class="spacer"></span><span class="coord">x &times; y &rarr; grid</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="1 22 451 142" role="img" aria-labelledby="grd-title grd-desc" class="dg">
+  <title id="grd-title">A gridded lattice uses individual axes</title>
+  <desc id="grd-desc">On the left, two individual axes -- x with three longitudes and y with two latitudes -- cross-product to fill all six cells of a regular two-by-three lattice. On the right, the label reads: a gridded lattice maps to individual axes, since every x pairs with every y. This is the gridded case.</desc>
+
+  <rect x="2" y="23" width="449" height="140" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- LEFT: the gridded lattice (x / y axes labelled) -->
+  <g style="stroke:var(--dg-graticule)" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="80" y1="58" x2="80" y2="110"/><line x1="148" y1="58" x2="148" y2="110"/><line x1="216" y1="58" x2="216" y2="110"/>
+    <line x1="80" y1="58" x2="216" y2="58"/><line x1="80" y1="110" x2="216" y2="110"/>
+  </g>
+  <g style="fill:var(--dg-domain)">
+    <circle cx="80" cy="58" r="5.5"/><circle cx="148" cy="58" r="5.5"/><circle cx="216" cy="58" r="5.5"/>
+    <circle cx="80" cy="110" r="5.5"/><circle cx="148" cy="110" r="5.5"/><circle cx="216" cy="110" r="5.5"/>
+  </g>
+  <g font-size="11" style="fill:var(--dg-domain-ink)">
+    <g text-anchor="end"><text x="64" y="62">45.5</text><text x="64" y="114">45.0</text></g>
+    <g text-anchor="middle"><text x="80" y="128">12.0</text><text x="148" y="128">12.5</text><text x="216" y="128">13.0</text></g>
+  </g>
+  <text x="24" y="88" font-size="12" font-style="italic" font-weight="700" style="fill:var(--dg-domain-ink)" text-anchor="middle">y</text>
+  <text x="148" y="144" font-size="12" font-style="italic" font-weight="700" style="fill:var(--dg-domain-ink)" text-anchor="middle">x</text>
+
+  <line x1="242" y1="42" x2="242" y2="128" style="stroke:var(--dg-graticule)" stroke-width="1"/>
+
+  <!-- RIGHT: bold heading + original-style subtitles -->
+  <text x="258" y="60" font-size="13" font-weight="700" style="fill:var(--dg-line)">A gridded lattice</text>
+  <text x="258" y="75" font-size="13" font-weight="700" style="fill:var(--dg-domain-ink)">&#8594; individual axes</text>
+  <text x="258" y="102" font-size="10.5" style="fill:var(--dg-line)">shared x's &#215; shared y's</text>
+  <text x="258" y="117" font-size="9" style="fill:var(--dg-line)" opacity="0.7">every x with every y &#8594; a full 2 &#215; 3 grid</text>
+</svg>
+</div>
+```
+Two individual axes (three longitudes and two latitudes) cross-product to fill all six cells of a regular 2 × 3 lattice: a gridded coverage.
+:::
 
 A domain needs at least `x` and `y` (the table in @sec-domain-types lists them as always
 required). Each individual axis writes its coordinates one of two ways: explicitly,
@@ -680,7 +1080,66 @@ edge and the same cell spans 12.0 to 12.5. The specification does say that an ax
 with no bounds "MAY be derived automatically", but it never says *how*, so two
 readers can each derive an answer, disagree, and both still conform.
 
-![With no `bounds`, the same six positions support two different grids, and nothing in the document chooses between them. The ambiguity belongs to each axis separately, and crossing two axes compounds it: read every coordinate as its cell's center and the shaded grid is meant; read each as its cell's edge and the dashed one is, with every position landing on a corner. The two grids sit half a cell apart along both axes at once.](../diagrams/axis-bounds.svg){#fig-axis-bounds}
+::: {#fig-axis-bounds .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render axis-bounds.svg<span class="spacer"></span><span class="coord">centers vs corners</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 0 452 216" role="img" aria-labelledby="ab-title ab-desc" class="dg">
+  <title id="ab-title">With no bounds, the same six positions support two different grids</title>
+  <desc id="ab-desc">Six positions, the three longitudes 12.0, 12.5 and 13.0 crossed with the two latitudes 45.0 and 45.5, are drawn as dots. Two candidate grids are laid over them. The shaded grid reads each position as the center of its cell, so its cells box each dot without touching it, and it begins at 11.75, 44.75. The dashed grid reads each position as a cell corner, so its lines cross exactly at the dots, and it begins at 12.0, 45.0. The dots are the same under either reading; only the grid drawn around them moves, by half a cell along each axis at once, measured by the arrow at the lower left. Nothing in the coordinates chooses between the two, which is what an axis's bounds member settles.</desc>
+
+  <rect x="-15" y="1" width="450" height="214" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- READING A: positions as cell centers. Shaded cells box each dot. -->
+  <g style="fill:var(--dg-domain);stroke:var(--dg-domain)" fill-opacity="0.18" stroke-width="1.5">
+    <rect x="70" y="48" width="56" height="56"/><rect x="126" y="48" width="56" height="56"/><rect x="182" y="48" width="56" height="56"/>
+    <rect x="70" y="104" width="56" height="56"/><rect x="126" y="104" width="56" height="56"/><rect x="182" y="104" width="56" height="56"/>
+  </g>
+
+  <!-- READING B: positions as cell corners. Dashed lines cross at each dot. -->
+  <g style="stroke:var(--dg-domain)" stroke-width="1.5" stroke-dasharray="4 3">
+    <line x1="98" y1="20" x2="266" y2="20"/><line x1="98" y1="76" x2="266" y2="76"/><line x1="98" y1="132" x2="266" y2="132"/>
+    <line x1="98" y1="20" x2="98" y2="132"/><line x1="154" y1="20" x2="154" y2="132"/><line x1="210" y1="20" x2="210" y2="132"/><line x1="266" y1="20" x2="266" y2="132"/>
+  </g>
+
+  <!-- THE POSITIONS: identical under either reading -->
+  <g style="fill:var(--dg-domain)">
+    <circle cx="98" cy="132" r="5"/><circle cx="154" cy="132" r="5"/><circle cx="210" cy="132" r="5"/>
+    <circle cx="98" cy="76" r="5"/><circle cx="154" cy="76" r="5"/><circle cx="210" cy="76" r="5"/>
+  </g>
+
+  <!-- HIGHLIGHT: one grid begins half a cell along each axis from the other -->
+  <line x1="70" y1="160" x2="98" y2="132" style="stroke:var(--dg-instance)" stroke-width="2"/>
+  <g style="fill:var(--dg-instance)">
+    <polygon points="70,160 79,157 73,151"/><polygon points="98,132 89,135 95,141"/>
+  </g>
+  <text x="64" y="178" font-size="10" font-weight="700" style="fill:var(--dg-instance-ink)" text-anchor="end">half a cell</text>
+
+  <!-- Coordinates -->
+  <g font-size="11" style="fill:var(--dg-domain-ink)">
+    <g text-anchor="end"><text x="60" y="80">45.5</text><text x="60" y="136">45.0</text></g>
+    <g text-anchor="middle"><text x="98" y="180">12.0</text><text x="154" y="180">12.5</text><text x="210" y="180">13.0</text></g>
+  </g>
+  <text x="24" y="108" font-size="12" font-style="italic" font-weight="700" style="fill:var(--dg-domain-ink)" text-anchor="middle">y</text>
+  <text x="154" y="199" font-size="12" font-style="italic" font-weight="700" style="fill:var(--dg-domain-ink)" text-anchor="middle">x</text>
+
+  <!-- KEY -->
+  <g transform="translate(300, 76)">
+    <rect x="0" y="-9" width="18" height="18" style="fill:var(--dg-domain);stroke:var(--dg-domain)" fill-opacity="0.18" stroke-width="1.5"/>
+    <circle cx="9" cy="0" r="3.5" style="fill:var(--dg-domain)"/>
+    <text x="26" y="4" font-size="10.5" font-weight="600" style="fill:var(--dg-line)">read as centers</text>
+  </g>
+  <g transform="translate(300, 118)">
+    <line x1="0" y1="0" x2="18" y2="0" style="stroke:var(--dg-domain)" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <line x1="9" y1="-9" x2="9" y2="9" style="stroke:var(--dg-domain)" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <circle cx="9" cy="0" r="3.5" style="fill:var(--dg-domain)"/>
+    <text x="26" y="4" font-size="10.5" font-weight="600" style="fill:var(--dg-line)">read as corners</text>
+  </g>
+</svg>
+</div>
+```
+With no `bounds`, the same six positions support two different grids, and nothing in the document chooses between them. The ambiguity belongs to each axis separately, and crossing two axes compounds it: read every coordinate as its cell's center and the shaded grid is meant; read each as its cell's edge and the dashed one is, with every position landing on a corner. The two grids sit half a cell apart along both axes at once.
+:::
 
 ::: {.callout-warning}
 **Guess the wrong reading and everything moves half a cell.** This is the classic
@@ -750,7 +1209,42 @@ polygon outline visits whatever positions it visits, sharing no common longitude
 latitudes to factor out, so there is no way to split them into individual axes
 without inventing positions that were never sampled.
 
-![Three points sit at irregular, off-lattice positions over a faint reference grid (sharing no `x`'s or `y`'s to factor into axes), so a **composite axis** lists each as a coordinate tuple.](../diagrams/non-gridded-composite.svg){#fig-composite-axis}
+::: {#fig-composite-axis .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render non-gridded-composite.svg<span class="spacer"></span><span class="coord">points &rarr; composite axis</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="41 13 454 142" role="img" aria-labelledby="ca-title ca-desc" class="dg">
+  <title id="ca-title">Non-gridded points use a composite axis</title>
+  <desc id="ca-desc">On the left, a faint two-by-three reference lattice with x and y axes; three data points sit at irregular, off-lattice positions joined by a path, sharing no common x or y values. On the right, the label reads: non-gridded points map to a composite axis, which lists each as a coordinate tuple. This is the non-gridded case.</desc>
+
+  <rect x="42" y="14" width="452" height="140" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- LEFT: irregular points over a faint reference lattice (x / y labelled) -->
+  <g style="stroke:var(--dg-graticule)" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="80" y1="58" x2="80" y2="110"/><line x1="148" y1="58" x2="148" y2="110"/><line x1="216" y1="58" x2="216" y2="110"/>
+    <line x1="80" y1="58" x2="216" y2="58"/><line x1="80" y1="110" x2="216" y2="110"/>
+  </g>
+  <g style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"><circle cx="80" cy="58" r="3"/><circle cx="148" cy="58" r="3"/><circle cx="216" cy="58" r="3"/><circle cx="80" cy="110" r="3"/><circle cx="148" cy="110" r="3"/><circle cx="216" cy="110" r="3"/></g>
+  <text x="62" y="88" font-size="12" font-style="italic" style="fill:var(--dg-line)" opacity="0.72" text-anchor="middle">y</text>
+  <text x="148" y="126" font-size="12" font-style="italic" style="fill:var(--dg-line)" opacity="0.72" text-anchor="middle">x</text>
+  <polyline points="94,122 132,44 226,80" style="fill:none;stroke:var(--dg-domain)" stroke-width="2"/>
+  <g style="fill:var(--dg-domain)"><circle cx="94" cy="122" r="5"/><circle cx="132" cy="44" r="5"/><circle cx="226" cy="80" r="5"/></g>
+  <g font-size="8.5" style="fill:var(--dg-line)" text-anchor="middle">
+    <text x="94" y="135">12.1, 44.9</text><text x="132" y="38">12.4, 45.7</text><text x="226" y="93">13.1, 45.2</text>
+  </g>
+
+  <line x1="258" y1="42" x2="258" y2="128" style="stroke:var(--dg-graticule)" stroke-width="1"/>
+
+  <!-- RIGHT: bold heading + original-style subtitles -->
+  <text x="274" y="60" font-size="13" font-weight="700" style="fill:var(--dg-ink)">Non-gridded points</text>
+  <text x="274" y="75" font-size="13" font-weight="700" style="fill:var(--dg-domain-ink)">&#8594; a composite axis</text>
+  <text x="274" y="102" font-size="10.5" style="fill:var(--dg-line)">points fall wherever sampled</text>
+  <text x="274" y="117" font-size="9" style="fill:var(--dg-line)" opacity="0.72">off the lattice &#8594; no shared x's or y's to factor</text>
+</svg>
+</div>
+```
+Three points sit at irregular, off-lattice positions over a faint reference grid (sharing no `x`'s or `y`'s to factor into axes), so a **composite axis** lists each as a coordinate tuple.
+:::
 
 Such geometries use a single axis, conventionally named `composite`, whose `values`
 are an explicit list of the actual positions, each a *tuple* of coordinates rather
@@ -778,7 +1272,50 @@ instead of a point. The composite axis looks the same as the tuple case, only wi
 boundary, plus an inner ring for each hole. Here is the figure's polygon as a full
 composite axis, one corner per line:
 
-![A polygon is a list of rings: a tilted outer boundary with a triangular inner ring punched out as a hole, its winding shown. The exact corners are in the JSON below.](../diagrams/polygon-composite-axis.svg){#fig-polygon}
+::: {#fig-polygon .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render polygon-composite-axis.svg<span class="spacer"></span><span class="coord">outer ring &minus; hole</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 152" role="img" aria-labelledby="poly-title poly-desc" class="dg">
+  <title id="poly-title">A polygon with a hole: an outer ring and an inner ring</title>
+  <desc id="poly-desc">A longitude-latitude plane with one filled polygon outlined in indigo: a tilted four-sided outer ring with a tilted triangular inner ring cut out of its middle as a hole. Neither shape is aligned to the grid, like a real-world polygon. Axis ticks give the scale; the exact corner coordinates are in the accompanying JSON. Small arrows show the winding: the outer ring runs counter-clockwise and the inner ring clockwise. The figure shows that a polygon is a list of rings: an outer boundary plus any inner rings that punch holes.</desc>
+
+  <rect x="1" y="1" width="318" height="150" rx="14" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- reference gridlines at the labelled ticks -->
+  <g style="stroke:var(--dg-graticule)" stroke-width="1">
+    <line x1="66" y1="36" x2="66" y2="116"/><line x1="171" y1="36" x2="171" y2="116"/><line x1="276" y1="36" x2="276" y2="116"/>
+    <line x1="58" y1="36" x2="284" y2="36"/><line x1="58" y1="76" x2="284" y2="76"/><line x1="58" y1="116" x2="284" y2="116"/>
+  </g>
+  <text x="20" y="32" font-size="8.5" style="fill:var(--dg-domain-ink)">lat</text>
+  <text x="290" y="132" font-size="8.5" style="fill:var(--dg-domain-ink)">lon</text>
+  <g font-size="9" style="fill:var(--dg-domain-ink)">
+    <g text-anchor="end"><text x="46" y="40">46.0</text><text x="46" y="80">45.5</text><text x="46" y="120">45.0</text></g>
+    <g text-anchor="middle"><text x="66" y="132">12.0</text><text x="171" y="132">13.0</text><text x="276" y="132">14.0</text></g>
+  </g>
+
+  <!-- one polygon: a tilted outer ring with a tilted triangular inner ring (hole), via even-odd fill -->
+  <path d="M98 36 L255 28 L234 116 L77 110 Z M110 92 L213 84 L161 52 Z" style="fill:var(--dg-domain);stroke:var(--dg-domain)" fill-opacity="0.15" fill-rule="evenodd" stroke-width="2"/>
+  <g style="fill:var(--dg-domain)">
+    <circle cx="98" cy="36" r="3.5"/><circle cx="255" cy="28" r="3.5"/><circle cx="234" cy="116" r="3.5"/><circle cx="77" cy="110" r="3.5"/>
+    <circle cx="110" cy="92" r="3.5"/><circle cx="213" cy="84" r="3.5"/><circle cx="161" cy="52" r="3.5"/>
+  </g>
+
+  <!-- winding arrows: outer ring counter-clockwise, inner ring clockwise (right-hand rule) -->
+  <g style="fill:var(--dg-domain)">
+    <polygon points="84,85 83,76 89,78"/>
+    <polygon points="246,67 241,74 247,76"/>
+    <polygon points="139,69 131,72 135,76"/>
+    <polygon points="191,71 183,69 186,64"/>
+  </g>
+
+  <text x="166" y="24" text-anchor="middle" font-size="10.5" font-weight="600" style="fill:var(--dg-domain-ink)">outer ring &#8634;</text>
+  <text x="162" y="82" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">inner ring &#8635;</text>
+</svg>
+</div>
+```
+A polygon is a list of rings: a tilted outer boundary with a triangular inner ring punched out as a hole, its winding shown. The exact corners are in the JSON below.
+:::
 
 ```json
 "axes": {
@@ -829,7 +1366,81 @@ each to record a column of values down through the water. A `Section` is a
 two-dimensional field: one value at every (station, depth) pair
 ([specification Section 9.10](https://docs.ogc.org/cs/21-069r2/21-069r2.html#_2ebca2a8-cdde-41b4-ad83-2ede16d3792e)).
 
-![A `Section` reads as an equation: `Trajectory` &times; `VerticalProfile`. The ship's track is a **composite axis** of `(t, x, y)` tuples (one per station, listed beneath the equation) and crossing it with the **`z` axis** of depths fills the **curtain**, a value at each (station, depth). One highlight ties the three views together: as it steps from station to station it rings the dot on the track, the row in the composite-axis list (where the time `t` ticks forward), and the column in the curtain: the geometry carried through time. A real transect's stations are not evenly spaced; the even grid is only for legibility.](../diagrams/section-curtain.svg){#fig-section}
+::: {#fig-section .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render section-curtain.svg<span class="spacer"></span><span class="coord">trajectory &times; profile</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 0 504 324" role="img" aria-labelledby="sec-title sec-desc" class="dg">
+  <title id="sec-title">Section = Trajectory times VerticalProfile: a ship's depth-profile transect</title>
+  <desc id="sec-desc">An equation reads left to right: Trajectory times VerticalProfile equals Section. The Trajectory is a small map of a ship track with four numbered stations, labelled the composite t, x, y axis. The VerticalProfile is a single z depth axis. Their product is the Section, a curtain of values with one column per station and one row per depth. Below, the composite axis is listed as one t, x, y tuple per station, with columns headed hash, t, x and y. A single highlight marks station 1 across all three views at once: its track dot, its row in the composite-axis list, and its column in the curtain, showing one worked correspondence.</desc>
+
+  <rect x="7" y="1" width="502" height="322" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- ===== Factor A: Trajectory ===== -->
+  <text x="94" y="26" font-size="12" font-weight="bold" text-anchor="middle" style="fill:var(--dg-domain-ink)">Trajectory</text>
+  <text x="94" y="46" font-size="9" text-anchor="middle" style="fill:var(--dg-line)">stations along the ship track</text>
+  <rect x="24" y="52" width="140" height="104" rx="5" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.2"/>
+  <polyline points="40,138 74,92 112,112 150,72" style="fill:none;stroke:var(--dg-line)" stroke-width="1.6"/>
+  <circle cx="40" cy="138" r="4.5" style="fill:var(--dg-domain)"/><circle cx="74" cy="92" r="4.5" style="fill:var(--dg-domain)"/>
+  <circle cx="112" cy="112" r="4.5" style="fill:var(--dg-domain)"/><circle cx="150" cy="72" r="4.5" style="fill:var(--dg-domain)"/>
+  <circle cx="40" cy="138" r="7.5" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+  <text x="46" y="152" font-size="10" style="fill:var(--dg-ink)">1</text><text x="80" y="88" font-size="10" style="fill:var(--dg-ink)">2</text>
+  <text x="118" y="126" font-size="10" style="fill:var(--dg-ink)">3</text><text x="156" y="68" font-size="10" style="fill:var(--dg-ink)">4</text>
+  <text x="94" y="172" font-size="9" text-anchor="middle" style="fill:var(--dg-line)">composite (t, x, y) axis</text>
+
+  <text x="190" y="112" font-size="26" text-anchor="middle" style="fill:var(--dg-line)">&#215;</text>
+
+  <!-- ===== Factor B: VerticalProfile ===== -->
+  <text x="234" y="26" font-size="12" font-weight="bold" text-anchor="middle" style="fill:var(--dg-domain-ink)">VerticalProfile</text>
+  <g style="stroke:var(--dg-domain)" stroke-width="1">
+    <rect x="216" y="52" width="38" height="26" style="fill:var(--dg-domain)" fill-opacity="0.15"/><rect x="216" y="78" width="38" height="26" style="fill:var(--dg-domain)" fill-opacity="0.15"/>
+    <rect x="216" y="104" width="38" height="26" style="fill:var(--dg-domain)" fill-opacity="0.15"/><rect x="216" y="130" width="38" height="26" style="fill:var(--dg-domain)" fill-opacity="0.15"/>
+  </g>
+  <g font-size="9" text-anchor="end" style="fill:var(--dg-line)">
+    <text x="212" y="69">0</text><text x="212" y="95">10</text><text x="212" y="121">20</text><text x="212" y="147">30</text>
+  </g>
+  <text x="234" y="172" font-size="9" text-anchor="middle" style="fill:var(--dg-line)">z axis (depth, m)</text>
+
+  <text x="282" y="112" font-size="26" text-anchor="middle" style="fill:var(--dg-line)">=</text>
+
+  <!-- ===== Result: Section curtain (station 1 on the left) ===== -->
+  <text x="400" y="26" font-size="12" font-weight="bold" text-anchor="middle" style="fill:var(--dg-range-ink)">Section</text>
+  <g font-size="10" text-anchor="middle" style="fill:var(--dg-line)">
+    <text x="331" y="46">1</text><text x="377" y="46">2</text><text x="423" y="46">3</text><text x="469" y="46">4</text>
+  </g>
+  <g style="stroke:var(--dg-line)" stroke-width="1">
+    <rect x="308" y="52" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.08"/><rect x="354" y="52" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.08"/><rect x="400" y="52" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.08"/><rect x="446" y="52" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.08"/>
+    <rect x="308" y="78" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.20"/><rect x="354" y="78" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.20"/><rect x="400" y="78" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.20"/><rect x="446" y="78" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.20"/>
+    <rect x="308" y="104" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.36"/><rect x="354" y="104" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.36"/><rect x="400" y="104" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.36"/><rect x="446" y="104" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.36"/>
+    <rect x="308" y="130" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.55"/><rect x="354" y="130" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.55"/><rect x="400" y="130" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.55"/><rect x="446" y="130" width="46" height="26" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+  </g>
+  <g font-size="11" font-weight="600" text-anchor="middle" style="fill:var(--dg-ink)">
+    <text x="331" y="69">18.2</text><text x="377" y="69">17.6</text><text x="423" y="69">16.9</text><text x="469" y="69">15.4</text>
+    <text x="331" y="95">14.1</text><text x="377" y="95">13.3</text><text x="423" y="95">12.0</text><text x="469" y="95">11.2</text>
+    <text x="331" y="121">9.4</text><text x="377" y="121">8.7</text><text x="423" y="121">8.1</text><text x="469" y="121">7.3</text>
+    <text x="331" y="147">6.2</text><text x="377" y="147">5.5</text><text x="423" y="147">5.0</text><text x="469" y="147">4.1</text>
+  </g>
+  <rect x="308" y="52" width="46" height="104" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+  <text x="400" y="172" font-size="9" text-anchor="middle" style="fill:var(--dg-line)">value at each (station, depth) &#183; &#176;C</text>
+
+  <!-- ===== Composite axis list (heading matched to the panel headings) ===== -->
+  <text x="256" y="206" font-size="12" font-weight="bold" text-anchor="middle" style="fill:var(--dg-domain-ink)">Composite axis</text>
+  <text x="256" y="221" font-size="9" text-anchor="middle" style="fill:var(--dg-line)">one (t, x, y) tuple per station</text>
+  <g font-size="9" font-style="italic" text-anchor="middle" style="fill:var(--dg-line)">
+    <text x="143" y="237">#</text><text x="228" y="237">t</text><text x="322" y="237">x</text><text x="366" y="237">y</text>
+  </g>
+  <rect x="132" y="243" width="256" height="15" style="fill:none;stroke:var(--dg-instance)" stroke-width="2"/>
+  <g font-size="10.5" style="fill:var(--dg-ink)">
+    <text x="140" y="254">1&#160;&#160;&#160;2024-03-01T12:00:00Z&#160;&#160;&#160;12.5&#160;&#160;&#160;45.3</text>
+    <text x="140" y="270">2&#160;&#160;&#160;2024-03-01T13:00:00Z&#160;&#160;&#160;12.8&#160;&#160;&#160;45.6</text>
+    <text x="140" y="286">3&#160;&#160;&#160;2024-03-01T14:00:00Z&#160;&#160;&#160;13.1&#160;&#160;&#160;45.9</text>
+    <text x="140" y="302">4&#160;&#160;&#160;2024-03-01T15:00:00Z&#160;&#160;&#160;13.4&#160;&#160;&#160;46.2</text>
+  </g>
+</svg>
+</div>
+```
+A `Section` reads as an equation: `Trajectory` &times; `VerticalProfile`. The ship's track is a **composite axis** of `(t, x, y)` tuples (one per station, listed beneath the equation) and crossing it with the **`z` axis** of depths fills the **curtain**, a value at each (station, depth). One highlight ties the three views together: as it steps from station to station it rings the dot on the track, the row in the composite-axis list (where the time `t` ticks forward), and the column in the curtain: the geometry carried through time. A real transect's stations are not evenly spaced; the even grid is only for legibility.
+:::
 
 In the document, those two axes sit side by side. The **composite axis** carries
 one `(t, x, y)` tuple per station (the four rows from the figure's list) and a
@@ -883,7 +1494,50 @@ Because `x` is named last, you read across the `x` axis first: the first three
 values are the whole `y = 0` row (across all three `x`), then the next three are
 the `y = 1` row. Laid out as a grid:
 
-![Reading the flat `values` onto the grid: with `axisNames` `["y","x"]` the last-named axis, `x`, varies fastest, so the first three values fill row `y0` and the next three fill row `y1`.](../diagrams/row-major-grid.svg){#fig-row-major}
+::: {#fig-row-major .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render row-major-grid.svg<span class="spacer"></span><span class="coord">flat &rarr; grid</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" role="img" aria-labelledby="rm-title rm-desc" class="dg">
+  <title id="rm-title">Row-major order: a flat values list folds onto a grid</title>
+  <desc id="rm-desc">The flat values list one through six fills a two-row by three-column grid row by row, so the last axis x varies fastest. Values one, two, three form the first row y0; values four, five, six form the second row y1.</desc>
+
+  <rect x="1" y="1" width="518" height="218" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <!-- flat strip: one contiguous run of six, colour-coded into two rows (centred on x=260) -->
+  <g font-size="15" font-weight="700" text-anchor="middle">
+    <g style="fill:var(--dg-domain);stroke:var(--dg-domain)" fill-opacity="0.2" stroke-width="1.5">
+      <rect x="138" y="18" width="34" height="30" rx="5"/><rect x="180" y="18" width="34" height="30" rx="5"/><rect x="222" y="18" width="34" height="30" rx="5"/>
+    </g>
+    <g style="fill:var(--dg-range);stroke:var(--dg-range)" fill-opacity="0.2" stroke-width="1.5">
+      <rect x="264" y="18" width="34" height="30" rx="5"/><rect x="306" y="18" width="34" height="30" rx="5"/><rect x="348" y="18" width="34" height="30" rx="5"/>
+    </g>
+    <g style="fill:var(--dg-domain-ink)"><text x="155" y="38">1</text><text x="197" y="38">2</text><text x="239" y="38">3</text></g>
+    <g style="fill:var(--dg-range-ink)"><text x="281" y="38">4</text><text x="323" y="38">5</text><text x="365" y="38">6</text></g>
+  </g>
+
+  <!-- brackets + row labels -->
+  <path d="M138 54 v6 h118 v-6" style="fill:none;stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <path d="M264 54 v6 h118 v-6" style="fill:none;stroke:var(--dg-range)" stroke-width="1.5"/>
+  <text x="197" y="74" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--dg-domain-ink)">row y0</text>
+  <text x="323" y="74" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--dg-range-ink)">row y1</text>
+
+  <!-- grid (block columns centred on x=260) -->
+  <text x="260" y="98" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">x varies fastest &#8594;</text>
+  <g font-size="12" text-anchor="middle" style="fill:var(--dg-line)"><text x="205" y="112">x0</text><text x="260" y="112">x1</text><text x="315" y="112">x2</text></g>
+  <g font-size="12" font-weight="600" text-anchor="end"><text x="170" y="144" style="fill:var(--dg-domain-ink)">y0</text><text x="170" y="190" style="fill:var(--dg-range-ink)">y1</text></g>
+  <g style="fill:var(--dg-domain);stroke:var(--dg-domain)" fill-opacity="0.2" stroke-width="1.5"><rect x="180" y="122" width="50" height="36" rx="6"/><rect x="235" y="122" width="50" height="36" rx="6"/><rect x="290" y="122" width="50" height="36" rx="6"/></g>
+  <g style="fill:var(--dg-range);stroke:var(--dg-range)" fill-opacity="0.2" stroke-width="1.5"><rect x="180" y="166" width="50" height="36" rx="6"/><rect x="235" y="166" width="50" height="36" rx="6"/><rect x="290" y="166" width="50" height="36" rx="6"/></g>
+  <g font-size="15" font-weight="700" text-anchor="middle">
+    <g style="fill:var(--dg-domain-ink)"><text x="205" y="145">1</text><text x="260" y="145">2</text><text x="315" y="145">3</text></g>
+    <g style="fill:var(--dg-range-ink)"><text x="205" y="189">4</text><text x="260" y="189">5</text><text x="315" y="189">6</text></g>
+  </g>
+
+</svg>
+</div>
+```
+Reading the flat `values` onto the grid: with `axisNames` `["y","x"]` the last-named axis, `x`, varies fastest, so the first three values fill row `y0` and the next three fill row `y1`.
+:::
 
 The mapping between a cell and its slot in `values` is arithmetic: for a shape
 `[ny, nx]`, the cell in row `y`, column `x` lives at `values[y * nx + x]`. Here
@@ -911,7 +1565,37 @@ is identical (it is still one logical N-dimensional array with `axisNames` and
 Zarr and Cloud-Optimized GeoTIFF work, applied to a CoverageJSON
 range.
 
-![The original array we will tile: one logical `NdArray` of shape `[4, 600, 800]` over axes `t`, `y`, `x`, drawn as a deck of four time-step sheets (the `t` axis is the stack's depth). The two tile sets below each cut *this* array a different way.](../diagrams/tiled-ndarray-original.svg){#fig-tiled-original}
+::: {#fig-tiled-original .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render tiled-ndarray-original.svg<span class="spacer"></span><span class="coord">shape [4, 600, 800]</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 15 421 289" role="img" aria-labelledby="tio-title tio-desc" class="dg">
+  <title id="tio-title">The original array</title>
+  <desc id="tio-desc">One logical array of shape [4, 600, 800] over axes t, y, x, drawn as a deck of four stacked sheets, with the t axis shown as depth and x and y axes along the bottom and left.</desc>
+  <rect x="-10" y="18" width="415" height="283" rx="12" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
+  <rect x="71" y="34" width="256" height="192" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 30%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <rect x="64" y="41" width="256" height="192" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 20%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <rect x="57" y="48" width="256" height="192" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 10%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <rect x="50" y="55" width="256" height="192" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <text x="178" y="154" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">[4, 600, 800]</text>
+  <line x1="42" y1="255" x2="314" y2="255" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tio-a)"/>
+  <line x1="50" y1="255" x2="50" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="50" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">0</text>
+  <line x1="178" y1="255" x2="178" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="178" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">400</text>
+  <line x1="306" y1="255" x2="306" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="306" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">800</text>
+  <text x="178" y="283" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">x</text>
+  <line x1="42" y1="255" x2="42" y2="49" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tio-a)"/>
+  <line x1="38" y1="247" x2="42" y2="247" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="250" text-anchor="end" font-size="9" style="fill:var(--dg-line)">0</text>
+  <line x1="38" y1="151" x2="42" y2="151" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="154" text-anchor="end" font-size="9" style="fill:var(--dg-line)">300</text>
+  <line x1="38" y1="55" x2="42" y2="55" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="58" text-anchor="end" font-size="9" style="fill:var(--dg-line)">600</text>
+  <text x="8" y="154" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">y</text>
+  <line x1="319" y1="246" x2="340" y2="225" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tio-a)"/>
+  <text x="344" y="238" font-size="11" font-style="italic" style="fill:var(--dg-line)">t (0&#8594;3)</text>
+  <defs><marker id="tio-a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" style="fill:var(--dg-line)"/></marker></defs>
+</svg>
+</div>
+```
+The original array we will tile: one logical `NdArray` of shape `[4, 600, 800]` over axes `t`, `y`, `x`, drawn as a deck of four time-step sheets (the `t` axis is the stack's depth). The two tile sets below each cut *this* array a different way.
+:::
 
 A `TiledNdArray` keeps the familiar `axisNames` and `shape` (still describing the
 *whole* logical array) and adds a `tileSets` array. Each entry there is a
@@ -978,7 +1662,62 @@ not a tiling axis here, the steps are never split apart, so each tile is the ful
 time-stack of one spatial quadrant. A client zooming into one region across the
 whole time range fetches just the tile covering it (@fig-tiled-spatial).
 
-![The **spatial** tile set (`tileShape [null, 300, 400]`): four tiles in a 2 &times; 2 grid, each a quarter of the `x`/`y` plane that still keeps all four time steps (a deck of shape `[4, 300, 400]`). Each tile carries its indices `{y}`, `{x}` and the URL they produce from the template `https://example.com/spatial/{y}/{x}.covjson`. The dashed lines mark the 400/300 split on the `x`/`y` axes.](../diagrams/tiled-ndarray-spatial.svg){#fig-tiled-spatial}
+::: {#fig-tiled-spatial .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render tiled-ndarray-spatial.svg<span class="spacer"></span><span class="coord">2 &times; 2 tiles</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 15 421 289" role="img" aria-labelledby="tis-title tis-desc" class="dg">
+  <title id="tis-title">The spatial tile set</title>
+  <desc id="tis-desc">The same array cut by tileShape [null, 300, 400] into a two-by-two grid of four tiles. Each tile is one quarter of the x-y plane but keeps all four time steps, drawn as a small deck, and is labelled with its tile indices {y} and {x}, the URL its template expands to, and its shape [4, 300, 400]. Dashed lines mark the 400 and 300 split on the x and y axes.</desc>
+  <rect x="-10" y="18" width="415" height="283" rx="12" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
+  <line x1="178" y1="55" x2="178" y2="247" style="stroke:var(--dg-line)" stroke-width="1.3" stroke-dasharray="5 3"/>
+  <line x1="50" y1="151" x2="306" y2="151" style="stroke:var(--dg-line)" stroke-width="1.3" stroke-dasharray="5 3"/>
+  <rect x="71" y="159" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 30%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="66" y="164" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 20%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="61" y="169" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 10%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="56" y="174" width="102" height="66" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <text x="107" y="198" text-anchor="middle" font-size="7" font-weight="700" style="fill:var(--dg-domain-ink)">{y}=0, {x}=0</text>
+  <text x="107" y="209" text-anchor="middle" font-size="7" style="fill:var(--dg-ink)">…/spatial/0/0.covjson</text>
+  <text x="107" y="220" text-anchor="middle" font-size="7" style="fill:var(--dg-line)">[4, 300, 400]</text>
+  <rect x="199" y="159" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 30%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="194" y="164" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 20%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="189" y="169" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 10%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="184" y="174" width="102" height="66" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <text x="235" y="198" text-anchor="middle" font-size="7" font-weight="700" style="fill:var(--dg-domain-ink)">{y}=0, {x}=1</text>
+  <text x="235" y="209" text-anchor="middle" font-size="7" style="fill:var(--dg-ink)">…/spatial/0/1.covjson</text>
+  <text x="235" y="220" text-anchor="middle" font-size="7" style="fill:var(--dg-line)">[4, 300, 400]</text>
+  <rect x="71" y="63" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 30%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="66" y="68" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 20%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="61" y="73" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 10%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="56" y="78" width="102" height="66" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <text x="107" y="102" text-anchor="middle" font-size="7" font-weight="700" style="fill:var(--dg-domain-ink)">{y}=1, {x}=0</text>
+  <text x="107" y="113" text-anchor="middle" font-size="7" style="fill:var(--dg-ink)">…/spatial/1/0.covjson</text>
+  <text x="107" y="124" text-anchor="middle" font-size="7" style="fill:var(--dg-line)">[4, 300, 400]</text>
+  <rect x="199" y="63" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 30%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="194" y="68" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 20%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="189" y="73" width="102" height="66" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 10%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <rect x="184" y="78" width="102" height="66" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.3"/>
+  <text x="235" y="102" text-anchor="middle" font-size="7" font-weight="700" style="fill:var(--dg-domain-ink)">{y}=1, {x}=1</text>
+  <text x="235" y="113" text-anchor="middle" font-size="7" style="fill:var(--dg-ink)">…/spatial/1/1.covjson</text>
+  <text x="235" y="124" text-anchor="middle" font-size="7" style="fill:var(--dg-line)">[4, 300, 400]</text>
+  <line x1="42" y1="255" x2="314" y2="255" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tis-b)"/>
+  <line x1="50" y1="255" x2="50" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="50" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">0</text>
+  <line x1="178" y1="255" x2="178" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="178" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">400</text>
+  <line x1="306" y1="255" x2="306" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="306" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">800</text>
+  <text x="178" y="283" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">x</text>
+  <line x1="42" y1="255" x2="42" y2="49" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tis-b)"/>
+  <line x1="38" y1="247" x2="42" y2="247" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="250" text-anchor="end" font-size="9" style="fill:var(--dg-line)">0</text>
+  <line x1="38" y1="151" x2="42" y2="151" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="154" text-anchor="end" font-size="9" style="fill:var(--dg-line)">300</text>
+  <line x1="38" y1="55" x2="42" y2="55" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="58" text-anchor="end" font-size="9" style="fill:var(--dg-line)">600</text>
+  <text x="8" y="154" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">y</text>
+  <line x1="319" y1="246" x2="340" y2="225" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tis-b)"/>
+  <text x="344" y="238" font-size="11" font-style="italic" style="fill:var(--dg-line)">t (0&#8594;3)</text>
+  <defs><marker id="tis-b" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" style="fill:var(--dg-line)"/></marker></defs>
+</svg>
+</div>
+```
+The **spatial** tile set (`tileShape [null, 300, 400]`): four tiles in a 2 &times; 2 grid, each a quarter of the `x`/`y` plane that still keeps all four time steps (a deck of shape `[4, 300, 400]`). Each tile carries its indices `{y}`, `{x}` and the URL they produce from the template `https://example.com/spatial/{y}/{x}.covjson`. The dashed lines mark the 400/300 split on the `x`/`y` axes.
+:::
 
 The `urlTemplate` is how a client turns a tile's position into a request. Reading
 one takes three steps:
@@ -1014,7 +1753,78 @@ leaves `y` and `x` as `null`, so each of its four tiles is a full-resolution
 `[1, 600, 800]` snapshot of a single moment. A client animating the whole map step
 by step fetches those instead (@fig-tiled-temporal).
 
-![The **temporal** tile set (`tileShape [1, null, null]`): four tiles, one per time step, laid out along `t`. Each is a single full-extent `[1, 600, 800]` image, carrying its index `{t}` and the URL it produces from the template `https://example.com/temporal/{t}.covjson`.](../diagrams/tiled-ndarray-temporal.svg){#fig-tiled-temporal}
+::: {#fig-tiled-temporal .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render tiled-ndarray-temporal.svg<span class="spacer"></span><span class="coord">t: 0 &rarr; 3</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="9 6 796 238" role="img" aria-labelledby="tt-title tt-desc" class="dg">
+  <title id="tt-title">The temporal tile set</title>
+  <desc id="tt-desc">The same array cut by tileShape [1, null, null] into four tiles, one per time step, laid out left to right along a t axis. Each tile is a single full-extent 800-by-600 image with its own x and y axes, labelled with its time index {t}, the URL its template expands to, and its shape [1, 600, 800].</desc>
+  <rect x="12" y="9" width="790" height="232" rx="12" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
+  <g>
+    <rect x="56" y="40" width="140" height="112" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.4"/>
+    <text x="126" y="76" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--dg-domain-ink)">{t}=0</text>
+    <text x="126" y="100" text-anchor="middle" font-size="10" style="fill:var(--dg-ink)">…/temporal/0.covjson</text>
+    <text x="126" y="118" text-anchor="middle" font-size="9.5" style="fill:var(--dg-line)">[1, 600, 800]</text>
+    <line x1="47" y1="164" x2="214" y2="164" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <line x1="47" y1="164" x2="47" y2="27" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <text x="56" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">0</text><text x="196" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">800</text>
+    <text x="126" y="177" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">x</text>
+    <text x="43" y="155" text-anchor="end" font-size="11" style="fill:var(--dg-line)">0</text><text x="43" y="45" text-anchor="end" font-size="11" style="fill:var(--dg-line)">600</text>
+    <text x="29" y="99" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">y</text>
+  </g>
+  <g>
+    <rect x="244" y="40" width="140" height="112" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.4"/>
+    <text x="314" y="76" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--dg-domain-ink)">{t}=1</text>
+    <text x="314" y="100" text-anchor="middle" font-size="10" style="fill:var(--dg-ink)">…/temporal/1.covjson</text>
+    <text x="314" y="118" text-anchor="middle" font-size="9.5" style="fill:var(--dg-line)">[1, 600, 800]</text>
+    <line x1="235" y1="164" x2="402" y2="164" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <line x1="235" y1="164" x2="235" y2="27" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <text x="244" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">0</text><text x="384" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">800</text>
+    <text x="314" y="177" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">x</text>
+    <text x="231" y="155" text-anchor="end" font-size="11" style="fill:var(--dg-line)">0</text><text x="231" y="45" text-anchor="end" font-size="11" style="fill:var(--dg-line)">600</text>
+    <text x="217" y="99" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">y</text>
+  </g>
+  <g>
+    <rect x="432" y="40" width="140" height="112" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.4"/>
+    <text x="502" y="76" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--dg-domain-ink)">{t}=2</text>
+    <text x="502" y="100" text-anchor="middle" font-size="10" style="fill:var(--dg-ink)">…/temporal/2.covjson</text>
+    <text x="502" y="118" text-anchor="middle" font-size="9.5" style="fill:var(--dg-line)">[1, 600, 800]</text>
+    <line x1="423" y1="164" x2="590" y2="164" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <line x1="423" y1="164" x2="423" y2="27" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <text x="432" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">0</text><text x="572" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">800</text>
+    <text x="502" y="177" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">x</text>
+    <text x="419" y="155" text-anchor="end" font-size="11" style="fill:var(--dg-line)">0</text><text x="419" y="45" text-anchor="end" font-size="11" style="fill:var(--dg-line)">600</text>
+    <text x="405" y="99" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">y</text>
+  </g>
+  <g>
+    <rect x="620" y="40" width="140" height="112" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.4"/>
+    <text x="690" y="76" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--dg-domain-ink)">{t}=3</text>
+    <text x="690" y="100" text-anchor="middle" font-size="10" style="fill:var(--dg-ink)">…/temporal/3.covjson</text>
+    <text x="690" y="118" text-anchor="middle" font-size="9.5" style="fill:var(--dg-line)">[1, 600, 800]</text>
+    <line x1="611" y1="164" x2="778" y2="164" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <line x1="611" y1="164" x2="611" y2="27" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+    <text x="620" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">0</text><text x="760" y="177" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">800</text>
+    <text x="690" y="177" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">x</text>
+    <text x="607" y="155" text-anchor="end" font-size="11" style="fill:var(--dg-line)">0</text><text x="607" y="45" text-anchor="end" font-size="11" style="fill:var(--dg-line)">600</text>
+    <text x="593" y="99" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">y</text>
+  </g>
+  <line x1="47" y1="198" x2="772" y2="198" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tt-c)"/>
+  <line x1="126" y1="194" x2="126" y2="202" style="stroke:var(--dg-line)" stroke-width="1.2"/>
+  <line x1="314" y1="194" x2="314" y2="202" style="stroke:var(--dg-line)" stroke-width="1.2"/>
+  <line x1="502" y1="194" x2="502" y2="202" style="stroke:var(--dg-line)" stroke-width="1.2"/>
+  <line x1="690" y1="194" x2="690" y2="202" style="stroke:var(--dg-line)" stroke-width="1.2"/>
+  <text x="126" y="212" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">0</text>
+  <text x="314" y="212" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">1</text>
+  <text x="502" y="212" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">2</text>
+  <text x="690" y="212" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">3</text>
+  <text x="408" y="226" text-anchor="middle" font-size="13" font-style="italic" style="fill:var(--dg-line)">t</text>
+  <defs><marker id="tt-c" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" style="fill:var(--dg-line)"/></marker></defs>
+</svg>
+</div>
+```
+The **temporal** tile set (`tileShape [1, null, null]`): four tiles, one per time step, laid out along `t`. Each is a single full-extent `[1, 600, 800]` image, carrying its index `{t}` and the URL it produces from the template `https://example.com/temporal/{t}.covjson`.
+:::
 
 Same logical array, two delivery layouts; the client picks the one that matches
 its access pattern. That is exactly the trade-off you make when choosing a chunk
@@ -1311,7 +2121,58 @@ Reading it:
 - The range spans only the `t` axis (`axisNames` is `["t"]`, `shape` is `[4]`), so
   its four values line up one-to-one with the four times:
 
-![A PointSeries pins the location and lets time vary: at one fixed point (lon 12.5, lat 45.3), the four readings trace a day's warm-up to a noon peak and cool-down. The time axis is the domain; the temperatures are the range.](../diagrams/pointseries-daily-curve.svg){#fig-pointseries}
+::: {#fig-pointseries .diagram}
+```{=html}
+<div class="diagram-frame"><span class="dollar">$</span> render pointseries-daily-curve.svg<span class="spacer"></span><span class="coord">time &rarr; temperature</span></div>
+<div class="diagram-svg-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 284" role="img" aria-labelledby="ps-title ps-desc" class="dg">
+  <title id="ps-title">A PointSeries: temperature over a day at one location</title>
+  <desc id="ps-desc">A line chart. At one fixed location (longitude 12.5, latitude 45.3), four temperature readings over a day -- 14.2 at 00:00, 16.8 at 06:00, a 19.5 peak at noon (highlighted in amber), and 17.1 at 18:00 -- trace a daily warm-up and cool-down curve. The time axis is the domain; the temperature values are the range.</desc>
+
+  <rect x="1" y="1" width="498" height="282" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
+
+  <text x="262" y="34" text-anchor="middle" font-size="11.5" style="fill:var(--dg-line)">at one fixed location: lon 12.5, lat 45.3</text>
+
+  <!-- y axis: temperature (range) -->
+  <text x="56" y="54" font-size="11" style="fill:var(--dg-range-ink)">temperature, &#176;C (range)</text>
+  <g style="stroke:var(--dg-graticule)" stroke-width="1">
+    <line x1="56" y1="64" x2="468" y2="64"/><line x1="56" y1="106" x2="468" y2="106"/><line x1="56" y1="149" x2="468" y2="149"/><line x1="56" y1="191" x2="468" y2="191"/>
+  </g>
+  <line x1="56" y1="64" x2="56" y2="212" style="stroke:var(--dg-line)" stroke-width="1.5"/>
+  <g font-size="10" style="fill:var(--dg-range-ink)" text-anchor="end">
+    <text x="48" y="67.5">20</text><text x="48" y="109.5">18</text><text x="48" y="152.5">16</text><text x="48" y="194.5">14</text>
+  </g>
+
+  <!-- x axis: time of day (domain) -->
+  <line x1="56" y1="212" x2="468" y2="212" style="stroke:var(--dg-line)" stroke-width="1.5"/>
+  <g font-size="10.5" style="fill:var(--dg-domain-ink)" text-anchor="middle">
+    <text x="92" y="230">00:00</text><text x="205" y="230">06:00</text><text x="319" y="230">12:00</text><text x="432" y="230">18:00</text>
+  </g>
+  <text x="262" y="250" text-anchor="middle" font-size="11" style="fill:var(--dg-domain-ink)">time of day, UTC (domain)</text>
+
+  <!-- the daily curve through the four readings (range) -->
+  <path d="M92 187 C111 178,167 151,205 132 C243 113,281 76,319 75 C357 74,413 117,432 125" style="fill:none;stroke:var(--dg-range)" stroke-width="2.5"/>
+
+  <!-- noon peak spotlight (instance) -->
+  <circle cx="319" cy="75" r="9" style="fill:var(--dg-instance)" opacity="0.25"/>
+  <circle cx="319" cy="75" r="5" style="fill:var(--dg-instance);stroke:var(--dg-panel)" stroke-width="1"/>
+  <!-- the other readings -->
+  <g style="fill:var(--dg-range);stroke:var(--dg-panel)" stroke-width="1">
+    <circle cx="92" cy="187" r="4"/><circle cx="205" cy="132" r="4"/><circle cx="432" cy="125" r="4"/>
+  </g>
+
+  <!-- value labels -->
+  <g font-size="11" font-weight="600" text-anchor="middle">
+    <text x="92" y="177" style="fill:var(--dg-range-ink)">14.2</text>
+    <text x="205" y="122" style="fill:var(--dg-range-ink)">16.8</text>
+    <text x="319" y="62" style="fill:var(--dg-instance-ink)">19.5</text>
+    <text x="432" y="114" style="fill:var(--dg-range-ink)">17.1</text>
+  </g>
+</svg>
+</div>
+```
+A PointSeries pins the location and lets time vary: at one fixed point (lon 12.5, lat 45.3), the four readings trace a day's warm-up to a noon peak and cool-down. The time axis is the domain; the temperatures are the range.
+:::
 
 The air warms from 14.2 degrees Celsius at midnight to a 19.5-degree peak at noon,
 then cools again, exactly the daily curve you would expect. Structurally, this is

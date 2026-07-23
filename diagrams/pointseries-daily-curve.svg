@@ -1,44 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 284" role="img" aria-labelledby="ps-title ps-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 284" role="img" aria-labelledby="ps-title ps-desc" class="dg">
   <title id="ps-title">A PointSeries: temperature over a day at one location</title>
   <desc id="ps-desc">A line chart. At one fixed location (longitude 12.5, latitude 45.3), four temperature readings over a day -- 14.2 at 00:00, 16.8 at 06:00, a 19.5 peak at noon (highlighted in amber), and 17.1 at 18:00 -- trace a daily warm-up and cool-down curve. The time axis is the domain; the temperature values are the range.</desc>
 
-  <rect x="1" y="1" width="498" height="282" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="1" y="1" width="498" height="282" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
 
-  <text x="262" y="34" text-anchor="middle" font-size="11.5" fill="#475569">at one fixed location: lon 12.5, lat 45.3</text>
+  <text x="262" y="34" text-anchor="middle" font-size="11.5" style="fill:var(--dg-line)">at one fixed location: lon 12.5, lat 45.3</text>
 
-  <!-- y axis: temperature (range, teal) -->
-  <text x="56" y="54" font-size="11" fill="#0f766e">temperature, &#176;C (range)</text>
-  <g stroke="#eef2f6" stroke-width="1">
+  <!-- y axis: temperature (range) -->
+  <text x="56" y="54" font-size="11" style="fill:var(--dg-range-ink)">temperature, &#176;C (range)</text>
+  <g style="stroke:var(--dg-graticule)" stroke-width="1">
     <line x1="56" y1="64" x2="468" y2="64"/><line x1="56" y1="106" x2="468" y2="106"/><line x1="56" y1="149" x2="468" y2="149"/><line x1="56" y1="191" x2="468" y2="191"/>
   </g>
-  <line x1="56" y1="64" x2="56" y2="212" stroke="#cbd5e1" stroke-width="1.5"/>
-  <g font-size="10" fill="#0f766e" text-anchor="end" font-family="ui-monospace, Menlo, monospace">
+  <line x1="56" y1="64" x2="56" y2="212" style="stroke:var(--dg-line)" stroke-width="1.5"/>
+  <g font-size="10" style="fill:var(--dg-range-ink)" text-anchor="end">
     <text x="48" y="67.5">20</text><text x="48" y="109.5">18</text><text x="48" y="152.5">16</text><text x="48" y="194.5">14</text>
   </g>
 
-  <!-- x axis: time of day (domain, indigo) -->
-  <line x1="56" y1="212" x2="468" y2="212" stroke="#cbd5e1" stroke-width="1.5"/>
-  <g font-size="10.5" fill="#4338ca" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">
+  <!-- x axis: time of day (domain) -->
+  <line x1="56" y1="212" x2="468" y2="212" style="stroke:var(--dg-line)" stroke-width="1.5"/>
+  <g font-size="10.5" style="fill:var(--dg-domain-ink)" text-anchor="middle">
     <text x="92" y="230">00:00</text><text x="205" y="230">06:00</text><text x="319" y="230">12:00</text><text x="432" y="230">18:00</text>
   </g>
-  <text x="262" y="250" text-anchor="middle" font-size="11" fill="#4338ca">time of day, UTC (domain)</text>
+  <text x="262" y="250" text-anchor="middle" font-size="11" style="fill:var(--dg-domain-ink)">time of day, UTC (domain)</text>
 
-  <!-- the daily curve through the four readings (range, teal) -->
-  <path d="M92 187 C111 178,167 151,205 132 C243 113,281 76,319 75 C357 74,413 117,432 125" fill="none" stroke="#0f766e" stroke-width="2.5"/>
+  <!-- the daily curve through the four readings (range) -->
+  <path d="M92 187 C111 178,167 151,205 132 C243 113,281 76,319 75 C357 74,413 117,432 125" style="fill:none;stroke:var(--dg-range)" stroke-width="2.5"/>
 
-  <!-- noon peak spotlight (amber) -->
-  <circle cx="319" cy="75" r="9" fill="#f59e0b" opacity="0.25"/>
-  <circle cx="319" cy="75" r="5" fill="#f59e0b" stroke="#ffffff" stroke-width="1"/>
+  <!-- noon peak spotlight (instance) -->
+  <circle cx="319" cy="75" r="9" style="fill:var(--dg-instance)" opacity="0.25"/>
+  <circle cx="319" cy="75" r="5" style="fill:var(--dg-instance);stroke:var(--dg-panel)" stroke-width="1"/>
   <!-- the other readings -->
-  <g fill="#0f766e" stroke="#ffffff" stroke-width="1">
+  <g style="fill:var(--dg-range);stroke:var(--dg-panel)" stroke-width="1">
     <circle cx="92" cy="187" r="4"/><circle cx="205" cy="132" r="4"/><circle cx="432" cy="125" r="4"/>
   </g>
 
   <!-- value labels -->
-  <g font-size="11" font-weight="600" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">
-    <text x="92" y="177" fill="#0f766e">14.2</text>
-    <text x="205" y="122" fill="#0f766e">16.8</text>
-    <text x="319" y="62" fill="#b45309">19.5</text>
-    <text x="432" y="114" fill="#0f766e">17.1</text>
+  <g font-size="11" font-weight="600" text-anchor="middle">
+    <text x="92" y="177" style="fill:var(--dg-range-ink)">14.2</text>
+    <text x="205" y="122" style="fill:var(--dg-range-ink)">16.8</text>
+    <text x="319" y="62" style="fill:var(--dg-instance-ink)">19.5</text>
+    <text x="432" y="114" style="fill:var(--dg-range-ink)">17.1</text>
   </g>
 </svg>

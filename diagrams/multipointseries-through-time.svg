@@ -1,96 +1,96 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 518 226" role="img" aria-labelledby="ser-title ser-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
-  <title id="ser-title">A MultiPointSeries carries the same geometry through time</title>
-  <desc id="ser-desc">A MultiPointSeries shown as three side-by-side frames labelled t0, t1 and t2 along a shared time axis t. Each frame holds the same five sensor positions, drawn as dots in the same places; the dots never move because the domain geometry is fixed. Each dot carries a value label, and those labels change from frame to frame because the range values vary through time. One station is highlighted with a heavier outline and joined across the frames by dashed arrows; its position label x=12.5, y=45.3 is identical in every frame, showing the position is fixed, while its value reads twelve, then fifteen, then thirteen.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 518 226" role="img" aria-labelledby="stt-title stt-desc" class="dg">
+  <title id="stt-title">A MultiPointSeries carries the same geometry through time</title>
+  <desc id="stt-desc">A MultiPointSeries shown as three side-by-side frames labelled t0, t1 and t2 along a shared time axis t. Each frame holds the same five sensor positions, drawn as dots in the same places; the dots never move because the domain geometry is fixed. Each dot carries a value label, and those labels change from frame to frame because the range values vary through time. One station is highlighted with a heavier outline and joined across the frames by dashed arrows; its position label x=12.5, y=45.3 is identical in every frame, showing the position is fixed, while its value reads twelve, then fifteen, then thirteen.</desc>
 
   <defs>
-    <marker id="ser-ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#334155"/></marker>
-    <marker id="ser-tie" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#f59e0b"/></marker>
+    <marker id="stt-ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-line)"/></marker>
+    <marker id="stt-tie" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-instance)"/></marker>
   </defs>
 
-  <rect x="1" y="1" width="516" height="224" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="1" y="1" width="516" height="224" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
 
   <!-- heading + encoding key (refer to elements by role, not color) -->
-  <text x="259" y="26" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0f172a">MultiPointSeries: one geometry, sampled through time</text>
-  <text x="259" y="43" text-anchor="middle" font-size="9.5" fill="#64748b">same dots = fixed positions  &#183;  only the value labels change with t</text>
+  <text x="259" y="26" text-anchor="middle" font-size="14.5" font-weight="700" style="fill:var(--dg-ink)">MultiPointSeries: one geometry, sampled through time</text>
+  <text x="259" y="43" text-anchor="middle" font-size="9.5" style="fill:var(--dg-line)">same dots = fixed positions  &#183;  only the value labels change with t</text>
 
   <!-- frame labels -->
-  <g font-size="13" font-weight="600" fill="#475569" text-anchor="middle">
+  <g font-size="13" font-weight="600" style="fill:var(--dg-line)" text-anchor="middle">
     <text x="91" y="60">t<tspan dy="2.5" font-size="9.5">0</tspan></text>
     <text x="259" y="60">t<tspan dy="2.5" font-size="9.5">1</tspan></text>
     <text x="427" y="60">t<tspan dy="2.5" font-size="9.5">2</tspan></text>
   </g>
 
   <!-- frame sub-cards -->
-  <g fill="#f8fafc" stroke="#e2e8f0" stroke-width="1">
+  <g style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1">
     <rect x="16" y="66" width="150" height="130" rx="8"/>
     <rect x="184" y="66" width="150" height="130" rx="8"/>
     <rect x="352" y="66" width="150" height="130" rx="8"/>
   </g>
 
   <!-- dashed arrows threading the worked-instance station forward through time -->
-  <g stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.7">
-    <line x1="105" y1="92" x2="245" y2="92" marker-end="url(#ser-tie)"/>
-    <line x1="273" y1="92" x2="413" y2="92" marker-end="url(#ser-tie)"/>
+  <g style="stroke:var(--dg-instance)" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.7">
+    <line x1="105" y1="92" x2="245" y2="92" marker-end="url(#stt-tie)"/>
+    <line x1="273" y1="92" x2="413" y2="92" marker-end="url(#stt-tie)"/>
   </g>
 
   <!-- ===== t0 ===== -->
   <g transform="translate(16,66)">
-    <g stroke="#4338ca" stroke-width="2">
-      <circle cx="36" cy="66" r="8" fill="#ccfbf1"/>
-      <circle cx="116" cy="62" r="8" fill="#5eead4"/>
-      <circle cx="50" cy="104" r="8" fill="#ccfbf1"/>
-      <circle cx="104" cy="106" r="8" fill="#ccfbf1"/>
-      <circle cx="75" cy="26" r="8" fill="#5eead4"/>
+    <g style="stroke:var(--dg-domain)" stroke-width="2">
+      <circle cx="36" cy="66" r="8" style="fill:var(--dg-range)" fill-opacity="0.30"/>
+      <circle cx="116" cy="62" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="50" cy="104" r="8" style="fill:var(--dg-range)" fill-opacity="0.30"/>
+      <circle cx="104" cy="106" r="8" style="fill:var(--dg-range)" fill-opacity="0.30"/>
+      <circle cx="75" cy="26" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
     </g>
-    <circle cx="75" cy="26" r="11.5" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
-    <g font-size="9" font-weight="700" text-anchor="middle" fill="#334155">
+    <circle cx="75" cy="26" r="11.5" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+    <g font-size="9" font-weight="700" text-anchor="middle" style="fill:var(--dg-line)">
       <text x="36" y="86">10&#176;</text><text x="116" y="82">11&#176;</text><text x="50" y="126">9&#176;</text><text x="104" y="128">10&#176;</text>
     </g>
-    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b45309">12&#176;</text>
-    <g font-size="7.5" text-anchor="middle" fill="#475569">
+    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--dg-instance-ink)">12&#176;</text>
+    <g font-size="7.5" text-anchor="middle" style="fill:var(--dg-line)">
       <text x="75" y="60">x=12.5</text><text x="75" y="70">y=45.3</text>
     </g>
   </g>
 
   <!-- ===== t1 ===== -->
   <g transform="translate(184,66)">
-    <g stroke="#4338ca" stroke-width="2">
-      <circle cx="36" cy="66" r="8" fill="#14b8a6"/>
-      <circle cx="116" cy="62" r="8" fill="#0f766e"/>
-      <circle cx="50" cy="104" r="8" fill="#5eead4"/>
-      <circle cx="104" cy="106" r="8" fill="#14b8a6"/>
-      <circle cx="75" cy="26" r="8" fill="#0f766e"/>
+    <g style="stroke:var(--dg-domain)" stroke-width="2">
+      <circle cx="36" cy="66" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
+      <circle cx="116" cy="62" r="8" style="fill:var(--dg-range)" fill-opacity="1"/>
+      <circle cx="50" cy="104" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="104" cy="106" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
+      <circle cx="75" cy="26" r="8" style="fill:var(--dg-range)" fill-opacity="1"/>
     </g>
-    <circle cx="75" cy="26" r="11.5" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
-    <g font-size="9" font-weight="700" text-anchor="middle" fill="#334155">
+    <circle cx="75" cy="26" r="11.5" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+    <g font-size="9" font-weight="700" text-anchor="middle" style="fill:var(--dg-line)">
       <text x="36" y="86">13&#176;</text><text x="116" y="82">14&#176;</text><text x="50" y="126">12&#176;</text><text x="104" y="128">13&#176;</text>
     </g>
-    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b45309">15&#176;</text>
-    <g font-size="7.5" text-anchor="middle" fill="#475569">
+    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--dg-instance-ink)">15&#176;</text>
+    <g font-size="7.5" text-anchor="middle" style="fill:var(--dg-line)">
       <text x="75" y="60">x=12.5</text><text x="75" y="70">y=45.3</text>
     </g>
   </g>
 
   <!-- ===== t2 ===== -->
   <g transform="translate(352,66)">
-    <g stroke="#4338ca" stroke-width="2">
-      <circle cx="36" cy="66" r="8" fill="#5eead4"/>
-      <circle cx="116" cy="62" r="8" fill="#5eead4"/>
-      <circle cx="50" cy="104" r="8" fill="#14b8a6"/>
-      <circle cx="104" cy="106" r="8" fill="#5eead4"/>
-      <circle cx="75" cy="26" r="8" fill="#14b8a6"/>
+    <g style="stroke:var(--dg-domain)" stroke-width="2">
+      <circle cx="36" cy="66" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="116" cy="62" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="50" cy="104" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
+      <circle cx="104" cy="106" r="8" style="fill:var(--dg-range)" fill-opacity="0.55"/>
+      <circle cx="75" cy="26" r="8" style="fill:var(--dg-range)" fill-opacity="0.82"/>
     </g>
-    <circle cx="75" cy="26" r="11.5" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
-    <g font-size="9" font-weight="700" text-anchor="middle" fill="#334155">
+    <circle cx="75" cy="26" r="11.5" style="fill:none;stroke:var(--dg-instance)" stroke-width="2.5"/>
+    <g font-size="9" font-weight="700" text-anchor="middle" style="fill:var(--dg-line)">
       <text x="36" y="86">12&#176;</text><text x="116" y="82">12&#176;</text><text x="50" y="126">11&#176;</text><text x="104" y="128">11&#176;</text>
     </g>
-    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b45309">13&#176;</text>
-    <g font-size="7.5" text-anchor="middle" fill="#475569">
+    <text x="75" y="50" text-anchor="middle" font-size="9.5" font-weight="700" style="fill:var(--dg-instance-ink)">13&#176;</text>
+    <g font-size="7.5" text-anchor="middle" style="fill:var(--dg-line)">
       <text x="75" y="60">x=12.5</text><text x="75" y="70">y=45.3</text>
     </g>
   </g>
 
   <!-- shared time axis -->
-  <line x1="40" y1="206" x2="486" y2="206" stroke="#334155" stroke-width="1.5" marker-end="url(#ser-ax)"/>
-  <text x="495" y="210" font-size="13" font-style="italic" fill="#334155">t</text>
+  <line x1="40" y1="206" x2="486" y2="206" style="stroke:var(--dg-line)" stroke-width="1.5" marker-end="url(#stt-ax)"/>
+  <text x="495" y="210" font-size="13" font-style="italic" style="fill:var(--dg-line)">t</text>
 </svg>

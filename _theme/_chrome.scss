@@ -1,0 +1,348 @@
+/*-- scss:rules --*/
+
+/* ==========================================================================
+   Survey Console chrome: base paper/grid, the ambient satellite field, and the
+   readability scrims. Ported from the accepted mockup with the spike's selector
+   remaps: mockup .survey-root -> body, mockup .content -> #quarto-document-content
+   (Quarto's <main class="content" id="quarto-document-content">). The field div
+   is injected via _includes/satfield.html into #quarto-html-before-body.
+   ========================================================================== */
+
+/* ---- base paper + faint cartographic graticule wash (mockup .survey-root) ---- */
+body {
+  background:
+    linear-gradient(var(--grid-cell) 1px, transparent 1px) 0 0 / 100% 34px,
+    linear-gradient(90deg, var(--grid-cell) 1px, transparent 1px) 0 0 / 34px 100%,
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--t-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  /* own stacking context so the ambient field (a z-index:-1 fixed layer) paints
+     ABOVE this paper/grid background but BELOW all content and chrome. */
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+body ::selection { background: var(--accent-soft); }
+.mono { font-family: var(--mono); }
+
+/* ==========================================================================
+   AMBIENT SATELLITE FIELD — whole-page abstracted land-cover scene behind the
+   entire page. Fixed to the viewport at z-index:-1 (above the paper, below every
+   content surface), pointer-events:none. Palette-driven, so it repaints per
+   theme; organic biome fills (fill-opacity ~0.19-0.24) carry the perceptibility,
+   and SCRIMS (washes in --bg) buy readability back. Static by request; no motion.
+   ========================================================================== */
+.satfield {
+  position: fixed; inset: 0; z-index: -1;
+  pointer-events: none; overflow: hidden;
+  contain: layout paint style;
+}
+.satfield svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; display: block;
+}
+/* (a) land-cover / terrain patches — soft, blurred biome blobs (palette tokens) */
+.sf-land   { fill: var(--olive-ui); }   /* lowland — mid forest green */
+.sf-land-b { fill: var(--olive); }      /* upland  — deep forest green */
+.sf-water  { fill: var(--teal-ui); }    /* water   — sky/teal token   */
+.sf-arid   { fill: var(--accent-ui); }  /* arid    — warm terracotta  */
+/* (b) graticule overlay — the GIS lat/lon grid */
+.sf-grat   { fill: none; stroke: var(--border-strong); stroke-width: 1.2; stroke-opacity: 0.62; }
+.sf-grat-2 { fill: none; stroke: var(--border-strong); stroke-width: 1.8; stroke-opacity: 0.6; }
+/* (c) contour / elevation rings */
+.sf-cont-a { fill: none; stroke: var(--accent-line); stroke-width: 1.6; }
+.sf-cont-t { fill: none; stroke: var(--teal-ui);     stroke-width: 1.5; }
+.sf-cont-o { fill: none; stroke: var(--olive-ui);    stroke-width: 1.5; }
+
+/* ---- let the field show through Quarto's content wrappers (Cosmo/Darkly paint
+   an opaque --bs-body-bg on these; clear it so the back layer reads). Chrome
+   regions (navbar, sidebar, TOC) keep their own scrimmed surfaces in Tasks 5-7. */
+#quarto-content,
+#quarto-content > *,
+main.content { background: transparent; }
+
+/* ---- CENTER CONTENT reading-lane scrim (mockup .content -> #quarto-document-content).
+   A soft, blurred wash of --bg the width of the text measure, under the running
+   prose: softens the bold field beneath body copy while the gutters keep the
+   field at full strength. Opaque panels (cards, code, diagrams) sit above it. */
+#quarto-document-content {
+  position: relative; z-index: 0;
+}
+#quarto-document-content::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  top: -2rem; bottom: -2rem;
+  left: clamp(1rem, 2.4vw, 2.25rem);
+  width: min(120ch, calc(100% - 2 * clamp(1rem, 2.4vw, 2.25rem)));
+  background: var(--scrim-lane);
+  border-radius: 64px;
+  filter: blur(32px);
+}
+
+/* ==========================================================================
+   MASTHEAD — restyle Quarto's navbar (#quarto-header .navbar) into the terminal
+   bar. Mockup .masthead -> #quarto-header .navbar; .brand -> .navbar-brand;
+   .brand-title -> .navbar-title. The "~/geo $" prompt is composed with two
+   pseudo-elements (no nav item needed): brand::before = "~/geo " (muted path),
+   title::before = "$ " (accent dollar), then the site title.
+   ========================================================================== */
+#quarto-header .navbar {
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.55rem 1.25rem;
+}
+#quarto-header .navbar .navbar-brand {
+  display: inline-flex; align-items: baseline; gap: 0.15rem;
+  text-decoration: none; min-width: 0;
+}
+#quarto-header .navbar .navbar-brand::before {
+  content: "~/geo\00a0"; color: var(--ink-muted);
+  font-family: var(--mono); font-weight: 600; font-size: var(--t-sm);
+}
+#quarto-header .navbar .navbar-title {
+  font-family: var(--mono); font-weight: 600; font-size: 0.95rem;
+  letter-spacing: -0.01em; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#quarto-header .navbar .navbar-title::before {
+  content: "$\00a0"; color: var(--accent);
+  font-family: var(--mono); font-weight: 600; font-size: var(--t-sm);
+}
+/* native theme toggle -> .icon-btn */
+#quarto-header .navbar .quarto-color-scheme-toggle {
+  font-family: var(--mono); font-size: var(--t-xs);
+  color: var(--ink-2); background: var(--panel-2);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 0.36rem 0.55rem; line-height: 1;
+}
+#quarto-header .navbar .quarto-color-scheme-toggle:hover {
+  border-color: var(--border-strong); color: var(--ink);
+}
+
+/* ==========================================================================
+   LEFT SIDEBAR — restyle Quarto's docked sidebar (#quarto-sidebar) into the
+   lined survey ledger. Mockup .sidebar -> #quarto-sidebar.sidebar-navigation.
+   ========================================================================== */
+#quarto-sidebar.sidebar-navigation {
+  border-right: 1px solid var(--border);
+  /* ruled field-book lines over a light chrome scrim: the field still reads
+     boldly through the sidebar (~55%) while the wash keeps nav text past AA. */
+  background:
+    linear-gradient(var(--grid-fine) 1px, transparent 1px) 0 0 / 100% 30px,
+    var(--scrim-chrome);
+}
+/* Below Quarto's 992px breakpoint the docked rail becomes a fixed POPOUT overlay
+   (`.show`/`.collapsing` -> position:fixed; z-index:1000) over the content. The
+   translucent --scrim-chrome that lets the satfield read through the desktop rail
+   lets the PAGE bleed through the overlay, so nav items are hard to read. As an
+   overlay it should be a solid sheet: swap the scrim for opaque --bg (keep the
+   ruled lines) and lift it with a shadow so it detaches from the content it covers. */
+@media (max-width: 991.98px) {
+  #quarto-sidebar.sidebar-navigation {
+    background:
+      linear-gradient(var(--grid-fine) 1px, transparent 1px) 0 0 / 100% 30px,
+      var(--bg);
+  }
+  #quarto-sidebar.sidebar-navigation.show,
+  #quarto-sidebar.sidebar-navigation.collapsing {
+    box-shadow: 10px 0 30px -14px rgba(0, 0, 0, 0.55);
+  }
+}
+/* shared top baseline with the hero + TOC: land the ledger head at ~75px
+   (measured 81 at 0.6rem, so -6px). */
+#quarto-sidebar .quarto-sidebar-header { padding-top: calc(0.6rem - 6px); }
+/* ledger head (injected .ledger-head fenced div in .quarto-sidebar-header) */
+.quarto-sidebar-header .ledger-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--mono); font-size: var(--t-xs);
+  color: var(--ink-muted); letter-spacing: 0.14em; text-transform: uppercase;
+  padding-bottom: 0.5rem; margin-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+.quarto-sidebar-header .ledger-head p { margin: 0; }
+.quarto-sidebar-header .ledger-head .sheet { color: var(--olive); }
+
+/* ledger search box (search.location: sidebar) -> mockup .search panel. Quarto
+   hydrates #quarto-search into an autocomplete form at runtime and zeroes the
+   input padding, so put the border + padding on the FORM (the padding gives the
+   cursor its left inset) and keep the input transparent/borderless. Tighten the
+   margins: Quarto wraps the search in a .mt-2 div that stacks with our margin. */
+/* Quarto wraps the search in a Bootstrap .mt-2 utility (margin-top:.5rem
+   !important), so !important is REQUIRED to tighten the space above the box. */
+#quarto-sidebar .quarto-sidebar-header + div { margin: 0 !important; }
+#quarto-sidebar .sidebar-search { margin: 0 0 0.5rem; }
+#quarto-sidebar .sidebar-menu-container { margin-top: 0; padding-top: 0; }
+#quarto-sidebar .sidebar-menu-container > ul { margin-top: 0 !important; }
+/* Box on .aa-Form; cursor inset by padding the INPUT itself (Quarto forces
+   .aa-Input{padding:0}). Two ids (#quarto-sidebar #quarto-search) outrank
+   Quarto's own single-id search rules. */
+#quarto-sidebar #quarto-search .aa-Form {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); width: 100%;
+}
+#quarto-sidebar #quarto-search .aa-Input {
+  font-family: var(--mono); font-size: var(--t-sm);
+  color: var(--ink); background: transparent; border: 0; outline: none;
+  padding: 0.3rem 0.55rem; height: auto;
+}
+#quarto-sidebar #quarto-search .aa-Input::placeholder { color: var(--ink-muted); }
+/* search magnifier icon: Quarto hardcodes #343a40 at .5 opacity, near-invisible
+   on the dark ground; repaint it with a token so it reads in both themes. */
+#quarto-sidebar #quarto-search .aa-Label svg,
+#quarto-sidebar #quarto-search .aa-SubmitButton svg,
+#quarto-sidebar #quarto-search .aa-LoadingIndicator svg {
+  color: var(--ink-muted); opacity: 1;
+}
+#quarto-sidebar .sidebar-search .aa-Form,
+#quarto-sidebar .sidebar-search .aa-InputWrapper,
+#quarto-sidebar #quarto-search .aa-Autocomplete {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+#quarto-sidebar .sidebar-search input,
+#quarto-sidebar .sidebar-search .aa-Input {
+  font-family: var(--mono); font-size: var(--t-sm);
+  color: var(--ink); background: transparent; border: 0;
+}
+#quarto-sidebar .sidebar-search input::placeholder { color: var(--ink-muted); }
+
+/* nav links -> mockup .navlink; active -> .navlink.active. Decorative 00/01
+   indices via a CSS counter (Quarto emits none): reset to -1 so the first item
+   renders "00" through decimal-leading-zero. */
+#quarto-sidebar .sidebar-menu-container { counter-reset: navidx -1; }
+#quarto-sidebar .sidebar-item { counter-increment: navidx; }
+/* Quarto gives every .sidebar-item margin-top:.4rem; drop it on the first item so
+   "00 Home" sits tight under the search instead of double-spaced. */
+#quarto-sidebar .sidebar-menu-container .sidebar-item:first-child { margin-top: 0; }
+#quarto-sidebar .sidebar-item .sidebar-link {
+  display: flex; align-items: baseline; gap: 0.55rem;
+  font-family: var(--mono); font-size: var(--t-sm);
+  color: var(--ink-2); text-decoration: none;
+  padding: 0.5rem 0.6rem; border-radius: var(--radius-sm);
+  border-left: 2px solid transparent;
+}
+#quarto-sidebar .sidebar-item .sidebar-link::before {
+  content: counter(navidx, decimal-leading-zero);
+  color: var(--ink-muted); font-size: var(--t-xs); flex: none;
+}
+#quarto-sidebar .sidebar-item .sidebar-link:hover {
+  background: var(--panel-2); color: var(--ink);
+}
+#quarto-sidebar .sidebar-item .sidebar-link.active {
+  background: var(--accent-soft); color: var(--ink);
+  border-left-color: var(--accent-ui); font-weight: 600;
+}
+#quarto-sidebar .sidebar-item .sidebar-link.active::before { color: var(--accent); }
+
+/* survey coordinate readout pinned in the ledger footer (injected raw HTML) */
+.quarto-sidebar-footer .coord-block {
+  margin-top: 0.5rem;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--panel); overflow: hidden;
+}
+.quarto-sidebar-footer .coord-block .cb-head {
+  font-family: var(--mono); font-size: var(--t-xs);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted);
+  padding: 0.45rem 0.7rem; background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.quarto-sidebar-footer .coord-block .cb-head .dot { color: var(--teal-ui); }
+.quarto-sidebar-footer .coord-rows {
+  font-family: var(--mono); font-size: var(--t-xs); line-height: 1.9;
+  padding: 0.6rem 0.7rem; color: var(--ink-muted);
+}
+.quarto-sidebar-footer .coord-rows > div {
+  display: flex; justify-content: space-between; gap: 0.5rem;
+}
+.quarto-sidebar-footer .coord-rows .k { color: var(--olive); }
+.quarto-sidebar-footer .coord-rows .v { color: var(--ink-2); }
+
+/* ==========================================================================
+   RIGHT TOC — restyle #quarto-margin-sidebar / #TOC into the survey TOC.
+   Mockup .toc -> #quarto-margin-sidebar; .toc a -> #TOC a; active gets the "›".
+   ========================================================================== */
+#quarto-margin-sidebar {
+  background: var(--scrim-chrome);
+  border-left: 1px solid var(--border);
+  /* breathing room so the TOC links sit off the strip's left edge (mockup
+     .toc padding), and a little right room so text is not flush to the viewport. */
+  padding-left: 1.15rem;
+  padding-right: 0.75rem;
+  /* shared top baseline with the hero + ledger head: land the TOC title at ~75px
+     (measured 67 at 0.6rem, so +8px). */
+  padding-top: calc(0.6rem + 8px);
+}
+#quarto-margin-sidebar #TOC #toc-title,
+#quarto-margin-sidebar .toc-title {
+  font-family: var(--mono); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--ink-muted); margin: 0 0 0.9rem;
+}
+#quarto-margin-sidebar #TOC a,
+#quarto-margin-sidebar nav[role="doc-toc"] a {
+  display: block; font-family: var(--mono); font-size: var(--t-xs);
+  color: var(--ink-muted); text-decoration: none; line-height: 1.4;
+  padding: 0.34rem 0.55rem; border-left: 2px solid var(--border);
+}
+#quarto-margin-sidebar #TOC a:hover {
+  color: var(--ink); border-left-color: var(--border-strong);
+}
+#quarto-margin-sidebar #TOC a.active {
+  color: var(--accent); border-left-color: var(--accent);
+  border-left-width: 3px; font-weight: 600;
+  padding-left: calc(0.55rem - 1px); position: relative;
+}
+#quarto-margin-sidebar #TOC a.active::before {
+  content: "\203a"; position: absolute; left: -0.9rem;
+  color: var(--accent); font-weight: 700;
+}
+
+/* ==========================================================================
+   PAGE GRID — fill content + TOC to the RIGHT SCREEN EDGE (#3).
+
+   Quarto's docked page grid (body.docked .page-columns, >=992px) ends with
+   `[page-end] 5fr [screen-end-inset] 1.5rem` — the ONLY fluid track — while the
+   body track caps at `minmax(500px, calc(1380px - 3rem))`. So on any viewport
+   wide enough to exceed that cap, all slack pools into an empty right margin and
+   the content + TOC never reach the edge. It reads ASYMMETRIC because the docked
+   sidebar is pinned flush-left (spans screen-start/body-start) with no matching
+   left gutter. `page-layout: full` cannot fix this — an explicit grid template
+   ignores it — so this is the "grid-fill" override the design needs.
+
+   We restate the SAME template with every named line preserved (full-bleed
+   `.column-screen`/`.column-page` and the right-margin columns are placed by
+   these names, so dropping any would misplace them), changing only track SIZES:
+     - body track -> `minmax(500px, 1fr)` so it absorbs the slack and grows;
+     - trailing `5fr` + `1.5rem` -> 0 so the TOC lands flush against the right
+       edge, mirroring the flush-left sidebar (symmetric survey rails).
+   Prose still self-caps at --measure; the widened track is filled by full-bleed
+   figures/code/cards and by the reading-lane scrim over the satfield. On an
+   ultrawide monitor the body track can grow large — if that ever needs a ceiling
+   it is one knob (cap #quarto-content at var(--shell) + margin-inline:auto), left
+   out for now so the fill is true edge-to-edge. Only the >=992px variant is
+   overridden; <992px collapses the sidebar and already fills.
+   ========================================================================== */
+@media (min-width: 992px) {
+  body.docked .page-columns {
+    grid-template-columns:
+      [screen-start] 1.5rem
+      [screen-start-inset page-start] minmax(57.6px, 115.2px)
+      [page-start-inset] 57.6px
+      [body-start-outset] 57.6px
+      [body-start] 1.5rem
+      [body-content-start] minmax(500px, 1fr)
+      [body-content-end] 1.5rem
+      [body-end] 48px
+      [body-end-outset] minmax(48px, 96px)
+      [page-end-inset] 48px
+      [page-end] 0
+      [screen-end-inset] 0
+      [screen-end];
+  }
+}

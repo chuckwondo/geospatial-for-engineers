@@ -1,28 +1,82 @@
 ---
-title: "Geospatial for Engineers"
-subtitle: >-
+pagetitle: "Geospatial for Engineers"
+description: >-
   Earth observation and geospatial data, explained for experienced software
   engineers with zero domain background.
 ---
+
+```{=html}
+<section class="hero" aria-labelledby="hero-thesis">
+  <p class="eyebrow"><span class="comment">// </span>geospatial-for-engineers &middot; earth observation, without the domain gatekeeping</p>
+
+  <div class="terminal">
+    <div class="term-bar">
+      <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="term-name">manifesto.txt &mdash; ~/geo &middot; <span class="coord">45.3&deg;N 12.5&deg;E</span></span>
+      <span class="term-spacer"></span>
+      <span class="term-crs" aria-hidden="true">WGS&nbsp;84</span>
+    </div>
+    <div class="term-body">
+      <div class="hero-backdrop" aria-hidden="true">
+        <svg class="hero-contours" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <path class="sweep" d="M-20 120 C220 60 480 180 900 96"/>
+          <path class="sweep" d="M-20 220 C240 168 520 288 900 214"/>
+          <path class="sweep" d="M-20 330 C220 288 500 392 900 330"/>
+          <path class="ring" d="M690 40 C810 78 856 190 792 288 C724 392 556 402 500 316 C452 244 500 128 610 88 C646 74 664 52 690 40Z"/>
+          <path class="ring" d="M700 78 C796 110 832 200 780 280 C726 356 592 366 546 300 C508 246 546 150 634 118 C662 108 682 88 700 78Z"/>
+          <path class="ring" d="M708 118 C782 144 810 204 770 268 C732 328 632 336 596 288 C568 250 596 182 662 156 C684 148 696 128 708 118Z"/>
+          <path class="ring" d="M716 158 C770 180 790 220 762 262 C734 306 664 310 636 274 C616 246 636 200 682 180Z"/>
+          <path class="ring" d="M722 198 C756 214 768 238 750 264 C732 292 692 292 674 268 C660 248 680 218 706 206Z"/>
+        </svg>
+      </div>
+      <div class="hero-fore">
+        <div class="hero-ticks" aria-hidden="true">GRID&nbsp;WGS&nbsp;84<br/><span class="val">EPSG:4326</span></div>
+        <p class="cmd-line"><span class="prompt">~/geo $</span> <span class="cmd">cat manifesto.txt</span></p>
+        <h1 class="hero-thesis" id="hero-thesis">Most geospatial tutorials explain the code and assume the domain. <span class="flip">This series does the opposite.</span><span class="cursor" aria-hidden="true"></span></h1>
+        <p class="hero-tagline">
+          Earth observation and geospatial data, explained for experienced
+          software engineers with zero domain background.
+        </p>
+        <div class="hero-meta">
+          <span class="tag"><span class="k">assumes:</span> JSON, CLI, data structures</span>
+          <span class="tag teal"><span class="k">teaches:</span> CRS, coverage, raster, COG</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
 
 ## Who this is for
 
 You already write software. You are comfortable with JSON, the command line,
 data structures, and reading an unfamiliar API. What you *don't* have is a
-geospatial or earth-observation (EO) background: terms like CRS, projection,
-raster, coverage, footprint, COG, and Zarr go by without quite landing, and most
-tutorials assume the domain knowledge you're missing while carefully explaining
-the code you already understand.
+geospatial or earth-observation (EO) background: terms like `CRS`, `projection`,
+`raster`, `coverage`, `footprint`, `COG`, and `Zarr` go by without quite landing,
+and most tutorials assume the domain knowledge you're missing while carefully
+explaining the code you already understand.
 
-This series inverts that assumption. It spends its words on the **domain** (what these concepts *mean* and
-*why they exist*) and trusts you with the code.
-It is the on-ramp I wanted when I started doing EO work without the background.
+This series inverts that assumption. It spends its words on the **domain** (what
+these concepts *mean* and *why they exist*) and trusts you with the code. It is
+the on-ramp I wanted when I started doing EO work without the background.
 
-## The guides
-
-Each one is self-contained: it teaches the geospatial ideas it needs, so you can
-start with whichever one matches the problem in front of you.
-
-[**CoverageJSON Uncovered**](guides/coveragejson.qmd) is a complete, ground-up
-guide to reading coverage data on the web, from your first document through the
-edge cases.
+```{=html}
+<p class="gcards-label">The guides <span class="sub">&mdash; each self-contained; start wherever your problem is</span></p>
+<a class="gcard" href="guides/coveragejson.html">
+  <div class="gcard-head">
+    <span class="dollar">$</span> open guides/coveragejson.qmd
+    <span class="spacer"></span>
+    <span class="coord">01 / 01</span>
+  </div>
+  <div class="gcard-body">
+    <div>
+      <h3 class="gcard-title">CoverageJSON Uncovered</h3>
+      <p class="gcard-desc">
+        A complete, ground-up guide to reading coverage data on the web, from
+        your first document through the edge cases.
+      </p>
+    </div>
+    <span class="gcard-cta">read the guide <span class="arrow">&rarr;</span></span>
+  </div>
+</a>
+```

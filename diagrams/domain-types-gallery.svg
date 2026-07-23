@@ -1,96 +1,96 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 402" role="img" aria-labelledby="dt-title dt-desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 402" role="img" aria-labelledby="dt-title dt-desc" class="dg">
   <title id="dt-title">CoverageJSON domain types, grouped by axis structure</title>
   <desc id="dt-desc">A gallery of common CoverageJSON domain types in two groups. Top group, individual axes where each dimension is its own axis: Point is a single position; PointSeries samples one fixed location along a time axis t; VerticalProfile samples one fixed location along a vertical axis z; Grid is a regular lattice of positions. Bottom group, a composite axis whose entries are coordinate tuples: MultiPoint is a scatter of unconnected positions; Trajectory is a path of positions joined in order through space and time; Polygon is a closed ring of vertices; MultiPolygon is several separate rings.</desc>
 
   <defs>
-    <marker id="dt-ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#334155"/></marker>
-    <marker id="dt-traj" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4338ca"/></marker>
+    <marker id="dt-ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-line)"/></marker>
+    <marker id="dt-traj" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" style="fill:var(--dg-domain)"/></marker>
   </defs>
 
-  <rect x="1" y="1" width="678" height="400" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="1" y="1" width="678" height="400" rx="16" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="2"/>
 
   <!-- ===== GROUP 1: individual axes ===== -->
-  <text x="16" y="38"><tspan font-size="15" font-weight="700" fill="#4338ca">Individual axes</tspan><tspan font-size="13" fill="#475569"> &#8212; each dimension is its own axis</tspan></text>
-  <rect x="12" y="46" width="656" height="150" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="16" y="38"><tspan font-size="15" font-weight="700" style="fill:var(--dg-domain-ink)">Individual axes</tspan><tspan font-size="13" style="fill:var(--dg-line)"> &#8212; each dimension is its own axis</tspan></text>
+  <rect x="12" y="46" width="656" height="150" rx="8" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
 
   <!-- Point -->
   <g transform="translate(16,50)">
-    <circle cx="75" cy="56" r="6.5" fill="#4338ca"/>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Point</text>
+    <circle cx="75" cy="56" r="6.5" style="fill:var(--dg-domain)"/>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Point</text>
   </g>
 
   <!-- PointSeries -->
   <g transform="translate(182,50)">
-    <line x1="30" y1="74" x2="112" y2="74" stroke="#334155" stroke-width="1.5" marker-end="url(#dt-ax)"/>
-    <text x="122" y="78" font-size="13" font-style="italic" fill="#334155">t</text>
-    <g fill="#4338ca"><circle cx="40" cy="74" r="5"/><circle cx="62" cy="74" r="5"/><circle cx="84" cy="74" r="5"/><circle cx="106" cy="74" r="5"/></g>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">PointSeries</text>
+    <line x1="30" y1="74" x2="112" y2="74" style="stroke:var(--dg-line)" stroke-width="1.5" marker-end="url(#dt-ax)"/>
+    <text x="122" y="78" font-size="13" font-style="italic" style="fill:var(--dg-line)">t</text>
+    <g style="fill:var(--dg-domain)"><circle cx="40" cy="74" r="5"/><circle cx="62" cy="74" r="5"/><circle cx="84" cy="74" r="5"/><circle cx="106" cy="74" r="5"/></g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">PointSeries</text>
   </g>
 
   <!-- VerticalProfile -->
   <g transform="translate(348,50)">
-    <line x1="75" y1="102" x2="75" y2="30" stroke="#334155" stroke-width="1.5" marker-end="url(#dt-ax)"/>
-    <text x="86" y="40" font-size="13" font-style="italic" fill="#334155">z</text>
-    <g fill="#4338ca"><circle cx="75" cy="94" r="5"/><circle cx="75" cy="76" r="5"/><circle cx="75" cy="58" r="5"/><circle cx="75" cy="40" r="5"/></g>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">VerticalProfile</text>
+    <line x1="75" y1="102" x2="75" y2="30" style="stroke:var(--dg-line)" stroke-width="1.5" marker-end="url(#dt-ax)"/>
+    <text x="86" y="40" font-size="13" font-style="italic" style="fill:var(--dg-line)">z</text>
+    <g style="fill:var(--dg-domain)"><circle cx="75" cy="94" r="5"/><circle cx="75" cy="76" r="5"/><circle cx="75" cy="58" r="5"/><circle cx="75" cy="40" r="5"/></g>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">VerticalProfile</text>
   </g>
 
   <!-- Grid -->
   <g transform="translate(514,50)">
-    <g stroke="#e8edf3" stroke-width="1" stroke-dasharray="3 3">
+    <g style="stroke:var(--dg-graticule)" stroke-width="1" stroke-dasharray="3 3">
       <line x1="40" y1="28" x2="40" y2="94"/><line x1="62" y1="28" x2="62" y2="94"/><line x1="84" y1="28" x2="84" y2="94"/><line x1="106" y1="28" x2="106" y2="94"/>
       <line x1="40" y1="28" x2="106" y2="28"/><line x1="40" y1="50" x2="106" y2="50"/><line x1="40" y1="72" x2="106" y2="72"/><line x1="40" y1="94" x2="106" y2="94"/>
     </g>
-    <g fill="#4338ca">
+    <g style="fill:var(--dg-domain)">
       <circle cx="40" cy="28" r="4.5"/><circle cx="62" cy="28" r="4.5"/><circle cx="84" cy="28" r="4.5"/><circle cx="106" cy="28" r="4.5"/>
       <circle cx="40" cy="50" r="4.5"/><circle cx="62" cy="50" r="4.5"/><circle cx="84" cy="50" r="4.5"/><circle cx="106" cy="50" r="4.5"/>
       <circle cx="40" cy="72" r="4.5"/><circle cx="62" cy="72" r="4.5"/><circle cx="84" cy="72" r="4.5"/><circle cx="106" cy="72" r="4.5"/>
       <circle cx="40" cy="94" r="4.5"/><circle cx="62" cy="94" r="4.5"/><circle cx="84" cy="94" r="4.5"/><circle cx="106" cy="94" r="4.5"/>
     </g>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Grid</text>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Grid</text>
   </g>
 
   <!-- ===== GROUP 2: composite axis ===== -->
-  <text x="16" y="224"><tspan font-size="15" font-weight="700" fill="#4338ca">Composite axis</tspan><tspan font-size="13" fill="#475569"> &#8212; positions are tuples, no row-and-column grid</tspan></text>
-  <rect x="12" y="236" width="656" height="150" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="16" y="224"><tspan font-size="15" font-weight="700" style="fill:var(--dg-domain-ink)">Composite axis</tspan><tspan font-size="13" style="fill:var(--dg-line)"> &#8212; positions are tuples, no row-and-column grid</tspan></text>
+  <rect x="12" y="236" width="656" height="150" rx="8" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
 
   <!-- MultiPoint -->
   <g transform="translate(16,240)">
-    <g fill="#4338ca">
+    <g style="fill:var(--dg-domain)">
       <circle cx="32" cy="40" r="5"/><circle cx="60" cy="75" r="5"/><circle cx="95" cy="30" r="5"/>
       <circle cx="120" cy="58" r="5"/><circle cx="46" cy="100" r="5"/><circle cx="106" cy="96" r="5"/>
     </g>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">MultiPoint</text>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">MultiPoint</text>
   </g>
 
   <!-- Trajectory -->
   <g transform="translate(182,240)">
-    <polyline points="24,90 46,56 70,80 96,42 118,62" fill="none" stroke="#4338ca" stroke-width="2" marker-end="url(#dt-traj)"/>
-    <g fill="#4338ca">
+    <polyline points="24,90 46,56 70,80 96,42 118,62" style="fill:none;stroke:var(--dg-domain)" stroke-width="2" marker-end="url(#dt-traj)"/>
+    <g style="fill:var(--dg-domain)">
       <circle cx="24" cy="90" r="5"/><circle cx="46" cy="56" r="5"/><circle cx="70" cy="80" r="5"/><circle cx="96" cy="42" r="5"/>
     </g>
-    <text x="128" y="58" font-size="13" font-style="italic" fill="#334155">t</text>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Trajectory</text>
+    <text x="128" y="58" font-size="13" font-style="italic" style="fill:var(--dg-line)">t</text>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Trajectory</text>
   </g>
 
   <!-- Polygon -->
   <g transform="translate(348,240)">
-    <path d="M40,38 L96,30 L120,68 L92,100 L46,92 L26,64 Z" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
-    <g fill="#4338ca">
+    <path d="M40,38 L96,30 L120,68 L92,100 L46,92 L26,64 Z" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2"/>
+    <g style="fill:var(--dg-domain)">
       <circle cx="40" cy="38" r="4.5"/><circle cx="96" cy="30" r="4.5"/><circle cx="120" cy="68" r="4.5"/>
       <circle cx="92" cy="100" r="4.5"/><circle cx="46" cy="92" r="4.5"/><circle cx="26" cy="64" r="4.5"/>
     </g>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Polygon</text>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">Polygon</text>
   </g>
 
   <!-- MultiPolygon -->
   <g transform="translate(514,240)">
-    <path d="M28,44 L66,34 L76,64 L50,88 L24,68 Z" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
-    <path d="M96,52 L122,48 L126,74 L104,88 L90,70 Z" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
-    <g fill="#4338ca">
+    <path d="M28,44 L66,34 L76,64 L50,88 L24,68 Z" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2"/>
+    <path d="M96,52 L122,48 L126,74 L104,88 L90,70 Z" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="2"/>
+    <g style="fill:var(--dg-domain)">
       <circle cx="28" cy="44" r="4"/><circle cx="66" cy="34" r="4"/><circle cx="76" cy="64" r="4"/><circle cx="50" cy="88" r="4"/><circle cx="24" cy="68" r="4"/>
       <circle cx="96" cy="52" r="4"/><circle cx="122" cy="48" r="4"/><circle cx="126" cy="74" r="4"/><circle cx="104" cy="88" r="4"/><circle cx="90" cy="70" r="4"/>
     </g>
-    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">MultiPolygon</text>
+    <text x="75" y="136" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--dg-ink)">MultiPolygon</text>
   </g>
 </svg>

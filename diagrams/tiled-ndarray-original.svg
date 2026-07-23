@@ -1,29 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 15 421 289" role="img" aria-labelledby="tno-title tno-desc" font-family="sans-serif">
-  <title id="tno-title">The original array</title>
-  <desc id="tno-desc">One logical array of shape [4, 600, 800] over axes t, y, x, drawn as a deck of four stacked sheets, with the t axis shown as depth and x and y axes along the bottom and left.</desc>
-  <style>
-    .axis{stroke:#64748b;stroke-width:1.2}.tk{stroke:#64748b;stroke-width:1.2}
-    .tick{font-size:9px;fill:#475569}.axl{font-size:11px;font-style:italic;fill:#334155}
-    .shape{font-size:11px;font-family:monospace;fill:#334155}
-  </style>
-  <rect x="-10" y="18" width="415" height="283" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
-  <rect x="71" y="34" width="256" height="192" rx="2" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.5"/>
-  <rect x="64" y="41" width="256" height="192" rx="2" fill="#e8ecff" stroke="#4338ca" stroke-width="1.5"/>
-  <rect x="57" y="48" width="256" height="192" rx="2" fill="#eef2ff" stroke="#4338ca" stroke-width="1.5"/>
-  <rect x="50" y="55" width="256" height="192" rx="2" fill="#ffffff" stroke="#4338ca" stroke-width="1.5"/>
-  <text class="shape" x="178" y="154" text-anchor="middle">[4, 600, 800]</text>
-  <line class="axis" x1="42" y1="255" x2="314" y2="255" marker-end="url(#a)"/>
-  <line class="tk" x1="50" y1="255" x2="50" y2="259"/><text class="tick" x="50" y="268" text-anchor="middle">0</text>
-  <line class="tk" x1="178" y1="255" x2="178" y2="259"/><text class="tick" x="178" y="268" text-anchor="middle">400</text>
-  <line class="tk" x1="306" y1="255" x2="306" y2="259"/><text class="tick" x="306" y="268" text-anchor="middle">800</text>
-  <text class="axl" x="178" y="283" text-anchor="middle">x</text>
-  <line class="axis" x1="42" y1="255" x2="42" y2="49" marker-end="url(#a)"/>
-  <line class="tk" x1="38" y1="247" x2="42" y2="247"/><text class="tick" x="34" y="250" text-anchor="end">0</text>
-  <line class="tk" x1="38" y1="151" x2="42" y2="151"/><text class="tick" x="34" y="154" text-anchor="end">300</text>
-  <line class="tk" x1="38" y1="55" x2="42" y2="55"/><text class="tick" x="34" y="58" text-anchor="end">600</text>
-  <text class="axl" x="8" y="154" text-anchor="middle">y</text>
-  <line class="axis" x1="319" y1="246" x2="340" y2="225" marker-end="url(#a)"/>
-  <text class="axl" x="344" y="238">t (0&#8594;3)</text>
-  <defs><marker id="a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#64748b"/></marker></defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 15 421 289" role="img" aria-labelledby="tio-title tio-desc" class="dg">
+  <title id="tio-title">The original array</title>
+  <desc id="tio-desc">One logical array of shape [4, 600, 800] over axes t, y, x, drawn as a deck of four stacked sheets, with the t axis shown as depth and x and y axes along the bottom and left.</desc>
+  <rect x="-10" y="18" width="415" height="283" rx="12" style="fill:var(--dg-panel);stroke:var(--dg-graticule)" stroke-width="1"/>
+  <rect x="71" y="34" width="256" height="192" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 30%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <rect x="64" y="41" width="256" height="192" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 20%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <rect x="57" y="48" width="256" height="192" rx="2" style="fill:color-mix(in srgb, var(--dg-domain) 10%, var(--dg-panel));stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <rect x="50" y="55" width="256" height="192" rx="2" style="fill:var(--dg-panel);stroke:var(--dg-domain)" stroke-width="1.5"/>
+  <text x="178" y="154" text-anchor="middle" font-size="11" style="fill:var(--dg-line)">[4, 600, 800]</text>
+  <line x1="42" y1="255" x2="314" y2="255" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tio-a)"/>
+  <line x1="50" y1="255" x2="50" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="50" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">0</text>
+  <line x1="178" y1="255" x2="178" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="178" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">400</text>
+  <line x1="306" y1="255" x2="306" y2="259" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="306" y="268" text-anchor="middle" font-size="9" style="fill:var(--dg-line)">800</text>
+  <text x="178" y="283" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">x</text>
+  <line x1="42" y1="255" x2="42" y2="49" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tio-a)"/>
+  <line x1="38" y1="247" x2="42" y2="247" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="250" text-anchor="end" font-size="9" style="fill:var(--dg-line)">0</text>
+  <line x1="38" y1="151" x2="42" y2="151" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="154" text-anchor="end" font-size="9" style="fill:var(--dg-line)">300</text>
+  <line x1="38" y1="55" x2="42" y2="55" style="stroke:var(--dg-line)" stroke-width="1.2"/><text x="34" y="58" text-anchor="end" font-size="9" style="fill:var(--dg-line)">600</text>
+  <text x="8" y="154" text-anchor="middle" font-size="11" font-style="italic" style="fill:var(--dg-line)">y</text>
+  <line x1="319" y1="246" x2="340" y2="225" style="stroke:var(--dg-line)" stroke-width="1.2" marker-end="url(#tio-a)"/>
+  <text x="344" y="238" font-size="11" font-style="italic" style="fill:var(--dg-line)">t (0&#8594;3)</text>
+  <defs><marker id="tio-a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" style="fill:var(--dg-line)"/></marker></defs>
 </svg>
