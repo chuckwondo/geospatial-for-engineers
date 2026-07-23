@@ -136,6 +136,23 @@ main.content { background: transparent; }
     linear-gradient(var(--grid-fine) 1px, transparent 1px) 0 0 / 100% 30px,
     var(--scrim-chrome);
 }
+/* Below Quarto's 992px breakpoint the docked rail becomes a fixed POPOUT overlay
+   (`.show`/`.collapsing` -> position:fixed; z-index:1000) over the content. The
+   translucent --scrim-chrome that lets the satfield read through the desktop rail
+   lets the PAGE bleed through the overlay, so nav items are hard to read. As an
+   overlay it should be a solid sheet: swap the scrim for opaque --bg (keep the
+   ruled lines) and lift it with a shadow so it detaches from the content it covers. */
+@media (max-width: 991.98px) {
+  #quarto-sidebar.sidebar-navigation {
+    background:
+      linear-gradient(var(--grid-fine) 1px, transparent 1px) 0 0 / 100% 30px,
+      var(--bg);
+  }
+  #quarto-sidebar.sidebar-navigation.show,
+  #quarto-sidebar.sidebar-navigation.collapsing {
+    box-shadow: 10px 0 30px -14px rgba(0, 0, 0, 0.55);
+  }
+}
 /* shared top baseline with the hero + TOC: land the ledger head at ~75px
    (measured 81 at 0.6rem, so -6px). */
 #quarto-sidebar .quarto-sidebar-header { padding-top: calc(0.6rem - 6px); }
@@ -284,4 +301,48 @@ main.content { background: transparent; }
 #quarto-margin-sidebar #TOC a.active::before {
   content: "\203a"; position: absolute; left: -0.9rem;
   color: var(--accent); font-weight: 700;
+}
+
+/* ==========================================================================
+   PAGE GRID — fill content + TOC to the RIGHT SCREEN EDGE (#3).
+
+   Quarto's docked page grid (body.docked .page-columns, >=992px) ends with
+   `[page-end] 5fr [screen-end-inset] 1.5rem` — the ONLY fluid track — while the
+   body track caps at `minmax(500px, calc(1380px - 3rem))`. So on any viewport
+   wide enough to exceed that cap, all slack pools into an empty right margin and
+   the content + TOC never reach the edge. It reads ASYMMETRIC because the docked
+   sidebar is pinned flush-left (spans screen-start/body-start) with no matching
+   left gutter. `page-layout: full` cannot fix this — an explicit grid template
+   ignores it — so this is the "grid-fill" override the design needs.
+
+   We restate the SAME template with every named line preserved (full-bleed
+   `.column-screen`/`.column-page` and the right-margin columns are placed by
+   these names, so dropping any would misplace them), changing only track SIZES:
+     - body track -> `minmax(500px, 1fr)` so it absorbs the slack and grows;
+     - trailing `5fr` + `1.5rem` -> 0 so the TOC lands flush against the right
+       edge, mirroring the flush-left sidebar (symmetric survey rails).
+   Prose still self-caps at --measure; the widened track is filled by full-bleed
+   figures/code/cards and by the reading-lane scrim over the satfield. On an
+   ultrawide monitor the body track can grow large — if that ever needs a ceiling
+   it is one knob (cap #quarto-content at var(--shell) + margin-inline:auto), left
+   out for now so the fill is true edge-to-edge. Only the >=992px variant is
+   overridden; <992px collapses the sidebar and already fills.
+   ========================================================================== */
+@media (min-width: 992px) {
+  body.docked .page-columns {
+    grid-template-columns:
+      [screen-start] 1.5rem
+      [screen-start-inset page-start] minmax(57.6px, 115.2px)
+      [page-start-inset] 57.6px
+      [body-start-outset] 57.6px
+      [body-start] 1.5rem
+      [body-content-start] minmax(500px, 1fr)
+      [body-content-end] 1.5rem
+      [body-end] 48px
+      [body-end-outset] minmax(48px, 96px)
+      [page-end-inset] 48px
+      [page-end] 0
+      [screen-end-inset] 0
+      [screen-end];
+  }
 }

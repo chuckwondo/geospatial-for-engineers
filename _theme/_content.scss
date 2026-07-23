@@ -201,3 +201,165 @@
 
 /* diagram text inherits the mono UI face (used by the inline SVGs, Task 10+) */
 figure.diagram svg.dg text, svg.dg text { font-family: var(--mono); }
+
+/* ==========================================================================
+   CALLOUTS (Task 9) — restyle Quarto's five callout types into the Terra --c-*
+   system so they STAND OUT: a faint tinted wash + a strong 3px left rail + a
+   mono uppercase header carrying a bordered badge glyph. Quarto emits
+   `.callout.callout-style-default.callout-<type>.callout-titled` with a
+   `.callout-header` (icon-container + title-container) and a `.callout-body`.
+   We keep that markup and repaint it. Id-scoping (#quarto-document-content)
+   outranks Quarto's own `.callout-style-default …` rules. A per-callout `--cc`
+   / `--cc-bg` / `--cc-badge` triple makes each type a two-line override.
+   ========================================================================== */
+#quarto-document-content .callout {
+  --cc: var(--c-note);
+  --cc-bg: var(--c-note-bg);
+  --cc-badge: "i";
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--cc);
+  background: var(--cc-bg);
+  border-radius: var(--radius-sm);
+  margin: 1.75rem 0;
+  overflow: hidden;
+}
+#quarto-document-content .callout.callout-note      { --cc: var(--c-note); --cc-bg: var(--c-note-bg); --cc-badge: "i"; }
+#quarto-document-content .callout.callout-tip       { --cc: var(--c-note); --cc-bg: var(--c-note-bg); --cc-badge: "+"; }
+#quarto-document-content .callout.callout-important  { --cc: var(--c-imp);  --cc-bg: var(--c-imp-bg);  --cc-badge: "!"; }
+#quarto-document-content .callout.callout-warning   { --cc: var(--c-warn); --cc-bg: var(--c-warn-bg); --cc-badge: "\25b3"; } /* triangle */
+#quarto-document-content .callout.callout-caution   { --cc: var(--c-caut); --cc-bg: var(--c-caut-bg); --cc-badge: "\2573"; } /* cross */
+
+/* header: transparent (the callout carries the wash), mono uppercase in --cc */
+#quarto-document-content .callout .callout-header {
+  background: transparent; border: 0;
+  padding: 0.85rem 1.25rem 0.35rem;
+  font-family: var(--mono); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;
+  color: var(--cc);
+  align-items: center; gap: 0;
+}
+/* swap Quarto's sprite icon for the mockup's bordered badge glyph */
+#quarto-document-content .callout .callout-icon-container { display: none; }
+#quarto-document-content .callout .callout-title-container {
+  display: inline-flex; align-items: center;
+  font-family: var(--mono); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--cc);
+}
+#quarto-document-content .callout .callout-title-container::before {
+  content: var(--cc-badge, "i");
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.4em; height: 1.4em; margin-right: 0.6rem;
+  border: 1px solid currentColor; border-radius: 4px;
+  font-size: 0.85em; font-weight: 700; line-height: 1;
+}
+/* body: tighten to the header, cap prose at the measure */
+#quarto-document-content .callout .callout-body-container {
+  padding: 0 1.25rem 1rem;
+}
+#quarto-document-content .callout .callout-body > :first-child { margin-top: 0; }
+#quarto-document-content .callout .callout-body > :last-child { margin-bottom: 0; }
+#quarto-document-content .callout .callout-body p { color: var(--ink); max-width: var(--measure); }
+
+/* ==========================================================================
+   CODE BLOCKS (Task 9) — reskin Quarto's generated highlighter into a terminal
+   panel. DOM: div.sourceCode(.code-with-copy) > pre.sourceCode > code.sourceCode,
+   with a floating .code-copy-button. We frame the container, add a terminal
+   title bar (three traffic dots) via ::before, restyle the copy button, and
+   RETHEME the syntax colors by redefining Quarto's `--quarto-hl-*-color` custom
+   properties (defined on :root in quarto-syntax-highlighting*.css, which loads
+   BEFORE our bundle — so our :root / body.quarto-dark redefinitions win). This
+   keeps Quarto's highlighter (no hand-tokenized JSON) but weaves the palette in:
+   keys accent, strings ink, numbers teal, punctuation/operators muted.
+   ========================================================================== */
+#quarto-document-content div.sourceCode {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 2rem 0;
+}
+/* terminal title bar with three traffic-light dots (matches the hero terminal) */
+#quarto-document-content div.sourceCode::before {
+  content: "";
+  display: block; height: 2.15rem;
+  background:
+    radial-gradient(circle at 16px 50%, #d76a3a 0 5px, transparent 5.6px),
+    radial-gradient(circle at 34px 50%, #d9b24e 0 5px, transparent 5.6px),
+    radial-gradient(circle at 52px 50%, #4f9e62 0 5px, transparent 5.6px),
+    var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
+#quarto-document-content div.sourceCode pre.sourceCode {
+  margin: 0; padding: 1.15rem 1.3rem; background: transparent;
+  font-family: var(--mono); font-size: var(--t-sm); line-height: 1.7;
+  overflow: auto;
+}
+/* copy button -> mono chip sitting in the title bar's right side */
+#quarto-document-content div.sourceCode .code-copy-button {
+  top: 0.4rem; right: 0.5rem; bottom: auto;
+  color: var(--ink-muted); background: var(--panel-3);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 0.1rem 0.4rem;
+}
+#quarto-document-content div.sourceCode .code-copy-button:hover {
+  color: var(--accent); border-color: var(--accent-line); background: var(--panel-3);
+}
+
+/* retheme Quarto's highlighter to the palette (both bundles carry these) */
+:root {
+  --quarto-hl-ot-color: var(--ink-2);    /* other / normal */
+  --quarto-hl-kw-color: var(--accent);   /* keyword */
+  --quarto-hl-cf-color: var(--accent);   /* control flow */
+  --quarto-hl-dt-color: var(--accent);   /* datatype -> JSON keys */
+  --quarto-hl-fu-color: var(--accent);   /* function -> JSON keys */
+  --quarto-hl-at-color: var(--olive);    /* attribute */
+  --quarto-hl-st-color: var(--ink);      /* string */
+  --quarto-hl-ss-color: var(--ink);      /* special string */
+  --quarto-hl-ch-color: var(--ink);      /* char */
+  --quarto-hl-vs-color: var(--ink);      /* verbatim string */
+  --quarto-hl-dv-color: var(--teal);     /* decimal / int */
+  --quarto-hl-fl-color: var(--teal);     /* float */
+  --quarto-hl-bn-color: var(--teal);     /* base-n number */
+  --quarto-hl-cn-color: var(--teal);     /* constant: true/false/null */
+  --quarto-hl-va-color: var(--ink);      /* variable */
+  --quarto-hl-op-color: var(--ink-muted);/* operator */
+  --quarto-hl-sc-color: var(--ink-muted);/* special char */
+  --quarto-hl-co-color: var(--ink-muted);/* comment */
+  --quarto-hl-do-color: var(--ink-muted);/* doc comment */
+  --quarto-hl-in-color: var(--ink-muted);/* information */
+  --quarto-hl-wa-color: var(--ink-muted);/* warning comment */
+  --quarto-hl-pp-color: var(--olive);    /* preprocessor */
+  --quarto-hl-im-color: var(--olive);    /* import */
+  --quarto-hl-er-color: var(--c-caut);   /* error */
+  --quarto-hl-al-color: var(--c-caut);   /* alert */
+}
+/* the highlighter also hard-codes the NORMAL text color (not via a var); repaint
+   those base rules to --ink-2 at Quarto's own specificity (our bundle loads
+   later, so it wins; classed token spans keep their higher-specificity color). */
+pre > code.sourceCode > span,
+code.sourceCode > span,
+code span,
+div.sourceCode,
+div.sourceCode pre.sourceCode { color: var(--ink-2); }
+
+/* ==========================================================================
+   REFERENCE ASIDES / SPEC REFS (Task 9) — the guide marks per-section spec
+   references as blockquotes ("References for this section. …"). Style the
+   blockquote as the mockup's .specref card: a faint panel with an accent left
+   rail and mono-flavored links. (Reversible; if a true quotation is ever added
+   it can move to a dedicated wrapper.)
+   ========================================================================== */
+#quarto-document-content blockquote {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: var(--panel);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.3rem; margin: 1.75rem 0;
+  color: var(--ink-2); font-size: 0.95rem;
+}
+#quarto-document-content blockquote p { max-width: var(--measure); }
+#quarto-document-content blockquote > :first-child { margin-top: 0; }
+#quarto-document-content blockquote > :last-child { margin-bottom: 0; }
+#quarto-document-content blockquote strong { color: var(--ink); }
+#quarto-document-content blockquote a { color: var(--accent); word-break: break-word; }
